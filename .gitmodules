@@ -1,3 +1,6 @@
 [submodule "external/jsoncpp"]
 	path = external/jsoncpp
 	url = https://github.com/open-source-parsers/jsoncpp.git
+[submodule "external/libHttpClient"]
+	path = external/libHttpClient
+	url = https://github.com/microsoft/libHttpClient.git

@@ -41,9 +41,11 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\external\libHttpClient\libHttpClient.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\external\libHttpClient\libHttpClient.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -65,7 +67,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;ENABLE_PLAYFABADMIN_API;ENABLE_PLAYFABSERVER_API;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SdkSourceDir);$(ExternalDir)/jsoncpp/include;$(SdkSourceDir)/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SdkSourceDir);$(ExternalDir)/jsoncpp/include;$(SdkSourceDir)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -91,7 +93,7 @@
       <PreprocessorDefinitions>_LIB;ENABLE_PLAYFABADMIN_API;ENABLE_PLAYFABSERVER_API;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SdkSourceDir);$(ExternalDir)/jsoncpp/include;$(SdkSourceDir)/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SdkSourceDir);$(ExternalDir)/jsoncpp/include;$(SdkSourceDir)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MinimalRebuild>false</MinimalRebuild>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -116,7 +118,6 @@
     <ClInclude Include="$(SdkSourceDir)\include\playfab\PlayFabAuthenticationContext.h" />
     <ClInclude Include="$(SdkSourceDir)\include\playfab\PlayFabApiSettings.h" />
     <ClInclude Include="$(SdkSourceDir)\include\playfab\PlayFabBaseModel.h" />
-
     <ClInclude Include="$(SdkSourceDir)\include\playfab\PlayFabAdminApi.h" />
     <ClInclude Include="$(SdkSourceDir)\include\playfab\PlayFabAdminInstanceApi.h" />
     <ClInclude Include="$(SdkSourceDir)\include\playfab\PlayFabAdminDataModels.h" />
@@ -181,11 +182,14 @@
     <ClInclude Include="$(SdkSourceDir)\include\playfab\QoS\QoSSocket.h" />
     <ClInclude Include="$(SdkSourceDir)\include\playfab\QoS\XPlatSocket.h" />
     <ClInclude Include="$(SdkSourceDir)\stdafx.h" />
+    <ClInclude Include="..\..\code\include\playfab\PlayFabHCHttpPlugin.h" />
+    <ClInclude Include="..\..\code\include\playfab_gdk\GDK_PlayFabClientApi.h" />
+    <ClInclude Include="..\..\code\source\playfab_gdk\async_provider.h" />
+    <ClInclude Include="..\..\code\source\playfab_gdk\task_queue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabAuthenticationContext.cpp" />
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabApiSettings.cpp" />
-
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabAdminApi.cpp" />
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabAdminInstanceApi.cpp" />
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabClientApi.cpp" />
@@ -234,6 +238,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\PlayFabHCHttpPlugin.cpp" />
+    <ClCompile Include="..\..\code\source\playfab_gdk\async_provider.cpp" />
+    <ClCompile Include="..\..\code\source\playfab_gdk\GDK_PlayFabClientApi.cpp" />
+    <ClCompile Include="..\..\code\source\playfab_gdk\task_queue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\jsoncpp-build\lib_json.vcxproj">

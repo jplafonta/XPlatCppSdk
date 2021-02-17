@@ -21,6 +21,12 @@
     <Filter Include="Source Files\playfab\QoS">
       <UniqueIdentifier>{f39744c7-f312-4119-a2bd-ae011afab4ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\playfab_gdk">
+      <UniqueIdentifier>{02000f42-9b59-4fbf-b049-bed676f2509b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\playfab_gdk">
+      <UniqueIdentifier>{caa95f4d-c3e5-45e9-8d03-b13c0c77cbd4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SdkSourceDir)\include\playfab\PlayFabPlatformMacros.h">
@@ -233,6 +239,18 @@
     <ClInclude Include="$(SdkSourceDir)\include\playfab\QoS\XPlatSocket.h">
       <Filter>Header Files\playfab\QoS</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab_gdk\GDK_PlayFabClientApi.h">
+      <Filter>Header Files\playfab_gdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\source\playfab_gdk\async_provider.h">
+      <Filter>Source Files\playfab_gdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\source\playfab_gdk\task_queue.h">
+      <Filter>Source Files\playfab_gdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab\PlayFabHCHttpPlugin.h">
+      <Filter>Header Files\playfab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabAuthenticationContext.cpp">
@@ -375,6 +393,18 @@
     </ClCompile>
     <ClCompile Include="$(SdkSourceDir)\source\playfab\QoS\XPlatSocket.cpp">
       <Filter>Source Files\playfab\QoS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab_gdk\GDK_PlayFabClientApi.cpp">
+      <Filter>Source Files\playfab_gdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab_gdk\async_provider.cpp">
+      <Filter>Source Files\playfab_gdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab_gdk\task_queue.cpp">
+      <Filter>Source Files\playfab_gdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\PlayFabHCHttpPlugin.cpp">
+      <Filter>Source Files\playfab</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

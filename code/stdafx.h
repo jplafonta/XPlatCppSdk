@@ -29,8 +29,11 @@
 #include <playfab/PlayFabPlatformTypes.h>
 #include <playfab/PlayFabApiSettings.h>
 #include <playfab/PlayFabAuthenticationContext.h>
+#include "httpClient/pal.h"
 
 #define UNREFERENCED_PARAMETER(P) (P)
+#define RETURN_HR_IF_FAILED(expr) { HRESULT exprResult{ expr }; if (FAILED(exprResult)) { return exprResult; } }
+#define RETURN_HR_INVALIDARGUMENT_IF_NULL(x) { if ( ( x ) == nullptr ) { return E_INVALIDARG; } }
 
 #ifdef PLAYFAB_PLATFORM_LINUX
 #include <stdio.h>
