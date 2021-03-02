@@ -8,7 +8,7 @@ namespace PlayFab
     // Note ANY api call may synchronously throw an exception if the title id is not set
     bool PlayFabSettings::threadedCallbacks = false;
     const std::string PlayFabSettings::sdkVersion = "3.47.210208";
-    const std::string PlayFabSettings::buildIdentifier = "jbuild_xplatcppsdk_sdk-genericslave-2_1";
+    const std::string PlayFabSettings::buildIdentifier = "xplatcppsdk_manual";
     const std::string PlayFabSettings::versionString = "XPlatCppSdk-3.47.210208";
     std::string PlayFabSettings::productionEnvironmentURL = ".playfabapi.com";
     ErrorCallback PlayFabSettings::globalErrorHandler = nullptr;

@@ -7,13 +7,6 @@
 #include "task_queue.h"
 #include "playfab/PlayFabError.h"
 
-// TODO Put this somewhere better
-// Holder for generic PlayFab result
-struct PlayFabResultHolder
-{
-    std::shared_ptr<PlayFab::PlayFabResultCommon> result;
-};
-
 namespace PlayFab
 {
 
@@ -33,10 +26,7 @@ public:
     // be called  by the XAsync framework. The lifetime of the of provider class will be managed by the Provider
     // base class; it will be destroyed automatically after the operation is complete and the client has gotten
     // the result.
-    static HRESULT Run(_In_ std::unique_ptr<Provider>&& provider) noexcept;
-
-    // Get the task queue for this provider
-    TaskQueue TaskQueue() const noexcept;
+    static HRESULT Run(_In_ UniquePtr<Provider>&& provider) noexcept;
 
 protected:
     // Create a Provider from a client provided XAsyncBlock
@@ -48,13 +38,13 @@ protected:
     // another asynchronous API. Begin will be invoked synchronously by Run(), so this operation should never block.
     //
     // Default implementation will call Schedule with no delay.
-    virtual HRESULT Begin();
+    virtual HRESULT Begin(TaskQueue&& queue);
 
     // Perform any long running work. This method is invoked  is guaranteed always be invoked on the thread dictated by the Provider's
     // XAsync task queue.
     //
     // Default implementation will return S_OK.
-    virtual HRESULT DoWork();
+    virtual HRESULT DoWork(TaskQueue&& queue);
 
     // The GetResult operation should copy the result payload into a client provided buffer. GetResult will be called
     // synchronously when the client calls the appropriate get result API.
@@ -88,7 +78,7 @@ class ClientApiProvider : public Provider
 {
 public:
     // Wrapped PlayFab client API must have a signature matching ClientApiT
-    typedef void ClientApiT(RequestT&, ProcessApiCallback<ResultT>, const ErrorCallback, void*);
+    typedef void ClientApiT(RequestT&, ProcessApiCallback<ResultT>, const TaskQueue&, const ErrorCallback, void*);
 
     ClientApiProvider(XAsyncBlock* async, ClientApiT* clientApi, RequestT&& request)
         : Provider{ async },
@@ -98,9 +88,9 @@ public:
     }
 
 protected:
-    HRESULT Begin() override
+    HRESULT Begin(TaskQueue&& queue) override
     {
-        m_clientApi(m_request, ProcessApiCallback, OnError, this);
+        m_clientApi(m_request, ProcessApiCallback, queue, OnError, this);
         return S_OK;
     }
 

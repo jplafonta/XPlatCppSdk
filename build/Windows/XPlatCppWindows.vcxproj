@@ -182,10 +182,14 @@
     <ClInclude Include="$(SdkSourceDir)\include\playfab\QoS\QoSSocket.h" />
     <ClInclude Include="$(SdkSourceDir)\include\playfab\QoS\XPlatSocket.h" />
     <ClInclude Include="$(SdkSourceDir)\stdafx.h" />
+    <ClInclude Include="..\..\code\include\playfab\async_provider.h" />
+    <ClInclude Include="..\..\code\include\playfab\internal_memory.h" />
     <ClInclude Include="..\..\code\include\playfab\PlayFabHCHttpPlugin.h" />
-    <ClInclude Include="..\..\code\include\playfab_gdk\GDK_PlayFabClientApi.h" />
-    <ClInclude Include="..\..\code\source\playfab_gdk\async_provider.h" />
-    <ClInclude Include="..\..\code\source\playfab_gdk\task_queue.h" />
+    <ClInclude Include="..\..\code\include\playfab\std_optional.h" />
+    <ClInclude Include="..\..\code\include\playfab\task_queue.h" />
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabClientApi_c.h" />
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabClientDataModels_c.h" />
+    <ClInclude Include="..\..\code\source\playfab\std_optional.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabAuthenticationContext.cpp" />
@@ -238,10 +242,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\async_provider.cpp" />
+    <ClCompile Include="..\..\code\source\playfab\PlayFabClientApi_c.cpp" />
     <ClCompile Include="..\..\code\source\playfab\PlayFabHCHttpPlugin.cpp" />
-    <ClCompile Include="..\..\code\source\playfab_gdk\async_provider.cpp" />
-    <ClCompile Include="..\..\code\source\playfab_gdk\GDK_PlayFabClientApi.cpp" />
-    <ClCompile Include="..\..\code\source\playfab_gdk\task_queue.cpp" />
+    <ClCompile Include="..\..\code\source\playfab\task_queue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\jsoncpp-build\lib_json.vcxproj">

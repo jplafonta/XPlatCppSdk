@@ -1,15 +1,14 @@
 // ConsoleApplication1.cpp : Defines the entry point for the console application.
 //
 
+#include <windows.h>
 #include "playfab/PlayFabError.h"
 #include "playfab/PlayFabClientDataModels.h"
 #include "playfab/PlayFabClientApi.h"
 #include "playfab/PlayFabSettings.h"
 #include "playfab/PlayFabApiSettings.h"
 #include "playfab/PlayFabPluginManager.h"
-#include "playfab_gdk/GDK_PlayFabClientApi.h"
-#include "playfab/PlayFabHCHttpPlugin.h"
-#include <windows.h>
+#include "playfab_c/PlayFabClientApi_c.h"
 
 using namespace PlayFab;
 using namespace ClientModels;
@@ -43,12 +42,13 @@ int main()
 
         while (!callComplete)
         {
-            PlayFabClientAPI::Update();
             Sleep(1);
         }
     }
 
     {
+        callComplete = false;
+
         // Get Player profile with existing client API
         GetPlayerProfileRequest request;
         request.PlayFabId = loginResult.PlayFabId;
@@ -57,34 +57,37 @@ int main()
             [] (const GetPlayerProfileResult& result, void* /*customData*/)
             {
                 printf("Got player profile!\n");
+                callComplete = true;
             },
+            TaskQueue{},
             [](const PlayFabError& error, void* /*customData*/)
             {
                 printf("GetPlayerProfile error");
             }
             );
 
-        while (PlayFabClientAPI::Update() != 0)
+        while (!callComplete)
         {
             Sleep(1);
         }
     }
 
     {
-        // Get Player profile with GDK API && HC HttpPlugin
-        PlayFabPluginManager::SetPlugin(std::make_shared<PlayFabHCHttpPlugin>(), PlayFabPluginContract::PlayFab_Transport);
-
         XAsyncBlock async{};
         async.callback = [](XAsyncBlock* async)
         {
-            PlayFabPlayerProfile profile{};
             PlayFabResultHandle handle{ nullptr };
-            HRESULT hr = PlayFabGetPlayerProfileResult(async, &profile, &handle);
+            HRESULT hr = PlayFabGetResultHandle(async, &handle);
             if (SUCCEEDED(hr))
             {
-                printf("Got player profile!\n");
-                PlayFabReleaseResult(handle);
+                PlayFabPlayerProfileModel* profile{ nullptr };
+                hr = PlayFabGetPlayerProfileResultGetProfile(handle, &profile);
+                if (SUCCEEDED(hr))
+                {
+                    printf("Got player profile!\n");
+                }
             }
+            PlayFabResultCloseHandle(handle);
         };
 
         HRESULT hr = PlayFabGetPlayerProfileAsync(nullptr, loginResult.PlayFabId.data(), &async);

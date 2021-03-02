@@ -5,6 +5,7 @@
 #pragma once
 
 #include <playfab/PlayFabPlatformMacros.h>
+#include <playfab/PlayFabHCHttpPlugin.h>
 
 #ifdef PLAYFAB_PLATFORM_XBOX
 #include <playfab/PlayFabIXHR2HttpPlugin.h>
@@ -12,7 +13,6 @@
 
 #ifdef PLAYFAB_PLATFORM_WINDOWS
 #include <playfab/PlayFabWinHttpPlugin.h>
-#include <playfab/PlayFabHCHttpPlugin.h>
 #endif // PLAYFAB_PLATFORM_WINDOWS
 
 #ifdef PLAYFAB_PLATFORM_LINUX

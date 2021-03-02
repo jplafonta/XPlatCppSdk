@@ -5,6 +5,8 @@
 #include <playfab/PlayFabJsonHeaders.h>
 #include <playfab/PlayFabPlatformTypes.h>
 #include <playfab/PlayFabPlatformUtils.h>
+#include <playfab/internal_memory.h>
+#include <playfab/std_optional.h>
 
 #include <assert.h>
 #include <functional>
@@ -49,6 +51,19 @@ namespace PlayFab
     };
 
     /// <summary>
+    /// Base class for all PlayFab Models
+    /// Provides interface for converting to/from json
+    /// Renamed to Model to have consistent naming conventions (non-namespaced public types should be
+    /// prefixed with PlayFab, internal types will be in PlayFab namespace and not be prefixed)
+    /// </summary>
+    struct BaseModel
+    {
+        virtual ~BaseModel() {}
+        virtual void FromJson(const Json::Value& input) = 0;
+        //virtual Json::Value ToJson() const = 0;
+    };
+
+    /// <summary>
     /// Base class for all PlayFab Requests
     /// Adds a parameter that controls how requests are threaded
     /// </summary>
@@ -74,6 +89,82 @@ namespace PlayFab
         /// An authentication context returned by Login methods, it can used in multi-user scenarios
         /// </summary>
         std::shared_ptr<PlayFabAuthenticationContext> authenticationContext;
+    };
+
+    /// <summary>
+    /// Helper class for managing C-style arrays of pointers
+    /// </summary>
+    template<typename PointerT, typename ObjectT> class PointerArray : public BaseModel
+    {
+    public:
+        static_assert(std::is_base_of_v<PointerT, ObjectT> || std::is_same_v<PointerT, ObjectT>, "ObjectT must be a PointerT");
+        static_assert(std::is_base_of_v<BaseModel, ObjectT>, "ObjectT must inherit from BaseModel");
+
+        PointerArray() = default;
+        virtual ~PointerArray() = default;
+
+        PointerArray(const PointerArray& src)
+            : m_objects(src.m_objects)
+        {
+            m_pointers.reserve(m_objects.size());
+            for (const auto& o : m_objects)
+            {
+                m_pointers.push_back((PointerT*)&o);
+            }
+        }
+
+        PointerArray(PointerArray&& src)
+            : m_pointers(std::move(src.m_pointers)),
+            m_objects(std::move(src.m_objects))
+        {
+        }
+
+        PointerArray& operator=(PointerArray src)
+        {
+            m_pointers = std::move(src.m_pointers);
+            m_objects = std::move(src.m_objects);
+            return *this;
+        }
+
+        PointerArray& operator=(PointerArray&& src)
+        {
+            m_pointers = std::move(src.m_pointers);
+            m_objects = std::move(src.m_objects);
+            return *this;
+        }
+
+        const PointerT** Data() 
+        {
+            return m_pointers.data();
+        }
+
+        size_t Size() const
+        {
+            assert(m_pointers.size() == m_objects.size());
+            return m_pointers.size();
+        }
+
+        void Clear()
+        {
+            m_pointers.clear();
+            m_objects.clear();
+        }
+
+        void FromJson(const Json::Value& input)
+        {
+            Clear();
+            FromJsonUtilO(input, m_objects);
+
+            m_pointers.reserve(m_objects.size());
+            for (const auto& o : m_objects)
+            {
+                m_pointers.push_back((PointerT*)&o);
+            }
+        }
+
+    private:
+        Vector<const PointerT*> m_pointers;
+        List<ObjectT> m_objects;
     };
 
     // Utilities for [de]serializing time_t to/from json
@@ -113,6 +204,22 @@ namespace PlayFab
             time_t outputVal = {};
             FromJsonUtilT(input, outputVal);
             output = outputVal;
+        }
+    }
+
+    inline void FromJsonUtilT(const Json::Value& input, StdExtra::optional<time_t>& output, time_t*& outputPointer)
+    {
+        if (input == Json::Value::null)
+        {
+            output.reset();
+            outputPointer = nullptr;
+        }
+        else
+        {
+            time_t outputVal = {};
+            FromJsonUtilT(input, outputVal);
+            output = outputVal;
+            outputPointer = output.operator->();
         }
     }
 
@@ -205,6 +312,22 @@ namespace PlayFab
         }
     }
 
+    template <typename EnumType> inline void FromJsonUtilE(const Json::Value& input, StdExtra::optional<EnumType>& output, EnumType*& outputPointer)
+    {
+        if (input == Json::Value::null)
+        {
+            output.reset();
+            outputPointer = nullptr;
+        }
+        else
+        {
+            EnumType outputVal;
+            ClientModels::FromJsonEnum(input, outputVal);
+            output = outputVal;
+            outputPointer = output.operator->();
+        }
+    }
+
     template <typename EnumType> inline void ToJsonUtilE(const std::list<EnumType>& input, Json::Value& output)
     {
         if (input.size() == 0)
@@ -271,6 +394,18 @@ namespace PlayFab
     inline void ToJsonUtilS(const std::string& input, Json::Value& output)
     {
         if (input.length() == 0)
+        {
+            output = Json::Value::null;
+        }
+        else
+        {
+            output = Json::Value(input);
+        }
+    }
+
+    inline void ToJsonUtilS(const char* input, Json::Value& output)
+    {
+        if (!input)
         {
             output = Json::Value::null;
         }
@@ -354,6 +489,20 @@ namespace PlayFab
         }
     }
 
+    inline void FromJsonUtilS(const Json::Value& input, String& output, const char*& outputPointer)
+    {
+        if (input == Json::Value::null)
+        {
+            output.clear();
+            outputPointer = nullptr;
+        }
+        else
+        {
+            output = input.asCString();
+            outputPointer = output.data();
+        }
+    }
+
     // Utilities for [de]serializing PlayFabObjects to/from json
     inline void ToJsonUtilO(const PlayFabBaseModel& input, Json::Value& output)
     {
@@ -361,6 +510,11 @@ namespace PlayFab
     }
 
     inline void FromJsonUtilO(const Json::Value& input, PlayFabBaseModel& output)
+    {
+        output.FromJson(input);
+    }
+
+    inline void FromJsonUtilO(const Json::Value& input, BaseModel& output)
     {
         output.FromJson(input);
     }
@@ -391,6 +545,20 @@ namespace PlayFab
         }
     }
 
+    template <typename ObjectType> inline void FromJsonUtilO(const Json::Value& input, StdExtra::optional<ObjectType>& output)
+    {
+        if (input == Json::Value::null)
+        {
+            output.reset();
+        }
+        else
+        {
+            ObjectType outputTemp;
+            outputTemp.FromJson(input);
+            output = outputTemp;
+        }
+    }
+
     template <typename ObjectType> inline void ToJsonUtilO(const std::list<ObjectType>& input, Json::Value& output)
     {
         if (input.size() == 0)
@@ -411,6 +579,22 @@ namespace PlayFab
     }
 
     template <typename ObjectType> inline void FromJsonUtilO(const Json::Value& input, std::list<ObjectType>& output)
+    {
+        output.clear();
+        if (input == Json::Value::null)
+        {
+            return;
+        }
+
+        ObjectType eachOutput;
+        for (auto iter = input.begin(); iter != input.end(); ++iter)
+        {
+            FromJsonUtilO(*iter, eachOutput);
+            output.push_back(eachOutput);
+        }
+    }
+
+    template <typename ObjectType> inline void FromJsonUtilO(const Json::Value& input, List<ObjectType>& output)
     {
         output.clear();
         if (input == Json::Value::null)
@@ -530,6 +714,22 @@ namespace PlayFab
         }
     }
 
+    template <typename PrimitiveType> inline void FromJsonUtilP(const Json::Value& input, StdExtra::optional<PrimitiveType>& output, PrimitiveType*& outputPointer)
+    {
+        if (input == Json::Value::null)
+        {
+            output.reset();
+            outputPointer = nullptr;
+        }
+        else
+        {
+            PrimitiveType outputVal;
+            FromJsonUtilP(input, outputVal);
+            output = outputVal;
+            outputPointer = output.operator->();
+        }
+    }
+
     template <typename PrimitiveType> inline void ToJsonUtilP(const std::list<PrimitiveType>& input, Json::Value& output)
     {
         if (input.size() == 0)
@@ -591,4 +791,122 @@ namespace PlayFab
             output[iter.key().asString()] = eachOutput;
         }
     }
+
+    template<> class PointerArray<const char*, String> : public BaseModel
+    {
+    public:
+        PointerArray() = default;
+        virtual ~PointerArray() = default;
+
+        PointerArray(const PointerArray& src)
+            : m_strings(src.m_strings)
+        {
+            m_pointers.reserve(m_strings.size());
+            for (const auto& o : m_strings)
+            {
+                m_pointers.push_back((const char*)&o);
+            }
+        }
+
+        PointerArray(PointerArray&& src)
+            : m_pointers(std::move(src.m_pointers)),
+            m_strings(std::move(src.m_strings))
+        {
+        }
+
+        PointerArray& operator=(PointerArray src)
+        {
+            m_pointers = std::move(src.m_pointers);
+            m_strings = std::move(src.m_strings);
+            return *this;
+        }
+
+        PointerArray& operator=(PointerArray&& src)
+        {
+            m_pointers = std::move(src.m_pointers);
+            m_strings = std::move(src.m_strings);
+            return *this;
+        }
+
+        const char** Data()
+        {
+            return m_pointers.data();
+        }
+
+        size_t Size() const
+        {
+            assert(m_pointers.size() == m_strings.size());
+            return m_pointers.size();
+        }
+
+        void Clear()
+        {
+            m_pointers.clear();
+            m_strings.clear();
+        }
+
+        void FromJson(const Json::Value& input)
+        {
+            for (auto iter = input.begin(); iter != input.end(); ++iter)
+            {
+                String output;
+                const char* outputPointer;
+                FromJsonUtilS(*iter, output, outputPointer);
+                m_pointers.push_back(outputPointer);
+                m_strings.push_back(std::move(output));
+            }
+        }
+
+    private:
+        Vector<const char*> m_pointers;
+        List<String> m_strings;
+    };
+
+
+    template<typename PublicT, typename InternalT> inline void FromJsonUtilA(
+        const Json::Value& input,
+        PointerArray<PublicT, InternalT>& output,
+        const PublicT**& outputPointer,
+        size_t& outputSize
+    )
+    {
+        output.Clear();
+        if (input == Json::Value::null)
+        {
+            outputPointer = nullptr;
+            outputSize = 0;
+            return;
+        }
+
+        output.FromJson(input);
+        outputPointer = output.Data();
+        outputSize = output.Size();
+    }
+
+    inline void FromJsonUtilA(
+        const Json::Value& input,
+        PointerArray<const char*, String>& output,
+        const char**& outputPointer,
+        size_t& outputSize
+    )
+    {
+        output.Clear();
+        if (input == Json::Value::null)
+        {
+            outputPointer = nullptr;
+            outputSize = 0;
+            return;
+        }
+
+        output.FromJson(input);
+        outputPointer = output.Data();
+        outputSize = output.Size();
+    }
 }
+
+/// <summary>
+/// Result holder which will be returned to callers
+/// </summary>
+struct PlayFabResultHolder {
+    std::shared_ptr<PlayFab::PlayFabResultCommon> result;
+};

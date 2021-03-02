@@ -4,6 +4,7 @@
 
 #include <playfab/PlayFabClientDataModels.h>
 #include <playfab/PlayFabError.h>
+#include <playfab/task_queue.h>
 
 namespace PlayFab
 {
@@ -72,7 +73,7 @@ namespace PlayFab
         static void GetPaymentToken(ClientModels::GetPaymentTokenRequest& request, const ProcessApiCallback<ClientModels::GetPaymentTokenResult> callback, const ErrorCallback errorCallback = nullptr, void* customData = nullptr);
         static void GetPhotonAuthenticationToken(ClientModels::GetPhotonAuthenticationTokenRequest& request, const ProcessApiCallback<ClientModels::GetPhotonAuthenticationTokenResult> callback, const ErrorCallback errorCallback = nullptr, void* customData = nullptr);
         static void GetPlayerCombinedInfo(ClientModels::GetPlayerCombinedInfoRequest& request, const ProcessApiCallback<ClientModels::GetPlayerCombinedInfoResult> callback, const ErrorCallback errorCallback = nullptr, void* customData = nullptr);
-        static void GetPlayerProfile(ClientModels::GetPlayerProfileRequest& request, const ProcessApiCallback<ClientModels::GetPlayerProfileResult> callback, const ErrorCallback errorCallback = nullptr, void* customData = nullptr);
+        static void GetPlayerProfile(ClientModels::GetPlayerProfileRequest& request, const ProcessApiCallback<ClientModels::GetPlayerProfileResult> callback, const TaskQueue& queue, const ErrorCallback errorCallback = nullptr, void* customData = nullptr);
         static void GetPlayerSegments(ClientModels::GetPlayerSegmentsRequest& request, const ProcessApiCallback<ClientModels::GetPlayerSegmentsResult> callback, const ErrorCallback errorCallback = nullptr, void* customData = nullptr);
         static void GetPlayerStatistics(ClientModels::GetPlayerStatisticsRequest& request, const ProcessApiCallback<ClientModels::GetPlayerStatisticsResult> callback, const ErrorCallback errorCallback = nullptr, void* customData = nullptr);
         static void GetPlayerStatisticVersions(ClientModels::GetPlayerStatisticVersionsRequest& request, const ProcessApiCallback<ClientModels::GetPlayerStatisticVersionsResult> callback, const ErrorCallback errorCallback = nullptr, void* customData = nullptr);

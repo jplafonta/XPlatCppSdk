@@ -2,14 +2,12 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 #include <stdafx.h>
-#include "task_queue.h"
+#include <playfab/task_queue.h>
 
 namespace PlayFab {
 
 TaskQueue::TaskQueue() noexcept : TaskQueue{ nullptr }
 {
-    // We should be providing a queue everywhere
-    //assert(false);
 }
 
 TaskQueue::TaskQueue(XTaskQueueHandle handle) noexcept

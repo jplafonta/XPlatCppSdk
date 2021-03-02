@@ -21,14 +21,5 @@ namespace PlayFab
 
         virtual void MakePostRequest(std::unique_ptr<CallRequestContainerBase> requestContainer) override;
         virtual size_t Update() override;
-
-        void CompleteRequest(std::unique_ptr<CallRequestContainer> requestContainer);
-
-    private:
-        static void InvokeCallback(std::unique_ptr<CallRequestContainer> requestContainer);
-
-        std::mutex m_mutex;
-        int m_activeRequestCount{ 0 };
-        std::deque<std::unique_ptr<CallRequestContainer>> m_completedRequests;
     };
 }

@@ -3,8 +3,7 @@
 
 #include <stdafx.h>
 #include <assert.h>
-#include "async_provider.h"
-#include "playfab_gdk/GDK_PlayFabClientApi.h"
+#include <playfab/async_provider.h>
 
 namespace PlayFab
 {
@@ -14,7 +13,7 @@ Provider::Provider(_In_ XAsyncBlock* async) noexcept
 {
 }
 
-HRESULT Provider::Run(_In_ std::unique_ptr<Provider>&& provider) noexcept
+HRESULT Provider::Run(_In_ UniquePtr<Provider>&& provider) noexcept
 {
     RETURN_HR_INVALIDARGUMENT_IF_NULL(provider->m_async);
     RETURN_HR_IF_FAILED(XAsyncBegin(provider->m_async, provider.get(), nullptr, nullptr, XAsyncProvider));
@@ -22,17 +21,12 @@ HRESULT Provider::Run(_In_ std::unique_ptr<Provider>&& provider) noexcept
     return S_OK;
 }
 
-TaskQueue Provider::TaskQueue() const noexcept
-{
-    return m_async->queue;
-}
-
-HRESULT Provider::Begin()
+HRESULT Provider::Begin(TaskQueue&&)
 {
     return Schedule(0);
 }
 
-HRESULT Provider::DoWork()
+HRESULT Provider::DoWork(TaskQueue&&)
 {
     return S_OK;
 }
@@ -65,7 +59,7 @@ HRESULT CALLBACK Provider::XAsyncProvider(_In_ XAsyncOp op, _Inout_ const XAsync
     case XAsyncOp::Begin:
         try
         {
-            return provider->Begin();
+            return provider->Begin(data->async->queue);
         }
         catch (...)
         {
@@ -74,7 +68,7 @@ HRESULT CALLBACK Provider::XAsyncProvider(_In_ XAsyncOp op, _Inout_ const XAsync
     case XAsyncOp::DoWork:
         try
         {
-            return provider->DoWork();
+            return provider->DoWork(data->async->queue);
         }
         catch (...)
         {

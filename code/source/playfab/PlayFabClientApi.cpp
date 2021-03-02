@@ -1993,6 +1993,7 @@ namespace PlayFab
     void PlayFabClientAPI::GetPlayerProfile(
         GetPlayerProfileRequest& request,
         const ProcessApiCallback<GetPlayerProfileResult> callback,
+        const TaskQueue& queue,
         const ErrorCallback errorCallback,
         void* customData
     )
@@ -2018,6 +2019,7 @@ namespace PlayFab
 
         reqContainer->successCallback = std::shared_ptr<void>((callback == nullptr) ? nullptr : new ProcessApiCallback<GetPlayerProfileResult>(callback));
         reqContainer->errorCallback = errorCallback;
+        reqContainer->m_queue = queue;
 
         http.MakePostRequest(std::unique_ptr<CallRequestContainerBase>(static_cast<CallRequestContainerBase*>(reqContainer.release())));
     }
