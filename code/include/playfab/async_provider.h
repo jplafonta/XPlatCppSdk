@@ -3,9 +3,10 @@
 
 #pragma once
 
-#include "XAsyncProvider.h"
+#include <XAsyncProvider.h>
 #include "task_queue.h"
-#include "playfab/PlayFabError.h"
+#include <playfab/PlayFabError.h>
+#include <playfab/PlayFabUser.h>
 
 namespace PlayFab
 {
@@ -78,10 +79,11 @@ class ClientApiProvider : public Provider
 {
 public:
     // Wrapped PlayFab client API must have a signature matching ClientApiT
-    typedef void ClientApiT(RequestT&, ProcessApiCallback<ResultT>, const TaskQueue&, const ErrorCallback, void*);
+    using ClientApiT = void (PlayFabClientInstanceAPI::*)(const RequestT&, ProcessApiCallback<ResultT>, const TaskQueue&, const ErrorCallback, void*);
 
-    ClientApiProvider(XAsyncBlock* async, ClientApiT* clientApi, RequestT&& request)
+    ClientApiProvider(XAsyncBlock* async, std::shared_ptr<User> user, ClientApiT clientApi, const RequestT& request)
         : Provider{ async },
+        m_user{ std::move(user) },
         m_clientApi{ clientApi },
         m_request{ std::move(request) }
     {
@@ -90,7 +92,7 @@ public:
 protected:
     HRESULT Begin(TaskQueue&& queue) override
     {
-        m_clientApi(m_request, ProcessApiCallback, queue, OnError, this);
+        (m_user->ClientApi.*m_clientApi)(std::move(m_request), ProcessApiCallback, queue, OnError, this);
         return S_OK;
     }
 
@@ -120,8 +122,61 @@ private:
         pThis->Fail(E_FAIL);
     }
 
-    ClientApiT* m_clientApi;
-    RequestT m_request;
+    std::shared_ptr<User> m_user;
+    ClientApiT m_clientApi;
+    const RequestT& m_request;
+    std::shared_ptr<ResultT> m_result;
+};
+
+// Class used to implement XAsync Providers for PlayFab Login APIs.
+template<typename RequestT, typename ResultT>
+class LoginApiProvider : public Provider
+{
+public:
+    using LoginApiT = void (*)(const RequestT&, ProcessApiCallback<ResultT>, const TaskQueue&, const ErrorCallback, void*);
+
+    LoginApiProvider(XAsyncBlock* async, LoginApiT loginApi, const RequestT& request)
+        : Provider{ async },
+        m_api{ loginApi },
+        m_request{ std::move(request) }
+    {
+    }
+
+protected:
+    HRESULT Begin(TaskQueue&& queue) override
+    {
+        (*m_api)(m_request, ProcessApiCallback, queue, OnError, this);
+        return S_OK;
+    }
+
+    HRESULT GetResult(void* buffer, size_t bufferSize) override
+    {
+        assert(bufferSize == sizeof(PlayFabResultHolder*));
+        auto resultHolder = static_cast<PlayFabResultHolder**>(buffer);
+        *resultHolder = new PlayFabResultHolder{ m_result };
+        return S_OK;
+    }
+
+private:
+    static void ProcessApiCallback(const ResultT& result, void* context)
+    {
+        auto pThis = static_cast<LoginApiProvider*>(context);
+        // Hold result until client calls GetResult API
+        pThis->m_result = MakeShared<ResultT>(result);
+        pThis->Complete(sizeof(PlayFabResultHolder*));
+    }
+
+    // Default error handler for PlayFab Client APIs
+    static void OnError(const PlayFabError& /*error*/, void* context) noexcept
+    {
+        auto pThis = static_cast<LoginApiProvider*>(context);
+
+        // TODO translate PlayFabError to HRESULT
+        pThis->Fail(E_FAIL);
+    }
+
+    LoginApiT m_api;
+    const RequestT& m_request;
     std::shared_ptr<ResultT> m_result;
 };
 

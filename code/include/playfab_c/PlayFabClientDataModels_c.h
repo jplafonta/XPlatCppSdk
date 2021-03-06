@@ -1,11 +1,6 @@
 #pragma once
 
-/// <summary>
-/// Opaque handle to PlayFab API results
-/// </summary>
-typedef struct PlayFabResultHolder* PlayFabResultHandle;
-
-typedef struct PlayFabAuthenticationContextHolder* PlayFabAuthenticationContextHandle;
+#include <playfab_c/PlayFabBaseModel_c.h>
 
 enum class PlayFabEmailVerificationStatus : uint32_t
 {
@@ -324,6 +319,62 @@ enum class PlayFabPushNotificationPlatform : uint32_t
     GoogleCloudMessaging = 1
 };
 
+struct PlayFabPlayerProfileViewConstraints
+{
+    bool showAvatarUrl;
+    bool showBannedUntil;
+    bool showCampaignAttributions;
+    bool showContactEmailAddresses;
+    bool showCreated;
+    bool showDisplayName;
+    bool showExperimentVariants;
+    bool showLastLogin;
+    bool showLinkedAccounts;
+    bool showLocations;
+    bool showMemberships;
+    bool showOrigination;
+    bool showPushNotificationRegistrations;
+    bool showStatistics;
+    bool showTags;
+    bool showTotalValueToDateInUsd;
+    bool showValuesToDate;
+};
+
+struct PlayFabGetPlayerCombinedInfoRequestParams
+{
+    bool getCharacterInventories;
+    bool getCharacterList;
+    bool getPlayerProfile;
+    bool getPlayerStatistics;
+    bool getTitleData;
+    bool getUserAccountInfo;
+    bool getUserData;
+    bool getUserInventory;
+    bool getUserReadOnlyData;
+    bool getUserVirtualCurrency;
+    const char** playerStatisticNames;
+    size_t playerStatisticNamesCount;
+    PlayFabPlayerProfileViewConstraints* profileConstraints;
+    const char** titleDataKeys;
+    size_t titleDataKeysCount;
+    const char** userDataKeys;
+    size_t userDataKeysCount;
+    const char** userReadOnlyDataKeys;
+    size_t userReadOnlyDataKeysCount;
+};
+
+struct PlayFabLoginWithCustomIDRequest
+{
+    bool* createAccount;
+    const char* customId;
+    PlayFabDictionaryEntry* customTags;
+    size_t customTagsCount;
+    const char* encryptedRequest;
+    PlayFabGetPlayerCombinedInfoRequestParams* infoRequestParameters;
+    const char* playerSecret;
+    const char* titleId;
+};
+
 struct PlayFabAdCampaignAttributionModel
 {
     time_t attributedAt;
@@ -335,7 +386,7 @@ struct PlayFabContactEmailInfoModel
 {
     const char* emailAddress;
     const char* name;
-    PlayFabEmailVerificationStatus* verificationStatus; // TODO move to public C header
+    PlayFabEmailVerificationStatus* verificationStatus;
 };
 
 struct PlayFabLinkedPlatformAccountModel
@@ -433,4 +484,12 @@ struct PlayFabPlayerProfileModel
     uint32_t* totalValueToDateInUSD;
     const PlayFabValueToDateModel** valuesToDate;
     size_t valuesToDateCount;
+};
+
+struct PlayFabGetPlayerProfileRequest
+{
+    PlayFabDictionaryEntry* customTags;
+    size_t customTagsCount;
+    const char* playFabId;
+    PlayFabPlayerProfileViewConstraints* profileConstraints;
 };

@@ -2,74 +2,43 @@
 //
 
 #include <windows.h>
-#include "playfab/PlayFabError.h"
-#include "playfab/PlayFabClientDataModels.h"
-#include "playfab/PlayFabClientApi.h"
-#include "playfab/PlayFabSettings.h"
-#include "playfab/PlayFabApiSettings.h"
-#include "playfab/PlayFabPluginManager.h"
+#include <string>
+#include <playfab/PlayFabSettings.h>
+#include <playfab/PlayFabApiSettings.h>
 #include "playfab_c/PlayFabClientApi_c.h"
 
-using namespace PlayFab;
-using namespace ClientModels;
-
-bool callComplete = false;
-LoginResult loginResult{};
-
-void OnLoginSuccess(const LoginResult& result, void* customData)
-{
-    printf("Congratulations, you made your first successful API call!\n");
-    loginResult = result;
-    callComplete = true;
-}
-
-void OnLoginFail(const PlayFabError& error, void* customData)
-{
-    printf("Api error!\n");
-}
+PlayFabUserHandle userHandle{ nullptr };
+std::string playFabId;
 
 int main()
 {
-    PlayFabSettings::staticSettings->titleId = ("E18D7");
+    PlayFab::PlayFabSettings::staticSettings->titleId = ("E18D7");
 
     {
-        callComplete = false;
-        LoginWithCustomIDRequest request;
-        request.CreateAccount = false;
-        request.CustomId = "GettingStartedGuide";
+        PlayFabLoginWithCustomIDRequest request{};
+        request.createAccount = false;
+        request.customId = "GettingStartedGuide";
 
-        PlayFabClientAPI::LoginWithCustomID(request, OnLoginSuccess, OnLoginFail);
-
-        while (!callComplete)
+        XAsyncBlock async{};
+        async.callback = [](XAsyncBlock* async)
         {
-            Sleep(1);
-        }
-    }
-
-    {
-        callComplete = false;
-
-        // Get Player profile with existing client API
-        GetPlayerProfileRequest request;
-        request.PlayFabId = loginResult.PlayFabId;
-
-        PlayFabClientAPI::GetPlayerProfile(request, 
-            [] (const GetPlayerProfileResult& result, void* /*customData*/)
+            PlayFabResultHandle resultHandle{ nullptr };
+            HRESULT hr = PlayFabGetResultHandle(async, &resultHandle);
+            if (SUCCEEDED(hr))
             {
-                printf("Got player profile!\n");
-                callComplete = true;
-            },
-            TaskQueue{},
-            [](const PlayFabError& error, void* /*customData*/)
-            {
-                printf("GetPlayerProfile error");
+                PlayFabLoginWithCustomIDResultGetUserHandle(resultHandle, &userHandle);
+                const char* playFabIdPtr;
+                PlayFabLoginWithCustomIdResultGetPlayFabId(resultHandle, &playFabIdPtr);
+                playFabId = playFabIdPtr;
             }
-            );
+            PlayFabResultCloseHandle(resultHandle);
+        };
 
-        while (!callComplete)
-        {
-            Sleep(1);
-        }
+        HRESULT hr = PlayFabLoginWithCustomIDAsync(&request, &async);
+        assert(SUCCEEDED(hr));
+
+        XAsyncGetStatus(&async, true);
+        assert(SUCCEEDED(hr));
     }
 
     {
@@ -90,7 +59,10 @@ int main()
             PlayFabResultCloseHandle(handle);
         };
 
-        HRESULT hr = PlayFabGetPlayerProfileAsync(nullptr, loginResult.PlayFabId.data(), &async);
+        PlayFabGetPlayerProfileRequest request{};
+        request.playFabId = playFabId.data();
+
+        HRESULT hr = PlayFabGetPlayerProfileAsync(userHandle, &request, &async);
         assert(SUCCEEDED(hr));
 
         XAsyncGetStatus(&async, true);

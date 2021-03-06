@@ -4,20 +4,9 @@
 #include "httpClient/async.h"
 #include "PlayFabClientDataModels_c.h"
 
-HRESULT PlayFabGetPlayerProfileAsync(
-    _In_opt_ PlayFabAuthenticationContextHandle authContext,
-    _In_ const char* playFabId,
-    _In_ XAsyncBlock* async
-) noexcept;
-
 HRESULT PlayFabGetResultHandle(
     _In_ XAsyncBlock* async,
     _Out_ PlayFabResultHandle* resultHandle
-) noexcept;
-
-HRESULT PlayFabGetPlayerProfileResultGetProfile(
-    _In_ PlayFabResultHandle resultHandle,
-    _Out_ PlayFabPlayerProfileModel** profile
 ) noexcept;
 
 // Duplicates a result
@@ -29,4 +18,31 @@ HRESULT PlayFabResultDuplicateHandle(
 // Releases a result
 void PlayFabResultCloseHandle(
     _In_ PlayFabResultHandle resultHandle
+) noexcept;
+
+// APIs
+HRESULT PlayFabLoginWithCustomIDAsync(
+    _In_ const PlayFabLoginWithCustomIDRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept;
+
+HRESULT PlayFabLoginWithCustomIDResultGetUserHandle(
+    _In_ PlayFabResultHandle resultHandle,
+    _Out_ PlayFabUserHandle* userHandle
+) noexcept;
+
+HRESULT PlayFabLoginWithCustomIdResultGetPlayFabId(
+    _In_ PlayFabResultHandle resultHandle,
+    _Out_ const char** playFabId
+) noexcept;
+
+HRESULT PlayFabGetPlayerProfileAsync(
+    _In_ PlayFabUserHandle user,
+    _In_ const PlayFabGetPlayerProfileRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept;
+
+HRESULT PlayFabGetPlayerProfileResultGetProfile(
+    _In_ PlayFabResultHandle resultHandle,
+    _Out_ PlayFabPlayerProfileModel** profile
 ) noexcept;

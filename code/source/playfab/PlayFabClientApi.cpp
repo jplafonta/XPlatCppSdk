@@ -1998,7 +1998,7 @@ namespace PlayFab
         void* customData
     )
     {
-        std::shared_ptr<PlayFabAuthenticationContext> context = request.authenticationContext != nullptr ? request.authenticationContext : PlayFabSettings::staticPlayer;
+        std::shared_ptr<PlayFabAuthenticationContext> context = PlayFabSettings::staticPlayer;
         std::shared_ptr<PlayFabApiSettings> settings = PlayFabSettings::staticSettings;
 
         IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
@@ -4552,40 +4552,40 @@ namespace PlayFab
         }
     }
 
-    void PlayFabClientAPI::LoginWithCustomID(
-        LoginWithCustomIDRequest& request,
-        const ProcessApiCallback<LoginResult> callback,
-        const ErrorCallback errorCallback,
-        void* customData
-    )
-    {
-        std::shared_ptr<PlayFabAuthenticationContext> context = request.authenticationContext != nullptr ? request.authenticationContext : PlayFabSettings::staticPlayer;
-        std::shared_ptr<PlayFabApiSettings> settings = PlayFabSettings::staticSettings;
-        if (request.TitleId.empty())
-        {
-            request.TitleId = settings->titleId;
-        }
+    //void PlayFabClientAPI::LoginWithCustomID(
+    //    LoginWithCustomIDRequest& request,
+    //    const ProcessApiCallback<LoginResult> callback,
+    //    const ErrorCallback errorCallback,
+    //    void* customData
+    //)
+    //{
+    //    std::shared_ptr<PlayFabAuthenticationContext> context = request.authenticationContext != nullptr ? request.authenticationContext : PlayFabSettings::staticPlayer;
+    //    std::shared_ptr<PlayFabApiSettings> settings = PlayFabSettings::staticSettings;
+    //    if (!request.titleId)
+    //    {
+    //        request.TitleId = settings->titleId;
+    //    }
 
-        IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
-        const Json::Value requestJson = request.ToJson();
-        std::string jsonAsString = requestJson.toStyledString();
+    //    IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
+    //    const Json::Value requestJson = request.ToJson();
+    //    std::string jsonAsString = requestJson.toStyledString();
 
-        std::unordered_map<std::string, std::string> headers;
+    //    std::unordered_map<std::string, std::string> headers;
 
-        auto reqContainer = std::unique_ptr<CallRequestContainer>(new CallRequestContainer(
-            "/Client/LoginWithCustomID",
-            headers,
-            jsonAsString,
-            OnLoginWithCustomIDResult,
-            settings,
-            context,
-            customData));
+    //    auto reqContainer = std::unique_ptr<CallRequestContainer>(new CallRequestContainer(
+    //        "/Client/LoginWithCustomID",
+    //        headers,
+    //        jsonAsString,
+    //        OnLoginWithCustomIDResult,
+    //        settings,
+    //        context,
+    //        customData));
 
-        reqContainer->successCallback = std::shared_ptr<void>((callback == nullptr) ? nullptr : new ProcessApiCallback<LoginResult>(callback));
-        reqContainer->errorCallback = errorCallback;
+    //    reqContainer->successCallback = std::shared_ptr<void>((callback == nullptr) ? nullptr : new ProcessApiCallback<LoginResult>(callback));
+    //    reqContainer->errorCallback = errorCallback;
 
-        http.MakePostRequest(std::unique_ptr<CallRequestContainerBase>(static_cast<CallRequestContainerBase*>(reqContainer.release())));
-    }
+    //    http.MakePostRequest(std::unique_ptr<CallRequestContainerBase>(static_cast<CallRequestContainerBase*>(reqContainer.release())));
+    //}
 
     void PlayFabClientAPI::OnLoginWithCustomIDResult(int /*httpCode*/, const std::string& /*result*/, const std::shared_ptr<CallRequestContainerBase>& reqContainer)
     {

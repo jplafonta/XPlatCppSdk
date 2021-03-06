@@ -7,6 +7,7 @@
 #include <playfab/PlayFabPlatformUtils.h>
 #include <playfab/internal_memory.h>
 #include <playfab/std_optional.h>
+#include <playfab_c/PlayFabBaseModel_c.h>
 
 #include <assert.h>
 #include <functional>
@@ -60,14 +61,13 @@ namespace PlayFab
     {
         virtual ~BaseModel() {}
         virtual void FromJson(const Json::Value& input) = 0;
-        //virtual Json::Value ToJson() const = 0;
+        virtual Json::Value ToJson() const = 0;
     };
 
     /// <summary>
     /// Base class for all PlayFab Requests
-    /// Adds a parameter that controls how requests are threaded
     /// </summary>
-    struct PlayFabRequestCommon : public PlayFabBaseModel {
+    struct PlayFabRequestCommon : public BaseModel {
         /// <summary>
         /// An optional authentication context, it can used in multi-user scenarios
         /// </summary>
@@ -75,10 +75,26 @@ namespace PlayFab
     };
 
     /// <summary>
+    /// Base class for all PlayFab Requests
+    /// </summary>
+    struct RequestCommon : public BaseModel
+    {
+        /// Do Requests need FromJson method?
+    };
+
+    /// <summary>
     /// Base class for all PlayFab Results
     /// </summary>
     struct PlayFabResultCommon : public PlayFabBaseModel {
         Json::Value Request;
+    };
+
+    /// <summary>
+    /// Base class for all PlayFab Results
+    /// </summary>
+    struct ResultCommon : public BaseModel
+    {
+        Json::Value request;
     };
 
     /// <summary>
@@ -98,7 +114,7 @@ namespace PlayFab
     {
     public:
         static_assert(std::is_base_of_v<PointerT, ObjectT> || std::is_same_v<PointerT, ObjectT>, "ObjectT must be a PointerT");
-        static_assert(std::is_base_of_v<BaseModel, ObjectT>, "ObjectT must inherit from BaseModel");
+        static_assert(std::is_base_of_v<BaseModel, ObjectT>, "ObjectT must be a PlayFab::BaseModel");
 
         PointerArray() = default;
         virtual ~PointerArray() = default;
@@ -133,7 +149,12 @@ namespace PlayFab
             return *this;
         }
 
-        const PointerT** Data() 
+        bool Empty() const
+        {
+            return m_pointers.empty();
+        }
+
+        const PointerT** Data()
         {
             return m_pointers.data();
         }
@@ -162,9 +183,23 @@ namespace PlayFab
             }
         }
 
+        Json::Value ToJson() const override
+        {
+            // TODO
+            return Json::Value();
+        }
+
     private:
         Vector<const PointerT*> m_pointers;
         List<ObjectT> m_objects;
+    };
+
+    template <typename EntryT, typename ValueT>
+    class AssociativeArray : public BaseModel
+    {
+    public:
+        void FromJson(const Json::Value& src) override {};
+        Json::Value ToJson() const override { return Json::Value(); }
     };
 
     // Utilities for [de]serializing time_t to/from json
@@ -204,6 +239,18 @@ namespace PlayFab
             time_t outputVal = {};
             FromJsonUtilT(input, outputVal);
             output = outputVal;
+        }
+    }
+
+    inline void ToJsonUtilT(const time_t* input, Json::Value& output)
+    {
+        if (!input)
+        {
+            output = Json::Value();
+        }
+        else
+        {
+            ToJsonUtilT(*input, output);
         }
     }
 
@@ -312,6 +359,20 @@ namespace PlayFab
         }
     }
 
+    template <typename EnumType> inline void ToJsonUtilE(const EnumType* input, Json::Value& output)
+    {
+        if (!input)
+        {
+            output = Json::Value();
+        }
+        else
+        {
+            // Will need to move all ToJsonEnum methods to a common namespace.
+            // They were found by ADL (https://en.cppreference.com/w/cpp/language/adl) previously but enums have been moved to global namespace
+            PlayFab::ClientModels::ToJsonEnum(*input, output);
+        }
+    }
+
     template <typename EnumType> inline void FromJsonUtilE(const Json::Value& input, StdExtra::optional<EnumType>& output, EnumType*& outputPointer)
     {
         if (input == Json::Value::null)
@@ -415,6 +476,18 @@ namespace PlayFab
         }
     }
 
+    inline void ToJsonUtilS(const String& input, Json::Value& output)
+    {
+        if (input.empty())
+        {
+            output = Json::Value::null;
+        }
+        else
+        {
+            output = Json::Value(input.data());
+        }
+    }
+
     inline void FromJsonUtilS(const Json::Value& input, std::string& output)
     {
         if (input == Json::Value::null)
@@ -442,6 +515,25 @@ namespace PlayFab
             {
                 ToJsonUtilS(*iter, eachOutput);
                 output[index++] = eachOutput;
+            }
+        }
+    }
+
+    // Consider something like std::span for these arrays
+    inline void ToJsonUtilS(const char** input, size_t inputCount, Json::Value& output)
+    {
+        if (!input || inputCount == 0)
+        {
+            output = Json::Value::null;
+        }
+        else
+        {
+            output = Json::Value(Json::arrayValue);
+            Json::Value eachOutput;
+            for (auto i = 0u; i < inputCount; ++i)
+            {
+                ToJsonUtilS(input[i], eachOutput);
+                output[i] = eachOutput;
             }
         }
     }
@@ -509,6 +601,11 @@ namespace PlayFab
         output = input.ToJson();
     }
 
+    inline void ToJsonUtilO(const BaseModel& input, Json::Value& output)
+    {
+        output = input.ToJson();
+    }
+
     inline void FromJsonUtilO(const Json::Value& input, PlayFabBaseModel& output)
     {
         output.FromJson(input);
@@ -528,6 +625,30 @@ namespace PlayFab
         else
         {
             output = static_cast<ObjectType>(input).ToJson();
+        }
+    }
+
+    template <typename ObjectType> inline void ToJsonUtilO(const StdExtra::optional<ObjectType>& input, Json::Value& output)
+    {
+        if (!input)
+        {
+            output = Json::Value::null;
+        }
+        else
+        {
+            output = input->ToJson();
+        }
+    }
+
+    template <typename ObjectType> inline void ToJsonUtilO(const ObjectType* input, Json::Value& output)
+    {
+        if (!input)
+        {
+            output = Json::Value::null;
+        }
+        else
+        {
+            output = PlayFab::JsonUtils::ToJsonObject(*input);
         }
     }
 
@@ -556,6 +677,22 @@ namespace PlayFab
             ObjectType outputTemp;
             outputTemp.FromJson(input);
             output = outputTemp;
+        }
+    }
+
+    template <typename ObjectType, typename PointerType> inline void FromJsonUtilO(const Json::Value& input, StdExtra::optional<ObjectType>& output, PointerType*& outputPointer)
+    {
+        if (input == Json::Value::null)
+        {
+            output.reset();
+            outputPointer = nullptr;
+        }
+        else
+        {
+            ObjectType outputTemp;
+            outputTemp.FromJson(input);
+            output = outputTemp;
+            outputPointer = output.operator->();
         }
     }
 
@@ -637,6 +774,24 @@ namespace PlayFab
         }
     }
 
+    template <typename ObjectType> inline void ToJsonUtilO(const ObjectType** input, size_t inputCount, Json::Value& output)
+    {
+        if (!input || inputCount == 0)
+        {
+            output = Json::Value::null;
+        }
+        else
+        {
+            output = Json::Value(Json::arrayValue);
+            Json::Value eachOutput;
+            for (auto i = 0u; i < inputCount; ++i)
+            {
+                ToJsonUtilO(input[i], eachOutput);
+                output[i] = eachOutput;
+            }
+        }
+    }
+
     // Utilities for [de]serializing primitives to/from json
     template <typename PrimitiveType> inline void ToJsonUtilP(const PrimitiveType& input, Json::Value& output)
     {
@@ -692,11 +847,35 @@ namespace PlayFab
     {
         if (input.isNull())
         {
-            output = Json::Value();
+            output = Json::Value::null;
         }
         else
         {
             ToJsonUtilP(static_cast<PrimitiveType>(input), output);
+        }
+    }
+
+    template <typename PrimitiveType> inline void ToJsonUtilP(const StdExtra::optional<PrimitiveType>& input, Json::Value& output)
+    {
+        if (!input)
+        {
+            output = Json::Value::null;
+        }
+        else
+        {
+            ToJsonUtilP(*input, output);
+        }
+    }
+
+    template <typename PrimitiveType> inline void ToJsonUtilP(const PrimitiveType* input, Json::Value& output)
+    {
+        if (!input)
+        {
+            output = Json::Value::null;
+        }
+        else
+        {
+            ToJsonUtilP(*input, output);
         }
     }
 
@@ -828,6 +1007,11 @@ namespace PlayFab
             return *this;
         }
 
+        bool Empty() const
+        {
+            return m_pointers.empty();
+        }
+
         const char** Data()
         {
             return m_pointers.data();
@@ -845,7 +1029,7 @@ namespace PlayFab
             m_strings.clear();
         }
 
-        void FromJson(const Json::Value& input)
+        void FromJson(const Json::Value& input) override
         {
             for (auto iter = input.begin(); iter != input.end(); ++iter)
             {
@@ -855,6 +1039,12 @@ namespace PlayFab
                 m_pointers.push_back(outputPointer);
                 m_strings.push_back(std::move(output));
             }
+        }
+
+        Json::Value ToJson() const override
+        {
+            // TODO
+            return Json::Value{};
         }
 
     private:
@@ -867,46 +1057,143 @@ namespace PlayFab
         const Json::Value& input,
         PointerArray<PublicT, InternalT>& output,
         const PublicT**& outputPointer,
-        size_t& outputSize
+        size_t& outputCount
     )
     {
         output.Clear();
         if (input == Json::Value::null)
         {
             outputPointer = nullptr;
-            outputSize = 0;
+            outputCount = 0;
             return;
         }
 
         output.FromJson(input);
         outputPointer = output.Data();
-        outputSize = output.Size();
+        outputCount = output.Size();
     }
 
     inline void FromJsonUtilA(
         const Json::Value& input,
         PointerArray<const char*, String>& output,
         const char**& outputPointer,
-        size_t& outputSize
+        size_t& outputCount
     )
     {
         output.Clear();
         if (input == Json::Value::null)
         {
             outputPointer = nullptr;
-            outputSize = 0;
+            outputCount = 0;
             return;
         }
 
         output.FromJson(input);
         outputPointer = output.Data();
-        outputSize = output.Size();
+        outputCount = output.Size();
+    }
+
+    template <> class AssociativeArray<PlayFabDictionaryEntry, String> : public BaseModel
+    {
+    public:
+        bool Empty() const
+        {
+            return m_sequentialEntries.empty();
+        }
+
+        PlayFabDictionaryEntry* Data()
+        {
+            return m_sequentialEntries.data();
+        }
+
+        const PlayFabDictionaryEntry* Data() const
+        {
+            return m_sequentialEntries.data();
+        }
+
+        size_t Size() const
+        {
+            return m_sequentialEntries.size();
+        }
+
+        void Clear()
+        {
+            m_sequentialEntries.clear();
+            m_map.clear();
+        }
+
+        void FromJson(const Json::Value& input) override
+        {
+            Clear();
+
+            String eachOutput;
+            for (auto iter = input.begin(); iter != input.end(); ++iter)
+            {
+                PlayFabDictionaryEntry entry;
+                FromJsonUtilS(*iter, eachOutput, entry.value);
+                m_map[iter.key().asCString()] = eachOutput;
+            }
+        }
+
+        Json::Value ToJson() const override
+        {
+            // TODO
+            return Json::Value{};
+        }
+
+    private:
+        Vector<PlayFabDictionaryEntry> m_sequentialEntries;
+        UnorderedMap<String, String> m_map;
+    };
+
+    // TODO fix constness
+    inline void ToJsonUtilA(const AssociativeArray<PlayFabDictionaryEntry, String>& input, Json::Value& output)
+    {
+        output = Json::Value(Json::objectValue);
+        Json::Value eachOutput;
+        // consider adding iterator to AssociativeArray
+        for (auto i = 0u; i < input.Size(); ++i)
+        {
+            auto& entry = input.Data()[i];
+            ToJsonUtilS(entry.value, eachOutput);
+            output[entry.key] = eachOutput;
+        }
+    }
+
+    // TODO consider something like std::span here
+    inline void ToJsonUtilA(const PlayFabDictionaryEntry* input, size_t inputCount, Json::Value& output)
+    {
+        output = Json::Value(Json::objectValue);
+        Json::Value eachOutput;
+        for (auto i = 0u; i < inputCount; ++i)
+        {
+            auto& entry = input[i];
+            ToJsonUtilS(entry.value, eachOutput);
+            output[entry.key] = eachOutput;
+        }
+    }
+
+    inline void FromJsonUtilA(const Json::Value& input, AssociativeArray<PlayFabDictionaryEntry, String>& output, PlayFabDictionaryEntry*& outputPointer, size_t& outputCount)
+    {
+        output.Clear();
+        if (input == Json::Value::null)
+        {
+            outputPointer = nullptr;
+            outputCount = 0;
+        }
+        else
+        {
+            output.FromJson(input);
+            outputPointer = output.Data();
+            outputCount = output.Size();
+        }
     }
 }
 
 /// <summary>
 /// Result holder which will be returned to callers
 /// </summary>
-struct PlayFabResultHolder {
+struct PlayFabResultHolder
+{
     std::shared_ptr<PlayFab::PlayFabResultCommon> result;
 };

@@ -260,6 +260,12 @@
     <ClInclude Include="..\..\code\include\playfab\task_queue.h">
       <Filter>Header Files\playfab</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabBaseModel_c.h">
+      <Filter>Header Files\playfab_c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab\PlayFabUser.h">
+      <Filter>Header Files\playfab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabAuthenticationContext.cpp">
@@ -413,6 +419,9 @@
       <Filter>Source Files\playfab</Filter>
     </ClCompile>
     <ClCompile Include="..\..\code\source\playfab\task_queue.cpp">
+      <Filter>Source Files\playfab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\PlayFabUser.cpp">
       <Filter>Source Files\playfab</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,18 +6,43 @@
 using namespace PlayFab;
 using namespace PlayFab::ClientModels;
 
-HRESULT PlayFabGetPlayerProfileAsync(
-    _In_opt_ PlayFabAuthenticationContextHandle authContext,
-    _In_ const char* playFabId,
+HRESULT PlayFabLoginWithCustomIDAsync(
+    _In_ const PlayFabLoginWithCustomIDRequest* request,
     _In_ XAsyncBlock* async
 ) noexcept
 {
-    UNREFERENCED_PARAMETER(authContext);
+    auto provider = MakeUnique<LoginApiProvider<PlayFabLoginWithCustomIDRequest, LoginResultWithUser>>(async, PlayFabClientInstanceAPI::LoginWithCustomID, *request);
+    return Provider::Run(UniquePtr<Provider>(provider.release()));
+}
 
-    GetPlayerProfileRequest request{};
-    request.PlayFabId = playFabId;
+HRESULT PlayFabLoginWithCustomIDResultGetUserHandle(
+    _In_ PlayFabResultHandle resultHandle,
+    _Out_ PlayFabUserHandle* userHandle
+) noexcept
+{
+    auto result = std::dynamic_pointer_cast<LoginResultWithUser>(resultHandle->result);
+    // TODO what part of this result is actually valuable? Can we just return the User
+    *userHandle = new PlayFabUserHolder{ result->playFabUser };
+    return S_OK;
+}
 
-    auto provider = MakeUnique<ClientApiProvider<GetPlayerProfileRequest, GetPlayerProfileResult>>(async, PlayFabClientAPI::GetPlayerProfile, std::move(request));
+HRESULT PlayFabLoginWithCustomIdResultGetPlayFabId(
+    _In_ PlayFabResultHandle resultHandle,
+    _Out_ const char** playFabId
+) noexcept
+{
+    auto result = std::dynamic_pointer_cast<LoginResultWithUser>(resultHandle->result);
+    *playFabId = result->PlayFabId.data();
+    return S_OK;
+}
+
+HRESULT PlayFabGetPlayerProfileAsync(
+    _In_opt_ PlayFabUserHandle user,
+    _In_ const PlayFabGetPlayerProfileRequest* request,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    auto provider = MakeUnique<ClientApiProvider<PlayFabGetPlayerProfileRequest, GetPlayerProfileResult>>(async, user->user, &PlayFabClientInstanceAPI::GetPlayerProfile, *request);
     return Provider::Run(UniquePtr<Provider>(provider.release()));
 }
 

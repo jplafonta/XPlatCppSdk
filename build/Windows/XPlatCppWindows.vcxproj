@@ -185,8 +185,10 @@
     <ClInclude Include="..\..\code\include\playfab\async_provider.h" />
     <ClInclude Include="..\..\code\include\playfab\internal_memory.h" />
     <ClInclude Include="..\..\code\include\playfab\PlayFabHCHttpPlugin.h" />
+    <ClInclude Include="..\..\code\include\playfab\PlayFabUser.h" />
     <ClInclude Include="..\..\code\include\playfab\std_optional.h" />
     <ClInclude Include="..\..\code\include\playfab\task_queue.h" />
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabBaseModel_c.h" />
     <ClInclude Include="..\..\code\include\playfab_c\PlayFabClientApi_c.h" />
     <ClInclude Include="..\..\code\include\playfab_c\PlayFabClientDataModels_c.h" />
     <ClInclude Include="..\..\code\source\playfab\std_optional.h" />
@@ -245,6 +247,7 @@
     <ClCompile Include="..\..\code\source\playfab\async_provider.cpp" />
     <ClCompile Include="..\..\code\source\playfab\PlayFabClientApi_c.cpp" />
     <ClCompile Include="..\..\code\source\playfab\PlayFabHCHttpPlugin.cpp" />
+    <ClCompile Include="..\..\code\source\playfab\PlayFabUser.cpp" />
     <ClCompile Include="..\..\code\source\playfab\task_queue.cpp" />
   </ItemGroup>
   <ItemGroup>
