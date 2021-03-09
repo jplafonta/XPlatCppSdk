@@ -8,16 +8,15 @@ namespace PlayFab
 class User
 {
 public:
-    User() = default;
-    User(std::shared_ptr<PlayFabAuthenticationContext> authContext);
+    User(SharedPtr<PlayFabApiSettings> settings, SharedPtr<PlayFabAuthenticationContext> authContext);
 
     PlayFabClientInstanceAPI ClientApi;
 private:
-    std::shared_ptr<PlayFabAuthenticationContext> m_authContext;
+    SharedPtr<PlayFabAuthenticationContext> m_authContext;
 };
 }
 
 struct PlayFabUserHolder
 {
-    std::shared_ptr<PlayFab::User> user;
+    PlayFab::SharedPtr<PlayFab::User> user;
 };

@@ -13,11 +13,11 @@ namespace PlayFab
     class PlayFabHCHttpPlugin : public IPlayFabHttpPlugin
     {
     public:
-        PlayFabHCHttpPlugin();
+        PlayFabHCHttpPlugin() = default;
         PlayFabHCHttpPlugin(const PlayFabHCHttpPlugin& other) = delete;
         PlayFabHCHttpPlugin(PlayFabHCHttpPlugin&& other) = delete;
         PlayFabHCHttpPlugin& operator=(PlayFabHCHttpPlugin&& other) = delete;
-        virtual ~PlayFabHCHttpPlugin();
+        virtual ~PlayFabHCHttpPlugin() = default;
 
         virtual void MakePostRequest(std::unique_ptr<CallRequestContainerBase> requestContainer) override;
         virtual size_t Update() override;

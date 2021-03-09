@@ -6,6 +6,20 @@
 using namespace PlayFab;
 using namespace PlayFab::ClientModels;
 
+HRESULT PlayFabInitialize(
+    _In_ const char* titleId
+) noexcept
+{
+    return GlobalState::Create(titleId);
+}
+
+HRESULT PlayFabCleanupAsync(
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    return GlobalState::CleanupAsync(async);
+}
+
 HRESULT PlayFabLoginWithCustomIDAsync(
     _In_ const PlayFabLoginWithCustomIDRequest* request,
     _In_ XAsyncBlock* async

@@ -12,7 +12,8 @@ std::string playFabId;
 
 int main()
 {
-    PlayFab::PlayFabSettings::staticSettings->titleId = ("E18D7");
+    HRESULT hr = PlayFabInitialize("E18D7");
+    assert(SUCCEEDED(hr));
 
     {
         PlayFabLoginWithCustomIDRequest request{};
@@ -37,7 +38,7 @@ int main()
         HRESULT hr = PlayFabLoginWithCustomIDAsync(&request, &async);
         assert(SUCCEEDED(hr));
 
-        XAsyncGetStatus(&async, true);
+        hr = XAsyncGetStatus(&async, true);
         assert(SUCCEEDED(hr));
     }
 
@@ -67,6 +68,12 @@ int main()
 
         XAsyncGetStatus(&async, true);
         assert(SUCCEEDED(hr));
+    }
+
+    {
+        XAsyncBlock async{};
+        PlayFabCleanupAsync(&async);
+        XAsyncGetStatus(&async, true);
     }
 
     printf("Press enter to exit\n");

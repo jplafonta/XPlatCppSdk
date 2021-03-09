@@ -183,6 +183,7 @@
     <ClInclude Include="$(SdkSourceDir)\include\playfab\QoS\XPlatSocket.h" />
     <ClInclude Include="$(SdkSourceDir)\stdafx.h" />
     <ClInclude Include="..\..\code\include\playfab\async_provider.h" />
+    <ClInclude Include="..\..\code\include\playfab\global_state.h" />
     <ClInclude Include="..\..\code\include\playfab\internal_memory.h" />
     <ClInclude Include="..\..\code\include\playfab\PlayFabHCHttpPlugin.h" />
     <ClInclude Include="..\..\code\include\playfab\PlayFabUser.h" />
@@ -245,6 +246,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\code\source\playfab\async_provider.cpp" />
+    <ClCompile Include="..\..\code\source\playfab\global_state.cpp" />
     <ClCompile Include="..\..\code\source\playfab\PlayFabClientApi_c.cpp" />
     <ClCompile Include="..\..\code\source\playfab\PlayFabHCHttpPlugin.cpp" />
     <ClCompile Include="..\..\code\source\playfab\PlayFabUser.cpp" />

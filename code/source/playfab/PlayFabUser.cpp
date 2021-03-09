@@ -3,8 +3,8 @@
 
 namespace PlayFab
 {
-User::User(std::shared_ptr<PlayFabAuthenticationContext> authContext) :
-    ClientApi{ authContext },
+User::User(SharedPtr<PlayFabApiSettings> settings, SharedPtr<PlayFabAuthenticationContext> authContext) :
+    ClientApi{ settings, authContext },
     m_authContext{ authContext }
 {
 }

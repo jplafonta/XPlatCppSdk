@@ -423,7 +423,7 @@ struct PlayFabMembershipModel
     time_t membershipExpiration;
     const char* membershipId;
     time_t* overrideExpiration;
-    const PlayFabSubscriptionModel** subscriptions;
+    PlayFabSubscriptionModel** subscriptions;
     size_t subscriptionsCount;
 };
 
@@ -454,35 +454,35 @@ struct PlayFabValueToDateModel
 
 struct PlayFabPlayerProfileModel
 {
-    const PlayFabAdCampaignAttributionModel** adCampaignAttributions;
+    PlayFabAdCampaignAttributionModel** adCampaignAttributions;
     size_t adCampaignAttributionsCount;
     const char* avatarUrl;
     time_t* bannedUntil;
-    const PlayFabContactEmailInfoModel** contactEmailAddresses;
+    PlayFabContactEmailInfoModel** contactEmailAddresses;
     size_t contactEmailAddressesCount;
     time_t* created;
     const char* displayName;
     const char** experimentVariants;
     size_t experimentVariantsCount;
     time_t* lastLogin;
-    const PlayFabLinkedPlatformAccountModel** linkedAccounts;
+    PlayFabLinkedPlatformAccountModel** linkedAccounts;
     size_t linkedAccountsCount;
-    const PlayFabLocationModel** locations;
+    PlayFabLocationModel** locations;
     size_t locationsCount;
-    const PlayFabMembershipModel** memberships;
+    PlayFabMembershipModel** memberships;
     size_t membershipsCount;
     PlayFabLoginIdentityProvider* origination;
     const char* playerId;
     const char* publisherId;
-    const PlayFabPushNotificationRegistrationModel** pushNotificationRegistrations;
+    PlayFabPushNotificationRegistrationModel** pushNotificationRegistrations;
     size_t pushNotificationRegistrationsCount;
-    const PlayFabStatisticModel** statistics;
+    PlayFabStatisticModel** statistics;
     size_t statisticsCount;
-    const PlayFabTagModel** tags;
+    PlayFabTagModel** tags;
     size_t tagsCount;
     const char* titleId;
     uint32_t* totalValueToDateInUSD;
-    const PlayFabValueToDateModel** valuesToDate;
+    PlayFabValueToDateModel** valuesToDate;
     size_t valuesToDateCount;
 };
 

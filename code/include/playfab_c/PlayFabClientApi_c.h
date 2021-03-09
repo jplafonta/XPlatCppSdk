@@ -4,6 +4,14 @@
 #include "httpClient/async.h"
 #include "PlayFabClientDataModels_c.h"
 
+HRESULT PlayFabInitialize(
+    _In_ const char* titleId
+) noexcept;
+
+HRESULT PlayFabCleanupAsync(
+    _In_ XAsyncBlock* async
+) noexcept;
+
 HRESULT PlayFabGetResultHandle(
     _In_ XAsyncBlock* async,
     _Out_ PlayFabResultHandle* resultHandle

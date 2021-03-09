@@ -2072,7 +2072,7 @@ namespace PlayFab
         void* customData
     )
     {
-        std::shared_ptr<PlayFabApiSettings> settings = this->m_settings != nullptr ? this->m_settings : PlayFabSettings::staticSettings;
+        assert(m_settings);
 
         IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
         const Json::Value requestJson = JsonUtils::ToJsonObject(request);
@@ -2086,7 +2086,7 @@ namespace PlayFab
             headers,
             jsonAsString,
             std::bind(&PlayFabClientInstanceAPI::OnGetPlayerProfileResult, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
-            settings,
+            m_settings,
             m_context,
             customData));
 
@@ -4684,12 +4684,7 @@ namespace PlayFab
     )
     {
         std::shared_ptr<PlayFabAuthenticationContext> context = MakeShared<PlayFabAuthenticationContext>();
-        std::shared_ptr<PlayFabApiSettings> settings = PlayFabSettings::staticSettings;
-        //// TODO titleId concurrency issue here
-        //if (!request.titleId)
-        //{
-        //    request.titleId = settings->titleId.data();
-        //}
+        std::shared_ptr<PlayFabApiSettings> settings = GlobalState::Get()->Settings();
 
         IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
         Json::Value requestJson = JsonUtils::ToJsonObject(request);
@@ -4729,9 +4724,8 @@ namespace PlayFab
             context->HandlePlayFabLogin(outResult.PlayFabId, outResult.SessionTicket, outResult.EntityToken->Entity->Id, outResult.EntityToken->Entity->Type, outResult.EntityToken->EntityToken);
 
             outResult.authenticationContext = context;
-            outResult.playFabUser = MakeShared<User>(context);
-            // TODO
-            //MultiStepClientLogin(context, outResult.SettingsForUser->NeedsAttribution);
+            outResult.playFabUser = MakeShared<User>(container.GetApiSettings(), context);
+            outResult.playFabUser->ClientApi.MultiStepClientLogin(context, outResult.SettingsForUser->NeedsAttribution);
 
             std::shared_ptr<void> internalPtr = container.successCallback;
             if (internalPtr.get() != nullptr)

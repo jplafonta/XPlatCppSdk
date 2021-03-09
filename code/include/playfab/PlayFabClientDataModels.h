@@ -17,7 +17,7 @@ namespace PlayFab
             Json::Value output;
             Json::Value each_CreateAccount; ToJsonUtilP(input.createAccount, each_CreateAccount); output["CreateAccount"] = each_CreateAccount;
             Json::Value each_CustomId; ToJsonUtilS(input.customId, each_CustomId); output["CustomId"] = each_CustomId;
-            Json::Value each_CustomTags; ToJsonUtilA(input.customTags, input.customTagsCount, each_CustomTags); output["CustomTags"] = each_CustomTags;
+            Json::Value each_CustomTags; ToJsonUtilO(input.customTags, input.customTagsCount, each_CustomTags); output["CustomTags"] = each_CustomTags;
             Json::Value each_EncryptedRequest; ToJsonUtilS(input.encryptedRequest, each_EncryptedRequest); output["EncryptedRequest"] = each_EncryptedRequest;
             Json::Value each_InfoRequestParameters; ToJsonUtilO(input.infoRequestParameters, each_InfoRequestParameters); output["InfoRequestParameters"] = each_InfoRequestParameters;
             Json::Value each_PlayerSecret; ToJsonUtilS(input.playerSecret, each_PlayerSecret); output["PlayerSecret"] = each_PlayerSecret;
@@ -194,7 +194,7 @@ namespace PlayFab
         inline Json::Value ToJsonObject(const PlayFabGetPlayerProfileRequest& input)
         {
             Json::Value output;
-            Json::Value each_CustomTags; ToJsonUtilA(input.customTags, input.customTagsCount, each_CustomTags); output["CustomTags"] = each_CustomTags;
+            Json::Value each_CustomTags; ToJsonUtilO(input.customTags, input.customTagsCount, each_CustomTags); output["CustomTags"] = each_CustomTags;
             Json::Value each_PlayFabId; ToJsonUtilS(input.playFabId, each_PlayFabId); output["PlayFabId"] = each_PlayFabId;
             Json::Value each_ProfileConstraints; ToJsonUtilO(input.profileConstraints, each_ProfileConstraints); output["ProfileConstraints"] = each_ProfileConstraints;
             return output;
@@ -15911,15 +15911,7 @@ namespace PlayFab
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_CreateAccount; ToJsonUtilP(m_createAccount, each_CreateAccount); output["CreateAccount"] = each_CreateAccount;
-                Json::Value each_CustomId; ToJsonUtilS(m_customId, each_CustomId); output["CustomId"] = each_CustomId;
-                Json::Value each_CustomTags; ToJsonUtilA(m_customTags, each_CustomTags); output["CustomTags"] = each_CustomTags;
-                Json::Value each_EncryptedRequest; ToJsonUtilS(m_encryptedRequest, each_EncryptedRequest); output["EncryptedRequest"] = each_EncryptedRequest;
-                Json::Value each_InfoRequestParameters; ToJsonUtilO(m_infoRequestParameters, each_InfoRequestParameters); output["InfoRequestParameters"] = each_InfoRequestParameters;
-                Json::Value each_PlayerSecret; ToJsonUtilS(m_playerSecret, each_PlayerSecret); output["PlayerSecret"] = each_PlayerSecret;
-                Json::Value each_TitleId; ToJsonUtilS(m_titleId, each_TitleId); output["TitleId"] = each_TitleId;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
 
         private:

@@ -27,17 +27,6 @@ namespace PlayFab
         XAsyncBlock m_asyncBlock{};
     };
 
-    PlayFabHCHttpPlugin::PlayFabHCHttpPlugin()
-    {
-        HRESULT hr = HCInitialize(nullptr);
-        assert(SUCCEEDED(hr));
-    }
-
-    PlayFabHCHttpPlugin::~PlayFabHCHttpPlugin()
-    {
-        HCCleanup();
-    }
-
     void PlayFabHCHttpPlugin::MakePostRequest(std::unique_ptr<CallRequestContainerBase> requestContainer)
     {
         CallRequestContainer* container = dynamic_cast<CallRequestContainer*>(requestContainer.get());

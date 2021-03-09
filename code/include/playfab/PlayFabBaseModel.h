@@ -108,7 +108,8 @@ namespace PlayFab
     };
 
     /// <summary>
-    /// Helper class for managing C-style arrays of pointers
+    /// Helper class for managing C-style arrays of pointers to PlayFab models.
+    /// Currently only have support for populating these arrays using PointerArray::FromJson (no other way to insert)
     /// </summary>
     template<typename PointerT, typename ObjectT> class PointerArray : public BaseModel
     {
@@ -117,89 +118,90 @@ namespace PlayFab
         static_assert(std::is_base_of_v<BaseModel, ObjectT>, "ObjectT must be a PlayFab::BaseModel");
 
         PointerArray() = default;
+        inline PointerArray(const PointerArray& src);
+        inline PointerArray(PointerArray&& src);
+        inline PointerArray& operator=(PointerArray src);
+        inline PointerArray& operator=(PointerArray&& src);
         virtual ~PointerArray() = default;
 
-        PointerArray(const PointerArray& src)
-            : m_objects(src.m_objects)
-        {
-            m_pointers.reserve(m_objects.size());
-            for (const auto& o : m_objects)
-            {
-                m_pointers.push_back((PointerT*)&o);
-            }
-        }
+        inline bool Empty() const;
+        inline const PointerT** Data() const;
+        inline PointerT** Data();
+        inline size_t Size() const;
+        inline void Clear();
 
-        PointerArray(PointerArray&& src)
-            : m_pointers(std::move(src.m_pointers)),
-            m_objects(std::move(src.m_objects))
-        {
-        }
-
-        PointerArray& operator=(PointerArray src)
-        {
-            m_pointers = std::move(src.m_pointers);
-            m_objects = std::move(src.m_objects);
-            return *this;
-        }
-
-        PointerArray& operator=(PointerArray&& src)
-        {
-            m_pointers = std::move(src.m_pointers);
-            m_objects = std::move(src.m_objects);
-            return *this;
-        }
-
-        bool Empty() const
-        {
-            return m_pointers.empty();
-        }
-
-        const PointerT** Data()
-        {
-            return m_pointers.data();
-        }
-
-        size_t Size() const
-        {
-            assert(m_pointers.size() == m_objects.size());
-            return m_pointers.size();
-        }
-
-        void Clear()
-        {
-            m_pointers.clear();
-            m_objects.clear();
-        }
-
-        void FromJson(const Json::Value& input)
-        {
-            Clear();
-            FromJsonUtilO(input, m_objects);
-
-            m_pointers.reserve(m_objects.size());
-            for (const auto& o : m_objects)
-            {
-                m_pointers.push_back((PointerT*)&o);
-            }
-        }
-
-        Json::Value ToJson() const override
-        {
-            // TODO
-            return Json::Value();
-        }
+        inline void FromJson(const Json::Value& input) override;
+        inline Json::Value ToJson() const override;
 
     private:
-        Vector<const PointerT*> m_pointers;
+        Vector<PointerT*> m_pointers;
         List<ObjectT> m_objects;
     };
 
+    /// <summary>
+    /// PointerArray specialization for arrays of C-strings
+    /// </summary>
+    template<> class PointerArray<const char*, String> : public BaseModel
+    {
+    public:
+        PointerArray() = default;
+        inline PointerArray(const PointerArray& src);
+        inline PointerArray(PointerArray&& src);
+        inline PointerArray& operator=(PointerArray src);
+        inline PointerArray& operator=(PointerArray&& src);
+        virtual ~PointerArray() = default;
+
+        inline bool Empty() const;
+        inline const char* const* Data() const;
+        inline const char** Data();
+        inline size_t Size() const;
+        inline void Clear();
+
+        inline void FromJson(const Json::Value& input) override;
+        inline Json::Value ToJson() const override;
+
+    private:
+        Vector<const char*> m_pointers;
+        List<String> m_strings;
+    };
+
+    /// <summary>
+    /// Helper class for managing arrays of key value pairs. Key type must always be a string.
+    /// Currently only have support for populating these arrays using PointerArray::FromJson (no other way to insert)
+    /// </summary>
     template <typename EntryT, typename ValueT>
     class AssociativeArray : public BaseModel
     {
     public:
+        AssociativeArray() = default;
+        virtual ~AssociativeArray() = default;
+
         void FromJson(const Json::Value& src) override {};
         Json::Value ToJson() const override { return Json::Value(); }
+    };
+
+    template <> class AssociativeArray<PlayFabDictionaryEntry, String> : public BaseModel
+    {
+    public:
+        AssociativeArray() = default;
+        inline AssociativeArray(const AssociativeArray& src);
+        inline AssociativeArray(AssociativeArray&& src);
+        inline AssociativeArray& operator=(AssociativeArray src);
+        inline AssociativeArray& operator=(AssociativeArray&& src);
+        virtual ~AssociativeArray() = default;
+
+        inline bool Empty() const;
+        inline PlayFabDictionaryEntry* Data();
+        inline const PlayFabDictionaryEntry* Data() const;
+        inline size_t Size() const;
+        inline void Clear();
+
+        inline void FromJson(const Json::Value& input) override;
+        inline Json::Value ToJson() const override;
+
+    private:
+        Vector<PlayFabDictionaryEntry> m_sequentialEntries;
+        UnorderedMap<String, String> m_map;
     };
 
     // Utilities for [de]serializing time_t to/from json
@@ -519,7 +521,6 @@ namespace PlayFab
         }
     }
 
-    // Consider something like std::span for these arrays
     inline void ToJsonUtilS(const char** input, size_t inputCount, Json::Value& output)
     {
         if (!input || inputCount == 0)
@@ -731,22 +732,6 @@ namespace PlayFab
         }
     }
 
-    template <typename ObjectType> inline void FromJsonUtilO(const Json::Value& input, List<ObjectType>& output)
-    {
-        output.clear();
-        if (input == Json::Value::null)
-        {
-            return;
-        }
-
-        ObjectType eachOutput;
-        for (auto iter = input.begin(); iter != input.end(); ++iter)
-        {
-            FromJsonUtilO(*iter, eachOutput);
-            output.push_back(eachOutput);
-        }
-    }
-
     template <typename ObjectType> inline void ToJsonUtilO(const std::map<std::string, ObjectType>& input, Json::Value& output)
     {
         output = Json::Value(Json::objectValue);
@@ -774,7 +759,7 @@ namespace PlayFab
         }
     }
 
-    template <typename ObjectType> inline void ToJsonUtilO(const ObjectType** input, size_t inputCount, Json::Value& output)
+    template <typename ObjectType> inline void ToJsonUtilO(ObjectType** const input, size_t inputCount, Json::Value& output)
     {
         if (!input || inputCount == 0)
         {
@@ -789,6 +774,18 @@ namespace PlayFab
                 ToJsonUtilO(input[i], eachOutput);
                 output[i] = eachOutput;
             }
+        }
+    }
+
+    inline void ToJsonUtilO(const PlayFabDictionaryEntry* input, size_t inputCount, Json::Value& output)
+    {
+        output = Json::Value(Json::objectValue);
+        Json::Value eachOutput;
+        for (auto i = 0u; i < inputCount; ++i)
+        {
+            auto& entry = input[i];
+            ToJsonUtilS(entry.value, eachOutput);
+            output[entry.key] = eachOutput;
         }
     }
 
@@ -971,92 +968,11 @@ namespace PlayFab
         }
     }
 
-    template<> class PointerArray<const char*, String> : public BaseModel
-    {
-    public:
-        PointerArray() = default;
-        virtual ~PointerArray() = default;
-
-        PointerArray(const PointerArray& src)
-            : m_strings(src.m_strings)
-        {
-            m_pointers.reserve(m_strings.size());
-            for (const auto& o : m_strings)
-            {
-                m_pointers.push_back((const char*)&o);
-            }
-        }
-
-        PointerArray(PointerArray&& src)
-            : m_pointers(std::move(src.m_pointers)),
-            m_strings(std::move(src.m_strings))
-        {
-        }
-
-        PointerArray& operator=(PointerArray src)
-        {
-            m_pointers = std::move(src.m_pointers);
-            m_strings = std::move(src.m_strings);
-            return *this;
-        }
-
-        PointerArray& operator=(PointerArray&& src)
-        {
-            m_pointers = std::move(src.m_pointers);
-            m_strings = std::move(src.m_strings);
-            return *this;
-        }
-
-        bool Empty() const
-        {
-            return m_pointers.empty();
-        }
-
-        const char** Data()
-        {
-            return m_pointers.data();
-        }
-
-        size_t Size() const
-        {
-            assert(m_pointers.size() == m_strings.size());
-            return m_pointers.size();
-        }
-
-        void Clear()
-        {
-            m_pointers.clear();
-            m_strings.clear();
-        }
-
-        void FromJson(const Json::Value& input) override
-        {
-            for (auto iter = input.begin(); iter != input.end(); ++iter)
-            {
-                String output;
-                const char* outputPointer;
-                FromJsonUtilS(*iter, output, outputPointer);
-                m_pointers.push_back(outputPointer);
-                m_strings.push_back(std::move(output));
-            }
-        }
-
-        Json::Value ToJson() const override
-        {
-            // TODO
-            return Json::Value{};
-        }
-
-    private:
-        Vector<const char*> m_pointers;
-        List<String> m_strings;
-    };
-
-
-    template<typename PublicT, typename InternalT> inline void FromJsonUtilA(
+    // Utilities for deserializing arrays from json
+    template<typename PointerT, typename ObjectT> inline void FromJsonUtilA(
         const Json::Value& input,
-        PointerArray<PublicT, InternalT>& output,
-        const PublicT**& outputPointer,
+        PointerArray<PointerT, ObjectT>& output,
+        PointerT**& outputPointer,
         size_t& outputCount
     )
     {
@@ -1073,12 +989,7 @@ namespace PlayFab
         outputCount = output.Size();
     }
 
-    inline void FromJsonUtilA(
-        const Json::Value& input,
-        PointerArray<const char*, String>& output,
-        const char**& outputPointer,
-        size_t& outputCount
-    )
+    inline void FromJsonUtilA(const Json::Value& input, PointerArray<const char*, String>& output, const char**& outputPointer, size_t& outputCount)
     {
         output.Clear();
         if (input == Json::Value::null)
@@ -1091,86 +1002,6 @@ namespace PlayFab
         output.FromJson(input);
         outputPointer = output.Data();
         outputCount = output.Size();
-    }
-
-    template <> class AssociativeArray<PlayFabDictionaryEntry, String> : public BaseModel
-    {
-    public:
-        bool Empty() const
-        {
-            return m_sequentialEntries.empty();
-        }
-
-        PlayFabDictionaryEntry* Data()
-        {
-            return m_sequentialEntries.data();
-        }
-
-        const PlayFabDictionaryEntry* Data() const
-        {
-            return m_sequentialEntries.data();
-        }
-
-        size_t Size() const
-        {
-            return m_sequentialEntries.size();
-        }
-
-        void Clear()
-        {
-            m_sequentialEntries.clear();
-            m_map.clear();
-        }
-
-        void FromJson(const Json::Value& input) override
-        {
-            Clear();
-
-            String eachOutput;
-            for (auto iter = input.begin(); iter != input.end(); ++iter)
-            {
-                PlayFabDictionaryEntry entry;
-                FromJsonUtilS(*iter, eachOutput, entry.value);
-                m_map[iter.key().asCString()] = eachOutput;
-            }
-        }
-
-        Json::Value ToJson() const override
-        {
-            // TODO
-            return Json::Value{};
-        }
-
-    private:
-        Vector<PlayFabDictionaryEntry> m_sequentialEntries;
-        UnorderedMap<String, String> m_map;
-    };
-
-    // TODO fix constness
-    inline void ToJsonUtilA(const AssociativeArray<PlayFabDictionaryEntry, String>& input, Json::Value& output)
-    {
-        output = Json::Value(Json::objectValue);
-        Json::Value eachOutput;
-        // consider adding iterator to AssociativeArray
-        for (auto i = 0u; i < input.Size(); ++i)
-        {
-            auto& entry = input.Data()[i];
-            ToJsonUtilS(entry.value, eachOutput);
-            output[entry.key] = eachOutput;
-        }
-    }
-
-    // TODO consider something like std::span here
-    inline void ToJsonUtilA(const PlayFabDictionaryEntry* input, size_t inputCount, Json::Value& output)
-    {
-        output = Json::Value(Json::objectValue);
-        Json::Value eachOutput;
-        for (auto i = 0u; i < inputCount; ++i)
-        {
-            auto& entry = input[i];
-            ToJsonUtilS(entry.value, eachOutput);
-            output[entry.key] = eachOutput;
-        }
     }
 
     inline void FromJsonUtilA(const Json::Value& input, AssociativeArray<PlayFabDictionaryEntry, String>& output, PlayFabDictionaryEntry*& outputPointer, size_t& outputCount)
@@ -1187,6 +1018,301 @@ namespace PlayFab
             outputPointer = output.Data();
             outputCount = output.Size();
         }
+    }
+
+    // Template implementations
+    template<typename PointerT, typename ObjectT>
+    PointerArray<PointerT, ObjectT>::PointerArray(const PointerArray& src) :
+        m_objects(src.m_objects)
+    {
+        m_pointers.reserve(m_objects.size());
+        for (const auto& o : m_objects)
+        {
+            m_pointers.push_back((PointerT*)&o);
+        }
+    }
+
+    template<typename PointerT, typename ObjectT>
+    PointerArray<PointerT, ObjectT>::PointerArray(PointerArray&& src) :
+        m_pointers(std::move(src.m_pointers)),
+        m_objects(std::move(src.m_objects))
+    {
+    }
+
+    template<typename PointerT, typename ObjectT>
+    PointerArray<PointerT, ObjectT>& PointerArray<PointerT, ObjectT>::operator=(PointerArray src)
+    {
+        m_pointers = std::move(src.m_pointers);
+        m_objects = std::move(src.m_objects);
+        return *this;
+    }
+
+    template<typename PointerT, typename ObjectT>
+    PointerArray<PointerT, ObjectT>& PointerArray<PointerT, ObjectT>::operator=(PointerArray&& src)
+    {
+        m_pointers = std::move(src.m_pointers);
+        m_objects = std::move(src.m_objects);
+        return *this;
+    }
+
+    template<typename PointerT, typename ObjectT>
+    bool PointerArray<PointerT, ObjectT>::Empty() const
+    {
+        return m_pointers.empty();
+    }
+
+    template<typename PointerT, typename ObjectT>
+    const PointerT** PointerArray<PointerT, ObjectT>::Data() const
+    {
+        return m_pointers.data();
+    }
+
+    template<typename PointerT, typename ObjectT>
+    PointerT** PointerArray<PointerT, ObjectT>::Data()
+    {
+        return m_pointers.data();
+    }
+
+    template<typename PointerT, typename ObjectT>
+    size_t PointerArray<PointerT, ObjectT>::Size() const
+    {
+        assert(m_pointers.size() == m_objects.size());
+        return m_pointers.size();
+    }
+
+    template<typename PointerT, typename ObjectT>
+    void PointerArray<PointerT, ObjectT>::Clear()
+    {
+        m_pointers.clear();
+        m_objects.clear();
+    }
+
+    template<typename PointerT, typename ObjectT>
+    void PointerArray<PointerT, ObjectT>::FromJson(const Json::Value& input)
+    {
+        Clear();
+        if (input == Json::Value::null)
+        {
+            return;
+        }
+
+        for (auto iter = input.begin(); iter != input.end(); ++iter)
+        {
+            ObjectT output;
+            FromJsonUtilO(*iter, output);
+            m_objects.push_back(std::move(output));
+        }
+
+        m_pointers.reserve(m_objects.size());
+        for (const auto& o : m_objects)
+        {
+            m_pointers.push_back((PointerT*)&o);
+        }
+    }
+
+    template<typename PointerT, typename ObjectT>
+    Json::Value PointerArray<PointerT, ObjectT>::ToJson() const
+    {
+        Json::Value output;
+        if (Size() == 0)
+        {
+            output = Json::Value::null;
+        }
+        else
+        {
+            output = Json::Value(Json::arrayValue);
+            int index = 0;
+            for (const auto& o : m_objects)
+            {
+                Json::Value eachOutput;
+                ToJsonUtilO(o, eachOutput);
+                output[index++] = eachOutput;
+            }
+        }
+        return output;
+    }
+
+    PointerArray<const char*, String>::PointerArray(const PointerArray& src)
+        : m_strings(src.m_strings)
+    {
+        m_pointers.reserve(m_strings.size());
+        for (const auto& o : m_strings)
+        {
+            m_pointers.push_back((const char*)&o);
+        }
+    }
+
+    PointerArray<const char*, String>::PointerArray(PointerArray&& src)
+        : m_pointers(std::move(src.m_pointers)),
+        m_strings(std::move(src.m_strings))
+    {
+    }
+
+    PointerArray<const char*, String>& PointerArray<const char*, String>::operator=(PointerArray src)
+    {
+        m_pointers = std::move(src.m_pointers);
+        m_strings = std::move(src.m_strings);
+        return *this;
+    }
+
+    PointerArray<const char*, String>& PointerArray<const char*, String>::operator=(PointerArray&& src)
+    {
+        m_pointers = std::move(src.m_pointers);
+        m_strings = std::move(src.m_strings);
+        return *this;
+    }
+
+    bool PointerArray<const char*, String>::Empty() const
+    {
+        return m_pointers.empty();
+    }
+
+    const char* const* PointerArray<const char*, String>::Data() const
+    {
+        return m_pointers.data();
+    }
+
+    const char** PointerArray<const char*, String>::Data()
+    {
+        return m_pointers.data();
+    }
+
+    size_t PointerArray<const char*, String>::Size() const
+    {
+        assert(m_pointers.size() == m_strings.size());
+        return m_pointers.size();
+    }
+
+    void PointerArray<const char*, String>::Clear()
+    {
+        m_pointers.clear();
+        m_strings.clear();
+    }
+
+    void PointerArray<const char*, String>::FromJson(const Json::Value& input)
+    {
+        Clear();
+        if (input == Json::Value::null)
+        {
+            return;
+        }
+
+        for (auto iter = input.begin(); iter != input.end(); ++iter)
+        {
+            String output;
+            const char* outputPointer;
+            FromJsonUtilS(*iter, output, outputPointer);
+            m_pointers.push_back(outputPointer);
+            m_strings.push_back(std::move(output));
+        }
+    }
+
+    Json::Value PointerArray<const char*, String>::ToJson() const
+    {
+        Json::Value output;
+        if (Size() == 0)
+        {
+            output = Json::Value::null;
+        }
+        else
+        {
+            output = Json::Value(Json::arrayValue);
+            int index = 0;
+            for (const auto& s : m_strings)
+            {
+                Json::Value eachOutput;
+                ToJsonUtilS(s, eachOutput);
+                output[index++] = eachOutput;
+            }
+        }
+        return output;
+    }
+
+    AssociativeArray<PlayFabDictionaryEntry, String>::AssociativeArray(const AssociativeArray& src) :
+        m_map(src.m_map)
+    {
+        m_sequentialEntries.reserve(m_map.size());
+        for (const auto& pair : m_map)
+        {
+            m_sequentialEntries.push_back(PlayFabDictionaryEntry{ pair.first.data(), pair.second.data() });
+        }
+    }
+
+    AssociativeArray<PlayFabDictionaryEntry, String>::AssociativeArray(AssociativeArray&& src)
+        : m_sequentialEntries(std::move(src.m_sequentialEntries)),
+        m_map(std::move(src.m_map))
+    {
+    }
+
+    AssociativeArray<PlayFabDictionaryEntry, String>& AssociativeArray<PlayFabDictionaryEntry, String>::operator=(AssociativeArray src)
+    {
+        m_sequentialEntries = std::move(src.m_sequentialEntries);
+        m_map = std::move(src.m_map);
+        return *this;
+    }
+
+    AssociativeArray<PlayFabDictionaryEntry, String>& AssociativeArray<PlayFabDictionaryEntry, String>::operator=(AssociativeArray&& src)
+    {
+        m_sequentialEntries = std::move(src.m_sequentialEntries);
+        m_map = std::move(src.m_map);
+        return *this;
+    }
+
+    bool AssociativeArray<PlayFabDictionaryEntry, String>::Empty() const
+    {
+        return m_sequentialEntries.empty();
+    }
+
+    PlayFabDictionaryEntry* AssociativeArray<PlayFabDictionaryEntry, String>::Data()
+    {
+        return m_sequentialEntries.data();
+    }
+
+    const PlayFabDictionaryEntry* AssociativeArray<PlayFabDictionaryEntry, String>::Data() const
+    {
+        return m_sequentialEntries.data();
+    }
+
+    size_t AssociativeArray<PlayFabDictionaryEntry, String>::Size() const
+    {
+        return m_sequentialEntries.size();
+    }
+
+    void AssociativeArray<PlayFabDictionaryEntry, String>::Clear()
+    {
+        m_sequentialEntries.clear();
+        m_map.clear();
+    }
+
+    void AssociativeArray<PlayFabDictionaryEntry, String>::FromJson(const Json::Value& input)
+    {
+        Clear();
+        if (input == Json::Value::null)
+        {
+            return;
+        }
+
+        for (auto iter = input.begin(); iter != input.end(); ++iter)
+        {
+            String key{ iter.key().asCString() };
+            String value;
+            PlayFabDictionaryEntry entry{ key.data(), nullptr };
+            FromJsonUtilS(*iter, value, entry.value);
+            m_map[std::move(key)] = std::move(value);
+            m_sequentialEntries.push_back(entry);
+        }
+    }
+
+    Json::Value AssociativeArray<PlayFabDictionaryEntry, String>::ToJson() const
+    {
+        Json::Value output = Json::Value(Json::objectValue);
+        for (const auto& e : m_sequentialEntries)
+        {
+            Json::Value eachOutput;
+            ToJsonUtilS(e.value, eachOutput);
+            output[e.key] = eachOutput;
+        }
+        return output;
     }
 }
 
