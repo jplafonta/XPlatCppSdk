@@ -5,6 +5,7 @@
 #pragma once
 
 #include <playfab/PlayFabPlatformMacros.h>
+#include <playfab/PlayFabHCHttpPlugin.h>
 
 #ifdef PLAYFAB_PLATFORM_XBOX
 #include <playfab/PlayFabIXHR2HttpPlugin.h>

@@ -2,6 +2,7 @@
 
 #include <playfab/PlayFabError.h>
 #include <playfab/PlayFabCallRequestContainerBase.h>
+#include <playfab/task_queue.h>
 
 namespace PlayFab
 {
@@ -40,5 +41,6 @@ namespace PlayFab
         ErrorCallback errorCallback;
         std::shared_ptr<PlayFabApiSettings> m_settings;
         std::shared_ptr<PlayFabAuthenticationContext> m_context;
+        TaskQueue m_queue;
     };
 }
