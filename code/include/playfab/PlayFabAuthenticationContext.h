@@ -40,8 +40,3 @@ namespace PlayFab
         bool IsEntityLoggedIn();
     };
 }
-
-struct PlayFabAuthenticationContextHolder
-{
-    std::shared_ptr<PlayFab::PlayFabAuthenticationContext> context;
-};

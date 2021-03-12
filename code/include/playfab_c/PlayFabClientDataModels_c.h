@@ -493,3 +493,31 @@ struct PlayFabGetPlayerProfileRequest
     const char* playFabId;
     PlayFabPlayerProfileViewConstraints* profileConstraints;
 };
+
+struct PlayFabPlayerProfileResult
+{
+    PlayFabPlayerProfileModel* playerProfile;
+};
+
+struct PlayFabLoginResult
+{
+    // TODO figure out which fields to expose here
+    PlayFabUserHandle userHandle;
+    time_t* lastLoginTime;
+    bool newlyCreated;
+};
+
+struct PlayFabCreateSharedGroupRequest
+{
+    const char* sharedGroupId;
+};
+
+struct PlayFabCreateSharedGroupResult
+{
+    const char* sharedGroupId;
+};
+
+struct PlayFabGetTimeResult
+{
+    time_t time;
+};

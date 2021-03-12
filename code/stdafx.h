@@ -25,15 +25,15 @@
 
 #include <httpClient/pal.h>
 #include <httpClient/async.h>
-#include <playfab/std_optional.h>
-#include <playfab/internal_memory.h>
-#include <playfab/task_queue.h>
+#include <playfab/StdOptional.h>
+#include <playfab/InternalMemory.h>
+#include <playfab/TaskQueue.h>
 #include <playfab/PlayFabJsonHeaders.h>
 #include <playfab/PlayFabPlatformMacros.h>
 #include <playfab/PlayFabPlatformTypes.h>
 #include <playfab/PlayFabApiSettings.h>
 #include <playfab/PlayFabAuthenticationContext.h>
-#include <playfab/global_state.h>
+#include <playfab/GlobalState.h>
 
 #define UNREFERENCED_PARAMETER(P) (P)
 #define RETURN_HR_IF_FAILED(expr) { HRESULT exprResult{ expr }; if (FAILED(exprResult)) { return exprResult; } }

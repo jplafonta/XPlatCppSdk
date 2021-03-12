@@ -5,8 +5,8 @@
 #include <playfab/PlayFabJsonHeaders.h>
 #include <playfab/PlayFabPlatformTypes.h>
 #include <playfab/PlayFabPlatformUtils.h>
-#include <playfab/internal_memory.h>
-#include <playfab/std_optional.h>
+#include <playfab/InternalMemory.h>
+#include <playfab/StdOptional.h>
 #include <playfab_c/PlayFabBaseModel_c.h>
 
 #include <assert.h>
@@ -95,6 +95,15 @@ namespace PlayFab
     struct ResultCommon : public BaseModel
     {
         Json::Value request;
+    };
+
+    /// <summary>
+    /// A result that can (trivially) be serialized to a continous memory buffer
+    /// </summary>
+    struct SerializableResult : public PlayFabResultCommon
+    {
+        virtual size_t RequiredBufferSize() const = 0;
+        virtual void Serialize(void* buffer, size_t bufferSize) const = 0;
     };
 
     /// <summary>

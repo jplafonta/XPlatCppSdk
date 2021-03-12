@@ -199,6 +199,13 @@ namespace PlayFab
             Json::Value each_ProfileConstraints; ToJsonUtilO(input.profileConstraints, each_ProfileConstraints); output["ProfileConstraints"] = each_ProfileConstraints;
             return output;
         }
+
+        inline Json::Value ToJsonObject(const PlayFabCreateSharedGroupRequest& input)
+        {
+            Json::Value output;
+            Json::Value each_SharedGroupId; ToJsonUtilS(input.sharedGroupId, each_SharedGroupId); output["SharedGroupId"] = each_SharedGroupId;
+            return output;
+        }
     }
 
     namespace ClientModels
@@ -8138,62 +8145,77 @@ namespace PlayFab
             StdExtra::optional<PlayFabEmailVerificationStatus> m_verificationStatus;
         };
 
-        struct CreateSharedGroupRequest : public PlayFabRequestCommon
+        struct CreateSharedGroupRequest : public PlayFabCreateSharedGroupRequest, public RequestCommon
         {
-            std::string SharedGroupId;
-
-            CreateSharedGroupRequest() :
-                PlayFabRequestCommon(),
-                SharedGroupId()
-            {}
+            CreateSharedGroupRequest() = default;
 
             CreateSharedGroupRequest(const CreateSharedGroupRequest& src) :
-                PlayFabRequestCommon(),
-                SharedGroupId(src.SharedGroupId)
-            {}
+                PlayFabCreateSharedGroupRequest(src),
+                m_sharedGroupId(src.m_sharedGroupId)
+            {
+                sharedGroupId = m_sharedGroupId.empty() ? nullptr : m_sharedGroupId.data();
+            }
 
             ~CreateSharedGroupRequest() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["SharedGroupId"], SharedGroupId);
+                FromJsonUtilS(input["SharedGroupId"], m_sharedGroupId, sharedGroupId);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_SharedGroupId; ToJsonUtilS(SharedGroupId, each_SharedGroupId); output["SharedGroupId"] = each_SharedGroupId;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_sharedGroupId;
         };
 
-        struct CreateSharedGroupResult : public PlayFabResultCommon
+        struct CreateSharedGroupResult : public PlayFabCreateSharedGroupResult, public SerializableResult
         {
-            std::string SharedGroupId;
-
-            CreateSharedGroupResult() :
-                PlayFabResultCommon(),
-                SharedGroupId()
-            {}
+            CreateSharedGroupResult() = default;
 
             CreateSharedGroupResult(const CreateSharedGroupResult& src) :
-                PlayFabResultCommon(),
-                SharedGroupId(src.SharedGroupId)
-            {}
+                PlayFabCreateSharedGroupResult(src),
+                m_sharedGroupId(src.m_sharedGroupId)
+            {
+                sharedGroupId = m_sharedGroupId.empty() ? nullptr : m_sharedGroupId.data();
+            }
 
             ~CreateSharedGroupResult() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["SharedGroupId"], SharedGroupId);
+                FromJsonUtilS(input["SharedGroupId"], m_sharedGroupId, sharedGroupId);
             }
 
             Json::Value ToJson() const override
             {
                 Json::Value output;
-                Json::Value each_SharedGroupId; ToJsonUtilS(SharedGroupId, each_SharedGroupId); output["SharedGroupId"] = each_SharedGroupId;
+                Json::Value each_SharedGroupId; ToJsonUtilS(sharedGroupId, each_SharedGroupId); output["SharedGroupId"] = each_SharedGroupId;
                 return output;
             }
+
+            size_t RequiredBufferSize() const override
+            {
+                size_t requiredSize = sizeof(PlayFabCreateSharedGroupResult);
+                requiredSize += m_sharedGroupId.length() + 1;
+                return requiredSize;
+            }
+
+            void Serialize(void* buffer, size_t bufferSize) const override
+            {
+                assert(bufferSize == RequiredBufferSize());
+                char* stringBuffer = static_cast<char*>(buffer) + sizeof(PlayFabCreateSharedGroupResult);
+
+                auto result = new (buffer) PlayFabCreateSharedGroupResult(*this);
+                result->sharedGroupId = stringBuffer;
+                memcpy(stringBuffer, m_sharedGroupId.data(), m_sharedGroupId.size() + 1);
+            }
+
+        private:
+            String m_sharedGroupId;
         };
 
         struct CurrentGamesRequest : public PlayFabRequestCommon
@@ -11989,25 +12011,32 @@ namespace PlayFab
             StdExtra::optional<PlayerProfileViewConstraints> m_profileConstraints;
         };
 
-        struct GetPlayerProfileResult : public PlayFabResultCommon
+        struct GetPlayerProfileResult : public PlayFabPlayerProfileResult, public PlayFabResultCommon
         {
-            StdExtra::optional<PlayerProfileModel> playerProfile;
-
             GetPlayerProfileResult() = default;
-            GetPlayerProfileResult(const GetPlayerProfileResult& src) = default;
+
+            GetPlayerProfileResult(const GetPlayerProfileResult& src) :
+                PlayFabPlayerProfileResult(src),
+                m_playerProfile(src.m_playerProfile)
+            {
+                playerProfile = m_playerProfile ? m_playerProfile.operator->() : nullptr;
+            }
+
             ~GetPlayerProfileResult() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilO(input["PlayerProfile"], playerProfile);
+                FromJsonUtilO(input["PlayerProfile"], m_playerProfile, playerProfile);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                //Json::Value each_PlayerProfile; ToJsonUtilO(PlayerProfile, each_PlayerProfile); output["PlayerProfile"] = each_PlayerProfile;
-                return output;
+                // TODO
+                return Json::Value{};
             }
+
+        private:
+            StdExtra::optional<PlayerProfileModel> m_playerProfile;
         };
 
         struct GetPlayerSegmentsRequest : public PlayFabRequestCommon
@@ -13791,32 +13820,38 @@ namespace PlayFab
             }
         };
 
-        struct GetTimeResult : public PlayFabResultCommon
+        struct GetTimeResult : public PlayFabGetTimeResult, public SerializableResult
         {
-            time_t Time;
-
-            GetTimeResult() :
-                PlayFabResultCommon(),
-                Time()
-            {}
+            GetTimeResult() = default;
 
             GetTimeResult(const GetTimeResult& src) :
-                PlayFabResultCommon(),
-                Time(src.Time)
-            {}
+                PlayFabGetTimeResult(src)
+            {
+            }
 
             ~GetTimeResult() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilT(input["Time"], Time);
+                FromJsonUtilT(input["Time"], time);
             }
 
             Json::Value ToJson() const override
             {
                 Json::Value output;
-                Json::Value each_Time; ToJsonUtilT(Time, each_Time); output["Time"] = each_Time;
+                Json::Value each_Time; ToJsonUtilT(time, each_Time); output["Time"] = each_Time;
                 return output;
+            }
+
+            size_t RequiredBufferSize() const override
+            {
+                return sizeof(PlayFabGetTimeResult);
+            }
+
+            void Serialize(void* buffer, size_t bufferSize) const override
+            {
+                assert(bufferSize == RequiredBufferSize());
+                auto result = new (buffer) PlayFabGetTimeResult(*this);
             }
         };
 
@@ -15676,7 +15711,7 @@ namespace PlayFab
             }
         };
 
-        struct LoginResult : public PlayFabLoginResultCommon
+        struct LoginResult : public PlayFabLoginResult, public PlayFabLoginResultCommon
         {
             Boxed<EntityTokenResponse> EntityToken;
             Boxed<GetPlayerCombinedInfoResultPayload> InfoResultPayload;
@@ -15699,17 +15734,7 @@ namespace PlayFab
                 pfTreatmentAssignment()
             {}
 
-            LoginResult(const LoginResult& src) :
-                PlayFabLoginResultCommon(),
-                EntityToken(src.EntityToken),
-                InfoResultPayload(src.InfoResultPayload),
-                LastLoginTime(src.LastLoginTime),
-                NewlyCreated(src.NewlyCreated),
-                PlayFabId(src.PlayFabId),
-                SessionTicket(src.SessionTicket),
-                SettingsForUser(src.SettingsForUser),
-                pfTreatmentAssignment(src.pfTreatmentAssignment)
-            {}
+            LoginResult(const LoginResult& src);
 
             ~LoginResult() = default;
 
@@ -15738,11 +15763,6 @@ namespace PlayFab
                 Json::Value each_pfTreatmentAssignment; ToJsonUtilO(pfTreatmentAssignment, each_pfTreatmentAssignment); output["TreatmentAssignment"] = each_pfTreatmentAssignment;
                 return output;
             }
-        };
-
-        struct LoginResultWithUser : public LoginResult
-        {
-            std::shared_ptr<User> playFabUser;
         };
 
         struct LoginWithAndroidDeviceIDRequest : public PlayFabRequestCommon

@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 #include <stdafx.h>
-#include <playfab/task_queue.h>
+#include <playfab/TaskQueue.h>
 
 namespace PlayFab {
 

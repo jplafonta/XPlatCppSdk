@@ -7,35 +7,35 @@
 #include <playfab/PlayFabApiSettings.h>
 #include "playfab_c/PlayFabClientApi_c.h"
 
+PlayFabStateHandle stateHandle{ nullptr };
 PlayFabUserHandle userHandle{ nullptr };
-std::string playFabId;
 
 int main()
 {
-    HRESULT hr = PlayFabInitialize("E18D7");
+    HRESULT hr = PlayFabInitialize(&stateHandle);
     assert(SUCCEEDED(hr));
 
     {
         PlayFabLoginWithCustomIDRequest request{};
         request.createAccount = false;
         request.customId = "GettingStartedGuide";
+        request.titleId = "E18D7";
 
         XAsyncBlock async{};
         async.callback = [](XAsyncBlock* async)
         {
             PlayFabResultHandle resultHandle{ nullptr };
-            HRESULT hr = PlayFabGetResultHandle(async, &resultHandle);
+            PlayFabLoginResult* loginResult{ nullptr };
+            HRESULT hr = PlayFabLoginWithCustomIDGetResult(async, &resultHandle, &loginResult);
             if (SUCCEEDED(hr))
             {
-                PlayFabLoginWithCustomIDResultGetUserHandle(resultHandle, &userHandle);
-                const char* playFabIdPtr;
-                PlayFabLoginWithCustomIdResultGetPlayFabId(resultHandle, &playFabIdPtr);
-                playFabId = playFabIdPtr;
+                hr = PlayFabUserDuplicateHandle(loginResult->userHandle, &userHandle);
+                assert(SUCCEEDED(hr));
             }
             PlayFabResultCloseHandle(resultHandle);
         };
 
-        HRESULT hr = PlayFabLoginWithCustomIDAsync(&request, &async);
+        HRESULT hr = PlayFabLoginWithCustomIDAsync(stateHandle, &request, &async);
         assert(SUCCEEDED(hr));
 
         hr = XAsyncGetStatus(&async, true);
@@ -47,32 +47,69 @@ int main()
         async.callback = [](XAsyncBlock* async)
         {
             PlayFabResultHandle handle{ nullptr };
-            HRESULT hr = PlayFabGetResultHandle(async, &handle);
+            PlayFabPlayerProfileResult* result{ nullptr };
+            HRESULT hr = PlayFabGetPlayerProfileGetResult(async, &handle, &result);
             if (SUCCEEDED(hr))
             {
-                PlayFabPlayerProfileModel* profile{ nullptr };
-                hr = PlayFabGetPlayerProfileResultGetProfile(handle, &profile);
-                if (SUCCEEDED(hr))
-                {
-                    printf("Got player profile!\n");
-                }
+                printf("Got player profile!\n");
             }
             PlayFabResultCloseHandle(handle);
         };
 
         PlayFabGetPlayerProfileRequest request{};
-        request.playFabId = playFabId.data();
 
         HRESULT hr = PlayFabGetPlayerProfileAsync(userHandle, &request, &async);
         assert(SUCCEEDED(hr));
 
-        XAsyncGetStatus(&async, true);
+        hr = XAsyncGetStatus(&async, true);
         assert(SUCCEEDED(hr));
     }
 
     {
         XAsyncBlock async{};
-        PlayFabCleanupAsync(&async);
+        async.callback = [](XAsyncBlock* async)
+        {
+            size_t requiredBufferSize;
+            HRESULT hr = PlayFabCreateSharedGroupGetResultSize(async, &requiredBufferSize);
+            if (SUCCEEDED(hr))
+            {
+                std::vector<char> buffer(requiredBufferSize);
+                PlayFabCreateSharedGroupResult* result;
+                hr = PlayFabCreateSharedGroupGetResult(async, buffer.size(), buffer.data(), &result, nullptr);
+                assert(SUCCEEDED(hr));
+            }
+        };
+
+        PlayFabCreateSharedGroupRequest request{};
+
+        HRESULT hr = PlayFabCreateSharedGroupAsync(userHandle, &request, &async);
+        assert(SUCCEEDED(hr));
+
+        hr = XAsyncGetStatus(&async, true);
+        assert(SUCCEEDED(hr));
+    }
+
+    {
+        XAsyncBlock async{};
+        async.callback = [](XAsyncBlock* async)
+        {
+            PlayFabGetTimeResult result;
+            HRESULT hr = PlayFabGetTimeGetResult(async, &result);
+            assert(SUCCEEDED(hr));
+        };
+
+        HRESULT hr = PlayFabGetTimeAsync(userHandle, &async);
+        assert(SUCCEEDED(hr));
+
+        hr = XAsyncGetStatus(&async, true);
+        assert(SUCCEEDED(hr));
+    }
+
+    PlayFabUserCloseHandle(userHandle);
+
+    {
+        XAsyncBlock async{};
+        PlayFabCleanupAsync(&async, stateHandle);
         XAsyncGetStatus(&async, true);
     }
 

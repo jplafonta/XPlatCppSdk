@@ -4,7 +4,7 @@
 #pragma once
 
 #include <XAsyncProvider.h>
-#include "task_queue.h"
+#include <playfab/TaskQueue.h>
 #include <playfab/PlayFabError.h>
 #include <playfab/PlayFabUser.h>
 
@@ -81,7 +81,7 @@ public:
     // Wrapped PlayFab client API must have a signature matching ClientApiT
     using ClientApiT = void (PlayFabClientInstanceAPI::*)(const RequestT&, ProcessApiCallback<ResultT>, const TaskQueue&, const ErrorCallback, void*);
 
-    ClientApiProvider(XAsyncBlock* async, std::shared_ptr<User> user, ClientApiT clientApi, const RequestT& request)
+    ClientApiProvider(XAsyncBlock* async, SharedPtr<User> user, ClientApiT clientApi, const RequestT& request)
         : Provider{ async },
         m_user{ std::move(user) },
         m_clientApi{ clientApi },
@@ -122,20 +122,71 @@ private:
         pThis->Fail(E_FAIL);
     }
 
-    std::shared_ptr<User> m_user;
+    SharedPtr<User> m_user;
     ClientApiT m_clientApi;
     const RequestT& m_request;
-    std::shared_ptr<ResultT> m_result;
+    SharedPtr<ResultT> m_result;
+};
+
+// Class used to implement XAsync Providers for PlayFab Client APIs.
+template<typename RequestT, typename ResultT>
+class ClientApiWithSerializableResultProvider : public Provider
+{
+public:
+    static_assert(std::is_base_of_v<SerializableResult, ResultT>, "ResultT must be a PlayFab::SerializableResult");
+
+    // Wrapped PlayFab client API must have a signature matching ClientApiT
+    using ClientApiT = void (PlayFabClientInstanceAPI::*)(const RequestT&, ProcessApiCallback<ResultT>, const TaskQueue&, const ErrorCallback, void*);
+
+    ClientApiWithSerializableResultProvider(XAsyncBlock* async, SharedPtr<User> user, ClientApiT clientApi, const RequestT& request)
+        : Provider{ async },
+        m_user{ std::move(user) },
+        m_clientApi{ clientApi },
+        m_request{ std::move(request) }
+    {
+    }
+
+protected:
+    HRESULT Begin(TaskQueue&& queue) override
+    {
+        (m_user->ClientApi.*m_clientApi)(std::move(m_request), ProcessApiCallback, queue, OnError, this);
+        return S_OK;
+    }
+
+    HRESULT GetResult(void* buffer, size_t bufferSize) override
+    {
+        m_result.Serialize(buffer, bufferSize);
+        return S_OK;
+    }
+
+private:
+    static void ProcessApiCallback(const ResultT& result, void* context)
+    {
+        auto pThis = static_cast<ClientApiWithSerializableResultProvider*>(context);
+        pThis->m_result = result;
+        pThis->Complete(pThis->m_result.RequiredBufferSize());
+    }
+
+    static void OnError(const PlayFabError& /*error*/, void* context) noexcept
+    {
+        auto pThis = static_cast<ClientApiWithSerializableResultProvider*>(context);
+        pThis->Fail(E_FAIL);
+    }
+
+    SharedPtr<User> m_user;
+    ClientApiT m_clientApi;
+    const RequestT& m_request;
+    ResultT m_result;
 };
 
 // Class used to implement XAsync Providers for PlayFab Login APIs.
-template<typename RequestT, typename ResultT>
-class LoginApiProvider : public Provider
+template<typename RequestT>
+class ClientLoginApiProvider : public Provider
 {
 public:
-    using LoginApiT = void (*)(const RequestT&, ProcessApiCallback<ResultT>, const TaskQueue&, const ErrorCallback, void*);
+    using LoginApiT = void (ClientLoginApi::*)(const RequestT&, ProcessApiCallback<ClientModels::LoginResult>, const TaskQueue&, const ErrorCallback, void*);
 
-    LoginApiProvider(XAsyncBlock* async, LoginApiT loginApi, const RequestT& request)
+    ClientLoginApiProvider(XAsyncBlock* async, SharedPtr<GlobalState> state, LoginApiT loginApi, const RequestT& request)
         : Provider{ async },
         m_api{ loginApi },
         m_request{ std::move(request) }
@@ -145,7 +196,7 @@ public:
 protected:
     HRESULT Begin(TaskQueue&& queue) override
     {
-        (*m_api)(m_request, ProcessApiCallback, queue, OnError, this);
+        (m_state->clientLoginApi.*m_api)(m_request, ProcessApiCallback, queue, OnError, this);
         return S_OK;
     }
 
@@ -158,26 +209,27 @@ protected:
     }
 
 private:
-    static void ProcessApiCallback(const ResultT& result, void* context)
+    static void ProcessApiCallback(const ClientModels::LoginResult& result, void* context)
     {
-        auto pThis = static_cast<LoginApiProvider*>(context);
+        auto pThis = static_cast<ClientLoginApiProvider*>(context);
         // Hold result until client calls GetResult API
-        pThis->m_result = MakeShared<ResultT>(result);
+        pThis->m_result = MakeShared<ClientModels::LoginResult>(result);
         pThis->Complete(sizeof(PlayFabResultHolder*));
     }
 
     // Default error handler for PlayFab Client APIs
     static void OnError(const PlayFabError& /*error*/, void* context) noexcept
     {
-        auto pThis = static_cast<LoginApiProvider*>(context);
+        auto pThis = static_cast<ClientLoginApiProvider*>(context);
 
         // TODO translate PlayFabError to HRESULT
         pThis->Fail(E_FAIL);
     }
 
+    SharedPtr<GlobalState> m_state;
     LoginApiT m_api;
     const RequestT& m_request;
-    std::shared_ptr<ResultT> m_result;
+    SharedPtr<ClientModels::LoginResult> m_result;
 };
 
 } // namespace PlayFab

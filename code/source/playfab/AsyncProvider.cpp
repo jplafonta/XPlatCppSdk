@@ -3,7 +3,7 @@
 
 #include <stdafx.h>
 #include <assert.h>
-#include <playfab/async_provider.h>
+#include <playfab/AsyncProvider.h>
 
 namespace PlayFab
 {
@@ -94,7 +94,7 @@ HRESULT CALLBACK Provider::XAsyncProvider(_In_ XAsyncOp op, _Inout_ const XAsync
         // at this point so die with exception.
 
         // Re-take ownership of provider, it will be destroyed here
-        std::unique_ptr<Provider>{ provider };
+        UniquePtr<Provider>{ provider };
         return S_OK;
     }
     default:

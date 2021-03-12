@@ -2,7 +2,7 @@
 
 #include <playfab/PlayFabError.h>
 #include <playfab/PlayFabCallRequestContainerBase.h>
-#include <playfab/task_queue.h>
+#include <playfab/TaskQueue.h>
 
 namespace PlayFab
 {

@@ -1,5 +1,5 @@
 #include <stdafx.h>
-#include <playfab/async_provider.h>
+#include <playfab/AsyncProvider.h>
 #include <playfab/PlayFabClientApi.h>
 #include <playfab/PlayFabBaseModel.h>
 
@@ -7,46 +7,42 @@ using namespace PlayFab;
 using namespace PlayFab::ClientModels;
 
 HRESULT PlayFabInitialize(
-    _In_ const char* titleId
+    _Outptr_ PlayFabStateHandle* stateHandle
 ) noexcept
 {
-    return GlobalState::Create(titleId);
+    return PlayFabGlobalState::Create(stateHandle);
 }
 
 HRESULT PlayFabCleanupAsync(
-    _In_ XAsyncBlock* async
+    _In_ XAsyncBlock* async,
+    _In_ PlayFabStateHandle stateHandle
 ) noexcept
 {
-    return GlobalState::CleanupAsync(async);
+    RETURN_HR_INVALIDARGUMENT_IF_NULL(stateHandle);
+    return stateHandle->CleanupAsync(async);
 }
 
 HRESULT PlayFabLoginWithCustomIDAsync(
+    _In_ PlayFabStateHandle stateHandle,
     _In_ const PlayFabLoginWithCustomIDRequest* request,
     _In_ XAsyncBlock* async
 ) noexcept
 {
-    auto provider = MakeUnique<LoginApiProvider<PlayFabLoginWithCustomIDRequest, LoginResultWithUser>>(async, PlayFabClientInstanceAPI::LoginWithCustomID, *request);
+    RETURN_HR_INVALIDARGUMENT_IF_NULL(stateHandle);
+    RETURN_HR_INVALIDARGUMENT_IF_NULL(request);
+
+    auto provider = MakeUnique<ClientLoginApiProvider<PlayFabLoginWithCustomIDRequest>>(async, stateHandle->state, &ClientLoginApi::LoginWithCustomID, *request);
     return Provider::Run(UniquePtr<Provider>(provider.release()));
 }
 
-HRESULT PlayFabLoginWithCustomIDResultGetUserHandle(
-    _In_ PlayFabResultHandle resultHandle,
-    _Out_ PlayFabUserHandle* userHandle
+HRESULT PlayFabLoginWithCustomIDGetResult(
+    _In_ XAsyncBlock* async,
+    _Out_ PlayFabResultHandle* handle,
+    _Out_ PlayFabLoginResult** result
 ) noexcept
 {
-    auto result = std::dynamic_pointer_cast<LoginResultWithUser>(resultHandle->result);
-    // TODO what part of this result is actually valuable? Can we just return the User
-    *userHandle = new PlayFabUserHolder{ result->playFabUser };
-    return S_OK;
-}
-
-HRESULT PlayFabLoginWithCustomIdResultGetPlayFabId(
-    _In_ PlayFabResultHandle resultHandle,
-    _Out_ const char** playFabId
-) noexcept
-{
-    auto result = std::dynamic_pointer_cast<LoginResultWithUser>(resultHandle->result);
-    *playFabId = result->PlayFabId.data();
+    RETURN_HR_IF_FAILED(XAsyncGetResult(async, nullptr, sizeof(PlayFabResultHandle), handle, nullptr));
+    *result = (PlayFabLoginResult*)(std::dynamic_pointer_cast<LoginResult>((*handle)->result).get());
     return S_OK;
 }
 
@@ -60,24 +56,73 @@ HRESULT PlayFabGetPlayerProfileAsync(
     return Provider::Run(UniquePtr<Provider>(provider.release()));
 }
 
-HRESULT PlayFabGetResultHandle(
+HRESULT PlayFabGetPlayerProfileGetResult(
     _In_ XAsyncBlock* async,
-    _Out_ PlayFabResultHandle* resultHandle
+    _Out_ PlayFabResultHandle* handle,
+    _Out_ PlayFabPlayerProfileResult** result
 ) noexcept
 {
-    RETURN_HR_IF_FAILED(XAsyncGetResult(async, nullptr, sizeof(PlayFabResultHandle), resultHandle, nullptr));
+    RETURN_HR_IF_FAILED(XAsyncGetResult(async, nullptr, sizeof(PlayFabResultHandle), handle, nullptr));
+    *result = (PlayFabPlayerProfileResult*)(std::dynamic_pointer_cast<GetPlayerProfileResult>((*handle)->result).get());
     return S_OK;
 }
 
-HRESULT PlayFabGetPlayerProfileResultGetProfile(
-    _In_ PlayFabResultHandle resultHandle,
-    _Out_ PlayFabPlayerProfileModel** profile
+HRESULT PlayFabCreateSharedGroupAsync(
+    _In_ PlayFabUserHandle user,
+    _In_ const PlayFabCreateSharedGroupRequest* request,
+    _In_ XAsyncBlock* async
 ) noexcept
 {
-    auto result = std::dynamic_pointer_cast<GetPlayerProfileResult>(resultHandle->result);
-    *profile = result->playerProfile.operator->();
+    auto provider = MakeUnique<ClientApiWithSerializableResultProvider<PlayFabCreateSharedGroupRequest, CreateSharedGroupResult>>(async, user->user, &PlayFabClientInstanceAPI::CreateSharedGroup, *request);
+    return Provider::Run(UniquePtr<Provider>(provider.release()));
+}
 
-    return S_OK;
+HRESULT PlayFabCreateSharedGroupGetResultSize(
+    _In_ XAsyncBlock* async,
+    _Out_ size_t* bufferSize
+) noexcept
+{
+    return XAsyncGetResultSize(async, bufferSize);
+}
+
+HRESULT PlayFabCreateSharedGroupGetResult(
+    _In_ XAsyncBlock* async,
+    _In_ size_t bufferSize,
+    _Out_writes_bytes_to_(bufferSize, *bufferUsed) void* buffer,
+    _Outptr_ PlayFabCreateSharedGroupResult** result,
+    _Out_opt_ size_t* bufferUsed
+) noexcept
+{
+    RETURN_HR_INVALIDARGUMENT_IF_NULL(result);
+
+    size_t sizeUsed{ 0 };
+    HRESULT hr = XAsyncGetResult(async, nullptr, bufferSize, buffer, &sizeUsed);
+    assert(FAILED(hr) || sizeUsed > 0);
+
+    *result = static_cast<PlayFabCreateSharedGroupResult*>(buffer);
+    if (bufferUsed)
+    {
+        *bufferUsed = sizeUsed;
+    }
+    return hr;
+}
+
+HRESULT PlayFabGetTimeAsync(
+    _In_ PlayFabUserHandle user,
+    _In_ XAsyncBlock* async
+) noexcept
+{
+    GetTimeRequest request;
+    auto provider = MakeUnique<ClientApiWithSerializableResultProvider<GetTimeRequest, GetTimeResult>>(async, user->user, &PlayFabClientInstanceAPI::GetTime, request);
+    return Provider::Run(UniquePtr<Provider>(provider.release()));
+}
+
+HRESULT PlayFabGetTimeGetResult(
+    _In_ XAsyncBlock* async,
+    _Out_ PlayFabGetTimeResult* result
+) noexcept
+{
+    return XAsyncGetResult(async, nullptr, sizeof(PlayFabGetTimeResult), result, nullptr);
 }
 
 HRESULT PlayFabResultDuplicateHandle(
@@ -88,7 +133,7 @@ HRESULT PlayFabResultDuplicateHandle(
     RETURN_HR_INVALIDARGUMENT_IF_NULL(resultHandle);
     RETURN_HR_INVALIDARGUMENT_IF_NULL(duplicatedHandle);
 
-    *duplicatedHandle = new PlayFabResultHolder{ resultHandle->result };
+    *duplicatedHandle = MakeUnique<PlayFabResultHolder>(*resultHandle).release();
     return S_OK;
 }
 
@@ -96,8 +141,24 @@ void PlayFabResultCloseHandle(
     _In_ PlayFabResultHandle resultHandle
 ) noexcept
 {
-    if (resultHandle)
-    {
-        delete resultHandle;
-    }
+    UniquePtr<PlayFabResultHolder>{ resultHandle };
+}
+
+HRESULT PlayFabUserDuplicateHandle(
+    _In_ PlayFabUserHandle userHandle,
+    _Out_ PlayFabUserHandle* duplicatedHandle
+) noexcept
+{
+    RETURN_HR_INVALIDARGUMENT_IF_NULL(userHandle);
+    RETURN_HR_INVALIDARGUMENT_IF_NULL(duplicatedHandle);
+
+    *duplicatedHandle = MakeUnique<PlayFabUser>(*userHandle).release();
+    return S_OK;
+}
+
+void PlayFabUserCloseHandle(
+    _In_ PlayFabUserHandle userHandle
+) noexcept
+{
+    UniquePtr<PlayFabUser>{ userHandle };
 }

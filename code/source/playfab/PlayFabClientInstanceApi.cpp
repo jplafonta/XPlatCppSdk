@@ -865,34 +865,32 @@ namespace PlayFab
     }
 
     void PlayFabClientInstanceAPI::CreateSharedGroup(
-        CreateSharedGroupRequest& request,
+        const PlayFabCreateSharedGroupRequest& request,
         const ProcessApiCallback<CreateSharedGroupResult> callback,
+        const TaskQueue& queue,
         const ErrorCallback errorCallback,
         void* customData
     )
     {
-        std::shared_ptr<PlayFabAuthenticationContext> context = request.authenticationContext != nullptr ? request.authenticationContext : this->m_context;
-        std::shared_ptr<PlayFabApiSettings> settings = this->m_settings != nullptr ? this->m_settings : PlayFabSettings::staticSettings;
-
         IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
-        const Json::Value requestJson = request.ToJson();
+        const Json::Value requestJson = JsonUtils::ToJsonObject(request);
         std::string jsonAsString = requestJson.toStyledString();
 
-        std::shared_ptr<PlayFabAuthenticationContext> authenticationContext = request.authenticationContext == nullptr ? this->m_context : request.authenticationContext;
         std::unordered_map<std::string, std::string> headers;
-        headers.emplace("X-Authorization", context->clientSessionTicket);
+        headers.emplace("X-Authorization", m_context->clientSessionTicket);
 
         auto reqContainer = std::unique_ptr<CallRequestContainer>(new CallRequestContainer(
             "/Client/CreateSharedGroup",
             headers,
             jsonAsString,
             std::bind(&PlayFabClientInstanceAPI::OnCreateSharedGroupResult, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
-            settings,
-            context,
+            m_settings,
+            m_context,
             customData));
 
         reqContainer->successCallback = std::shared_ptr<void>((callback == nullptr) ? nullptr : new ProcessApiCallback<CreateSharedGroupResult>(callback));
         reqContainer->errorCallback = errorCallback;
+        reqContainer->m_queue = queue;
 
         http.MakePostRequest(std::unique_ptr<CallRequestContainerBase>(static_cast<CallRequestContainerBase*>(reqContainer.release())));
     }
@@ -2092,6 +2090,7 @@ namespace PlayFab
 
         reqContainer->successCallback = std::shared_ptr<void>((callback == nullptr) ? nullptr : new ProcessApiCallback<GetPlayerProfileResult>(callback));
         reqContainer->errorCallback = errorCallback;
+        reqContainer->m_queue = queue;
 
         http.MakePostRequest(std::unique_ptr<CallRequestContainerBase>(static_cast<CallRequestContainerBase*>(reqContainer.release())));
     }
@@ -3114,34 +3113,33 @@ namespace PlayFab
     }
 
     void PlayFabClientInstanceAPI::GetTime(
-        GetTimeRequest& request,
+        const GetTimeRequest& request,
         const ProcessApiCallback<GetTimeResult> callback,
+        const TaskQueue& queue,
         const ErrorCallback errorCallback,
         void* customData
     )
     {
-        std::shared_ptr<PlayFabAuthenticationContext> context = request.authenticationContext != nullptr ? request.authenticationContext : this->m_context;
-        std::shared_ptr<PlayFabApiSettings> settings = this->m_settings != nullptr ? this->m_settings : PlayFabSettings::staticSettings;
-
         IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
         const Json::Value requestJson = request.ToJson();
         std::string jsonAsString = requestJson.toStyledString();
 
         std::shared_ptr<PlayFabAuthenticationContext> authenticationContext = request.authenticationContext == nullptr ? this->m_context : request.authenticationContext;
         std::unordered_map<std::string, std::string> headers;
-        headers.emplace("X-Authorization", context->clientSessionTicket);
+        headers.emplace("X-Authorization", m_context->clientSessionTicket);
 
         auto reqContainer = std::unique_ptr<CallRequestContainer>(new CallRequestContainer(
             "/Client/GetTime",
             headers,
             jsonAsString,
             std::bind(&PlayFabClientInstanceAPI::OnGetTimeResult, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3),
-            settings,
-            context,
+            m_settings,
+            m_context,
             customData));
 
         reqContainer->successCallback = std::shared_ptr<void>((callback == nullptr) ? nullptr : new ProcessApiCallback<GetTimeResult>(callback));
         reqContainer->errorCallback = errorCallback;
+        reqContainer->m_queue = queue;
 
         http.MakePostRequest(std::unique_ptr<CallRequestContainerBase>(static_cast<CallRequestContainerBase*>(reqContainer.release())));
     }
@@ -4670,67 +4668,6 @@ namespace PlayFab
             if (internalPtr.get() != nullptr)
             {
                 const auto& callback = *static_cast<ProcessApiCallback<LoginResult> *>(internalPtr.get());
-                callback(outResult, container.GetCustomData());
-            }
-        }
-    }
-
-    void PlayFabClientInstanceAPI::LoginWithCustomID(
-        const PlayFabLoginWithCustomIDRequest& request,
-        const ProcessApiCallback<LoginResultWithUser> callback,
-        const TaskQueue& queue,
-        const ErrorCallback errorCallback,
-        void* customData
-    )
-    {
-        std::shared_ptr<PlayFabAuthenticationContext> context = MakeShared<PlayFabAuthenticationContext>();
-        std::shared_ptr<PlayFabApiSettings> settings = GlobalState::Get()->Settings();
-
-        IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
-        Json::Value requestJson = JsonUtils::ToJsonObject(request);
-        if (!request.titleId)
-        {
-            requestJson["TitleId"] = Json::Value(settings->titleId);
-        }
-
-        std::string jsonAsString = requestJson.toStyledString();
-
-        std::unordered_map<std::string, std::string> headers;
-
-        auto reqContainer = std::unique_ptr<CallRequestContainer>(new CallRequestContainer(
-            "/Client/LoginWithCustomID",
-            headers,
-            jsonAsString,
-            OnLoginWithCustomIDResult,
-            settings,
-            context,
-            customData));
-
-        reqContainer->successCallback = std::shared_ptr<void>((callback == nullptr) ? nullptr : new ProcessApiCallback<LoginResultWithUser>(callback));
-        reqContainer->errorCallback = errorCallback;
-        reqContainer->m_queue = queue;
-
-        http.MakePostRequest(std::unique_ptr<CallRequestContainerBase>(static_cast<CallRequestContainerBase*>(reqContainer.release())));
-    }
-
-    void PlayFabClientInstanceAPI::OnLoginWithCustomIDResult(int /*httpCode*/, const std::string& /*result*/, const std::shared_ptr<CallRequestContainerBase>& reqContainer)
-    {
-        CallRequestContainer& container = static_cast<CallRequestContainer&>(*reqContainer);
-        std::shared_ptr<PlayFabAuthenticationContext> context = container.GetContext();
-
-        LoginResultWithUser outResult;
-        if (ValidateResult(outResult, container))
-        {
-            context->HandlePlayFabLogin(outResult.PlayFabId, outResult.SessionTicket, outResult.EntityToken->Entity->Id, outResult.EntityToken->Entity->Type, outResult.EntityToken->EntityToken);
-
-            outResult.authenticationContext = context;
-            outResult.playFabUser = MakeShared<User>(container.GetApiSettings(), context);
-            outResult.playFabUser->ClientApi.MultiStepClientLogin(context, outResult.SettingsForUser->NeedsAttribution);
-
-            std::shared_ptr<void> internalPtr = container.successCallback;
-            if (internalPtr.get() != nullptr)
-            {
-                const auto& callback = *static_cast<ProcessApiCallback<LoginResultWithUser> *>(internalPtr.get());
                 callback(outResult, container.GetCustomData());
             }
         }
