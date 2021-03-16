@@ -21,6 +21,9 @@
     <Filter Include="Source Files\playfab\QoS">
       <UniqueIdentifier>{f39744c7-f312-4119-a2bd-ae011afab4ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\playfab_c">
+      <UniqueIdentifier>{02000f42-9b59-4fbf-b049-bed676f2509b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(SdkSourceDir)\include\playfab\PlayFabPlatformMacros.h">
@@ -233,6 +236,45 @@
     <ClInclude Include="$(SdkSourceDir)\include\playfab\QoS\XPlatSocket.h">
       <Filter>Header Files\playfab\QoS</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab\PlayFabHCHttpPlugin.h">
+      <Filter>Header Files\playfab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabClientApi_c.h">
+      <Filter>Header Files\playfab_c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabClientDataModels_c.h">
+      <Filter>Header Files\playfab_c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabBaseModel_c.h">
+      <Filter>Header Files\playfab_c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab\PlayFabUser.h">
+      <Filter>Header Files\playfab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab\ClientLoginApi.h">
+      <Filter>Header Files\playfab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab\AsyncProvider.h">
+      <Filter>Header Files\playfab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab\GlobalState.h">
+      <Filter>Header Files\playfab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab\InternalMemory.h">
+      <Filter>Header Files\playfab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab\TaskQueue.h">
+      <Filter>Header Files\playfab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab\StdOptional.h">
+      <Filter>Header Files\playfab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabLogin_c.h">
+      <Filter>Header Files\playfab_c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabGlobal_c.h">
+      <Filter>Header Files\playfab_c</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabAuthenticationContext.cpp">
@@ -375,6 +417,27 @@
     </ClCompile>
     <ClCompile Include="$(SdkSourceDir)\source\playfab\QoS\XPlatSocket.cpp">
       <Filter>Source Files\playfab\QoS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\PlayFabHCHttpPlugin.cpp">
+      <Filter>Source Files\playfab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\PlayFabClientApi_c.cpp">
+      <Filter>Source Files\playfab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\PlayFabUser.cpp">
+      <Filter>Source Files\playfab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\ClientLoginApi.cpp">
+      <Filter>Source Files\playfab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\TaskQueue.cpp">
+      <Filter>Source Files\playfab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\GlobalState.cpp">
+      <Filter>Source Files\playfab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\code\source\playfab\AsyncProvider.cpp">
+      <Filter>Source Files\playfab</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

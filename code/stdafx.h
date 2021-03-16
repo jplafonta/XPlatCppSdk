@@ -22,15 +22,22 @@
 #include <sstream>
 #include <string>
 #include <thread>
-#include <unordered_map>
 
+#include <httpClient/pal.h>
+#include <httpClient/async.h>
+#include <playfab/StdOptional.h>
+#include <playfab/InternalMemory.h>
+#include <playfab/TaskQueue.h>
 #include <playfab/PlayFabJsonHeaders.h>
 #include <playfab/PlayFabPlatformMacros.h>
 #include <playfab/PlayFabPlatformTypes.h>
 #include <playfab/PlayFabApiSettings.h>
 #include <playfab/PlayFabAuthenticationContext.h>
+#include <playfab/GlobalState.h>
 
 #define UNREFERENCED_PARAMETER(P) (P)
+#define RETURN_HR_IF_FAILED(expr) { HRESULT exprResult{ expr }; if (FAILED(exprResult)) { return exprResult; } }
+#define RETURN_HR_INVALIDARGUMENT_IF_NULL(x) { if ( ( x ) == nullptr ) { return E_INVALIDARG; } }
 
 #ifdef PLAYFAB_PLATFORM_LINUX
 #include <stdio.h>

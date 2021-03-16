@@ -821,7 +821,7 @@ namespace PlayFab
         void* customData
     )
     {
-        std::shared_ptr<PlayFabAuthenticationContext> context = request.authenticationContext != nullptr ? request.authenticationContext : PlayFabSettings::staticPlayer;
+        std::shared_ptr<PlayFabAuthenticationContext> context = PlayFabSettings::staticPlayer;
         std::shared_ptr<PlayFabApiSettings> settings = PlayFabSettings::staticSettings;
 
         IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
@@ -1997,7 +1997,7 @@ namespace PlayFab
         void* customData
     )
     {
-        std::shared_ptr<PlayFabAuthenticationContext> context = request.authenticationContext != nullptr ? request.authenticationContext : PlayFabSettings::staticPlayer;
+        std::shared_ptr<PlayFabAuthenticationContext> context = PlayFabSettings::staticPlayer;
         std::shared_ptr<PlayFabApiSettings> settings = PlayFabSettings::staticSettings;
 
         IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
@@ -4557,15 +4557,15 @@ namespace PlayFab
         void* customData
     )
     {
-        std::shared_ptr<PlayFabAuthenticationContext> context = request.authenticationContext != nullptr ? request.authenticationContext : PlayFabSettings::staticPlayer;
+        std::shared_ptr<PlayFabAuthenticationContext> context = PlayFabSettings::staticPlayer;
         std::shared_ptr<PlayFabApiSettings> settings = PlayFabSettings::staticSettings;
-        if (request.TitleId.empty())
-        {
-            request.TitleId = settings->titleId;
-        }
 
         IPlayFabHttpPlugin& http = *PlayFabPluginManager::GetPlugin<IPlayFabHttpPlugin>(PlayFabPluginContract::PlayFab_Transport);
-        const Json::Value requestJson = request.ToJson();
+        Json::Value requestJson = request.ToJson();
+        if (!request.titleId)
+        {
+            requestJson["TitleId"] = Json::Value(settings->titleId);
+        }
         std::string jsonAsString = requestJson.toStyledString();
 
         std::unordered_map<std::string, std::string> headers;

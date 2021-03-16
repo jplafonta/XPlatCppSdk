@@ -4,6 +4,7 @@
 
 #include <playfab/PlayFabClientDataModels.h>
 #include <playfab/PlayFabError.h>
+#include <playfab/TaskQueue.h>
 
 namespace PlayFab
 {

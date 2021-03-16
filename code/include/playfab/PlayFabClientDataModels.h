@@ -2,11 +2,213 @@
 
 #if !defined(DISABLE_PLAYFABCLIENT_API)
 
+#include <playfab_c/PlayFabClientDataModels_c.h>
+#include <playfab_c/PlayFabLogin_c.h>
 #include <playfab/PlayFabBaseModel.h>
 #include <playfab/PlayFabJsonHeaders.h>
 
 namespace PlayFab
 {
+    class User;
+
+    namespace JsonUtils
+    {
+        inline Json::Value ToJsonObject(const PlayFabLoginWithCustomIDRequest& input)
+        {
+            Json::Value output;
+            Json::Value each_CreateAccount; ToJsonUtilP(input.createAccount, each_CreateAccount); output["CreateAccount"] = each_CreateAccount;
+            Json::Value each_CustomId; ToJsonUtilS(input.customId, each_CustomId); output["CustomId"] = each_CustomId;
+            Json::Value each_CustomTags; ToJsonUtilO(input.customTags, input.customTagsCount, each_CustomTags); output["CustomTags"] = each_CustomTags;
+            Json::Value each_EncryptedRequest; ToJsonUtilS(input.encryptedRequest, each_EncryptedRequest); output["EncryptedRequest"] = each_EncryptedRequest;
+            Json::Value each_InfoRequestParameters; ToJsonUtilO(input.infoRequestParameters, each_InfoRequestParameters); output["InfoRequestParameters"] = each_InfoRequestParameters;
+            Json::Value each_PlayerSecret; ToJsonUtilS(input.playerSecret, each_PlayerSecret); output["PlayerSecret"] = each_PlayerSecret;
+            Json::Value each_TitleId; ToJsonUtilS(input.titleId, each_TitleId); output["TitleId"] = each_TitleId;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabGetPlayerCombinedInfoRequestParams& input)
+        {
+            Json::Value output;
+            Json::Value each_GetCharacterInventories; ToJsonUtilP(input.getCharacterInventories, each_GetCharacterInventories); output["GetCharacterInventories"] = each_GetCharacterInventories;
+            Json::Value each_GetCharacterList; ToJsonUtilP(input.getCharacterList, each_GetCharacterList); output["GetCharacterList"] = each_GetCharacterList;
+            Json::Value each_GetPlayerProfile; ToJsonUtilP(input.getPlayerProfile, each_GetPlayerProfile); output["GetPlayerProfile"] = each_GetPlayerProfile;
+            Json::Value each_GetPlayerStatistics; ToJsonUtilP(input.getPlayerStatistics, each_GetPlayerStatistics); output["GetPlayerStatistics"] = each_GetPlayerStatistics;
+            Json::Value each_GetTitleData; ToJsonUtilP(input.getTitleData, each_GetTitleData); output["GetTitleData"] = each_GetTitleData;
+            Json::Value each_GetUserAccountInfo; ToJsonUtilP(input.getUserAccountInfo, each_GetUserAccountInfo); output["GetUserAccountInfo"] = each_GetUserAccountInfo;
+            Json::Value each_GetUserData; ToJsonUtilP(input.getUserData, each_GetUserData); output["GetUserData"] = each_GetUserData;
+            Json::Value each_GetUserInventory; ToJsonUtilP(input.getUserInventory, each_GetUserInventory); output["GetUserInventory"] = each_GetUserInventory;
+            Json::Value each_GetUserReadOnlyData; ToJsonUtilP(input.getUserReadOnlyData, each_GetUserReadOnlyData); output["GetUserReadOnlyData"] = each_GetUserReadOnlyData;
+            Json::Value each_GetUserVirtualCurrency; ToJsonUtilP(input.getUserVirtualCurrency, each_GetUserVirtualCurrency); output["GetUserVirtualCurrency"] = each_GetUserVirtualCurrency;
+            Json::Value each_PlayerStatisticNames; ToJsonUtilS(input.playerStatisticNames, input.playerStatisticNamesCount, each_PlayerStatisticNames); output["PlayerStatisticNames"] = each_PlayerStatisticNames;
+            Json::Value each_ProfileConstraints; ToJsonUtilO(input.profileConstraints, each_ProfileConstraints); output["ProfileConstraints"] = each_ProfileConstraints;
+            Json::Value each_TitleDataKeys; ToJsonUtilS(input.titleDataKeys, input.titleDataKeysCount, each_TitleDataKeys); output["TitleDataKeys"] = each_TitleDataKeys;
+            Json::Value each_UserDataKeys; ToJsonUtilS(input.userDataKeys, input.userDataKeysCount, each_UserDataKeys); output["UserDataKeys"] = each_UserDataKeys;
+            Json::Value each_UserReadOnlyDataKeys; ToJsonUtilS(input.userReadOnlyDataKeys, input.userReadOnlyDataKeysCount, each_UserReadOnlyDataKeys); output["UserReadOnlyDataKeys"] = each_UserReadOnlyDataKeys;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabPlayerProfileViewConstraints& input)
+        {
+            Json::Value output;
+            Json::Value each_ShowAvatarUrl; ToJsonUtilP(input.showAvatarUrl, each_ShowAvatarUrl); output["ShowAvatarUrl"] = each_ShowAvatarUrl;
+            Json::Value each_ShowBannedUntil; ToJsonUtilP(input.showBannedUntil, each_ShowBannedUntil); output["ShowBannedUntil"] = each_ShowBannedUntil;
+            Json::Value each_ShowCampaignAttributions; ToJsonUtilP(input.showCampaignAttributions, each_ShowCampaignAttributions); output["ShowCampaignAttributions"] = each_ShowCampaignAttributions;
+            Json::Value each_ShowContactEmailAddresses; ToJsonUtilP(input.showContactEmailAddresses, each_ShowContactEmailAddresses); output["ShowContactEmailAddresses"] = each_ShowContactEmailAddresses;
+            Json::Value each_ShowCreated; ToJsonUtilP(input.showCreated, each_ShowCreated); output["ShowCreated"] = each_ShowCreated;
+            Json::Value each_ShowDisplayName; ToJsonUtilP(input.showDisplayName, each_ShowDisplayName); output["ShowDisplayName"] = each_ShowDisplayName;
+            Json::Value each_ShowExperimentVariants; ToJsonUtilP(input.showExperimentVariants, each_ShowExperimentVariants); output["ShowExperimentVariants"] = each_ShowExperimentVariants;
+            Json::Value each_ShowLastLogin; ToJsonUtilP(input.showLastLogin, each_ShowLastLogin); output["ShowLastLogin"] = each_ShowLastLogin;
+            Json::Value each_ShowLinkedAccounts; ToJsonUtilP(input.showLinkedAccounts, each_ShowLinkedAccounts); output["ShowLinkedAccounts"] = each_ShowLinkedAccounts;
+            Json::Value each_ShowLocations; ToJsonUtilP(input.showLocations, each_ShowLocations); output["ShowLocations"] = each_ShowLocations;
+            Json::Value each_ShowMemberships; ToJsonUtilP(input.showMemberships, each_ShowMemberships); output["ShowMemberships"] = each_ShowMemberships;
+            Json::Value each_ShowOrigination; ToJsonUtilP(input.showOrigination, each_ShowOrigination); output["ShowOrigination"] = each_ShowOrigination;
+            Json::Value each_ShowPushNotificationRegistrations; ToJsonUtilP(input.showPushNotificationRegistrations, each_ShowPushNotificationRegistrations); output["ShowPushNotificationRegistrations"] = each_ShowPushNotificationRegistrations;
+            Json::Value each_ShowStatistics; ToJsonUtilP(input.showStatistics, each_ShowStatistics); output["ShowStatistics"] = each_ShowStatistics;
+            Json::Value each_ShowTags; ToJsonUtilP(input.showTags, each_ShowTags); output["ShowTags"] = each_ShowTags;
+            Json::Value each_ShowTotalValueToDateInUsd; ToJsonUtilP(input.showTotalValueToDateInUsd, each_ShowTotalValueToDateInUsd); output["ShowTotalValueToDateInUsd"] = each_ShowTotalValueToDateInUsd;
+            Json::Value each_ShowValuesToDate; ToJsonUtilP(input.showValuesToDate, each_ShowValuesToDate); output["ShowValuesToDate"] = each_ShowValuesToDate;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabAdCampaignAttributionModel& input)
+        {
+            Json::Value output;
+            Json::Value each_AttributedAt; ToJsonUtilT(input.attributedAt, each_AttributedAt); output["AttributedAt"] = each_AttributedAt;
+            Json::Value each_CampaignId; ToJsonUtilS(input.campaignId, each_CampaignId); output["CampaignId"] = each_CampaignId;
+            Json::Value each_Platform; ToJsonUtilS(input.platform, each_Platform); output["Platform"] = each_Platform;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabContactEmailInfoModel& input)
+        {
+            Json::Value output;
+            Json::Value each_EmailAddress; ToJsonUtilS(input.emailAddress, each_EmailAddress); output["EmailAddress"] = each_EmailAddress;
+            Json::Value each_Name; ToJsonUtilS(input.name, each_Name); output["Name"] = each_Name;
+            Json::Value each_VerificationStatus; ToJsonUtilE(input.verificationStatus, each_VerificationStatus); output["VerificationStatus"] = each_VerificationStatus;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabLinkedPlatformAccountModel& input)
+        {
+            Json::Value output;
+            Json::Value each_Email; ToJsonUtilS(input.email, each_Email); output["Email"] = each_Email;
+            Json::Value each_Platform; ToJsonUtilE(input.platform, each_Platform); output["Platform"] = each_Platform;
+            Json::Value each_PlatformUserId; ToJsonUtilS(input.platformUserId, each_PlatformUserId); output["PlatformUserId"] = each_PlatformUserId;
+            Json::Value each_Username; ToJsonUtilS(input.username, each_Username); output["Username"] = each_Username;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabLocationModel& input)
+        {
+            Json::Value output;
+            Json::Value each_City; ToJsonUtilS(input.city, each_City); output["City"] = each_City;
+            Json::Value each_pfContinentCode; ToJsonUtilE(input.pfContinentCode, each_pfContinentCode); output["ContinentCode"] = each_pfContinentCode;
+            Json::Value each_pfCountryCode; ToJsonUtilE(input.pfCountryCode, each_pfCountryCode); output["CountryCode"] = each_pfCountryCode;
+            Json::Value each_Latitude; ToJsonUtilP(input.latitude, each_Latitude); output["Latitude"] = each_Latitude;
+            Json::Value each_Longitude; ToJsonUtilP(input.longitude, each_Longitude); output["Longitude"] = each_Longitude;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabSubscriptionModel& input)
+        {
+            Json::Value output;
+            Json::Value each_Expiration; ToJsonUtilT(input.expiration, each_Expiration); output["Expiration"] = each_Expiration;
+            Json::Value each_InitialSubscriptionTime; ToJsonUtilT(input.initialSubscriptionTime, each_InitialSubscriptionTime); output["InitialSubscriptionTime"] = each_InitialSubscriptionTime;
+            Json::Value each_IsActive; ToJsonUtilP(input.isActive, each_IsActive); output["IsActive"] = each_IsActive;
+            Json::Value each_Status; ToJsonUtilE(input.status, each_Status); output["Status"] = each_Status;
+            Json::Value each_SubscriptionId; ToJsonUtilS(input.subscriptionId, each_SubscriptionId); output["SubscriptionId"] = each_SubscriptionId;
+            Json::Value each_SubscriptionItemId; ToJsonUtilS(input.subscriptionItemId, each_SubscriptionItemId); output["SubscriptionItemId"] = each_SubscriptionItemId;
+            Json::Value each_SubscriptionProvider; ToJsonUtilS(input.subscriptionProvider, each_SubscriptionProvider); output["SubscriptionProvider"] = each_SubscriptionProvider;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabMembershipModel& input)
+        {
+            Json::Value output;
+            Json::Value each_IsActive; ToJsonUtilP(input.isActive, each_IsActive); output["IsActive"] = each_IsActive;
+            Json::Value each_MembershipExpiration; ToJsonUtilT(input.membershipExpiration, each_MembershipExpiration); output["MembershipExpiration"] = each_MembershipExpiration;
+            Json::Value each_MembershipId; ToJsonUtilS(input.membershipId, each_MembershipId); output["MembershipId"] = each_MembershipId;
+            Json::Value each_OverrideExpiration; ToJsonUtilT(input.overrideExpiration, each_OverrideExpiration); output["OverrideExpiration"] = each_OverrideExpiration;
+            Json::Value each_Subscriptions; ToJsonUtilO(input.subscriptions, input.subscriptionsCount, each_Subscriptions); output["Subscriptions"] = each_Subscriptions;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabPushNotificationRegistrationModel& input)
+        {
+            Json::Value output;
+            Json::Value each_NotificationEndpointARN; ToJsonUtilS(input.notificationEndpointARN, each_NotificationEndpointARN); output["NotificationEndpointARN"] = each_NotificationEndpointARN;
+            Json::Value each_Platform; ToJsonUtilE(input.platform, each_Platform); output["Platform"] = each_Platform;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabStatisticModel& input)
+        {
+            Json::Value output;
+            Json::Value each_Name; ToJsonUtilS(input.name, each_Name); output["Name"] = each_Name;
+            Json::Value each_Value; ToJsonUtilP(input.value, each_Value); output["Value"] = each_Value;
+            Json::Value each_Version; ToJsonUtilP(input.version, each_Version); output["Version"] = each_Version;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabTagModel& input)
+        {
+            Json::Value output;
+            Json::Value each_TagValue; ToJsonUtilS(input.tagValue, each_TagValue); output["TagValue"] = each_TagValue;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabValueToDateModel& input)
+        {
+            Json::Value output;
+            Json::Value each_Currency; ToJsonUtilS(input.currency, each_Currency); output["Currency"] = each_Currency;
+            Json::Value each_TotalValue; ToJsonUtilP(input.totalValue, each_TotalValue); output["TotalValue"] = each_TotalValue;
+            Json::Value each_TotalValueAsDecimal; ToJsonUtilS(input.totalValueAsDecimal, each_TotalValueAsDecimal); output["TotalValueAsDecimal"] = each_TotalValueAsDecimal;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabPlayerProfileModel& input)
+        {
+            Json::Value output;
+            Json::Value each_AdCampaignAttributions; ToJsonUtilO(input.adCampaignAttributions, input.adCampaignAttributionsCount, each_AdCampaignAttributions); output["AdCampaignAttributions"] = each_AdCampaignAttributions;
+            Json::Value each_AvatarUrl; ToJsonUtilS(input.avatarUrl, each_AvatarUrl); output["AvatarUrl"] = each_AvatarUrl;
+            Json::Value each_BannedUntil; ToJsonUtilT(input.bannedUntil, each_BannedUntil); output["BannedUntil"] = each_BannedUntil;
+            Json::Value each_ContactEmailAddresses; ToJsonUtilO(input.contactEmailAddresses, input.contactEmailAddressesCount, each_ContactEmailAddresses); output["ContactEmailAddresses"] = each_ContactEmailAddresses;
+            Json::Value each_Created; ToJsonUtilT(input.created, each_Created); output["Created"] = each_Created;
+            Json::Value each_DisplayName; ToJsonUtilS(input.displayName, each_DisplayName); output["DisplayName"] = each_DisplayName;
+            Json::Value each_ExperimentVariants; ToJsonUtilS(input.experimentVariants, input.experimentVariantsCount, each_ExperimentVariants); output["ExperimentVariants"] = each_ExperimentVariants;
+            Json::Value each_LastLogin; ToJsonUtilT(input.lastLogin, each_LastLogin); output["LastLogin"] = each_LastLogin;
+            Json::Value each_LinkedAccounts; ToJsonUtilO(input.linkedAccounts, input.linkedAccountsCount, each_LinkedAccounts); output["LinkedAccounts"] = each_LinkedAccounts;
+            Json::Value each_Locations; ToJsonUtilO(input.locations, input.locationsCount, each_Locations); output["Locations"] = each_Locations;
+            Json::Value each_Memberships; ToJsonUtilO(input.memberships, input.membershipsCount, each_Memberships); output["Memberships"] = each_Memberships;
+            Json::Value each_Origination; ToJsonUtilE(input.origination, each_Origination); output["Origination"] = each_Origination;
+            Json::Value each_PlayerId; ToJsonUtilS(input.playerId, each_PlayerId); output["PlayerId"] = each_PlayerId;
+            Json::Value each_PublisherId; ToJsonUtilS(input.publisherId, each_PublisherId); output["PublisherId"] = each_PublisherId;
+            Json::Value each_PushNotificationRegistrations; ToJsonUtilO(input.pushNotificationRegistrations, input.pushNotificationRegistrationsCount, each_PushNotificationRegistrations); output["PushNotificationRegistrations"] = each_PushNotificationRegistrations;
+            Json::Value each_Statistics; ToJsonUtilO(input.statistics, input.statisticsCount, each_Statistics); output["Statistics"] = each_Statistics;
+            Json::Value each_Tags; ToJsonUtilO(input.tags, input.tagsCount, each_Tags); output["Tags"] = each_Tags;
+            Json::Value each_TitleId; ToJsonUtilS(input.titleId, each_TitleId); output["TitleId"] = each_TitleId;
+            Json::Value each_TotalValueToDateInUSD; ToJsonUtilP(input.totalValueToDateInUSD, each_TotalValueToDateInUSD); output["TotalValueToDateInUSD"] = each_TotalValueToDateInUSD;
+            Json::Value each_ValuesToDate; ToJsonUtilO(input.valuesToDate, input.valuesToDateCount, each_ValuesToDate); output["ValuesToDate"] = each_ValuesToDate;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabGetPlayerProfileRequest& input)
+        {
+            Json::Value output;
+            Json::Value each_CustomTags; ToJsonUtilO(input.customTags, input.customTagsCount, each_CustomTags); output["CustomTags"] = each_CustomTags;
+            Json::Value each_PlayFabId; ToJsonUtilS(input.playFabId, each_PlayFabId); output["PlayFabId"] = each_PlayFabId;
+            Json::Value each_ProfileConstraints; ToJsonUtilO(input.profileConstraints, each_ProfileConstraints); output["ProfileConstraints"] = each_ProfileConstraints;
+            return output;
+        }
+
+        inline Json::Value ToJsonObject(const PlayFabCreateSharedGroupRequest& input)
+        {
+            Json::Value output;
+            Json::Value each_SharedGroupId; ToJsonUtilS(input.sharedGroupId, each_SharedGroupId); output["SharedGroupId"] = each_SharedGroupId;
+            return output;
+        }
+    }
+
     namespace ClientModels
     {
         // Client Enums
@@ -119,56 +321,45 @@ namespace PlayFab
             }
         }
 
-        enum class ContinentCode
+        inline void ToJsonEnum(const PlayFabContinentCode input, Json::Value& output)
         {
-            ContinentCodeAF,
-            ContinentCodeAN,
-            ContinentCodeAS,
-            ContinentCodeEU,
-            ContinentCodeNA,
-            ContinentCodeOC,
-            ContinentCodeSA
-        };
-
-        inline void ToJsonEnum(const ContinentCode input, Json::Value& output)
-        {
-            if (input == ContinentCode::ContinentCodeAF)
+            if (input == PlayFabContinentCode::AF)
             {
                 output = Json::Value("AF");
                 return;
             }
-            if (input == ContinentCode::ContinentCodeAN)
+            if (input == PlayFabContinentCode::AN)
             {
                 output = Json::Value("AN");
                 return;
             }
-            if (input == ContinentCode::ContinentCodeAS)
+            if (input == PlayFabContinentCode::AS)
             {
                 output = Json::Value("AS");
                 return;
             }
-            if (input == ContinentCode::ContinentCodeEU)
+            if (input == PlayFabContinentCode::EU)
             {
                 output = Json::Value("EU");
                 return;
             }
-            if (input == ContinentCode::ContinentCodeNA)
+            if (input == PlayFabContinentCode::NA)
             {
                 output = Json::Value("NA");
                 return;
             }
-            if (input == ContinentCode::ContinentCodeOC)
+            if (input == PlayFabContinentCode::OC)
             {
                 output = Json::Value("OC");
                 return;
             }
-            if (input == ContinentCode::ContinentCodeSA)
+            if (input == PlayFabContinentCode::SA)
             {
                 output = Json::Value("SA");
                 return;
             }
         }
-        inline void FromJsonEnum(const Json::Value& input, ContinentCode& output)
+        inline void FromJsonEnum(const Json::Value& input, PlayFabContinentCode& output)
         {
             if (!input.isString())
             {
@@ -177,1543 +368,1293 @@ namespace PlayFab
             const std::string& inputStr = input.asString();
             if (inputStr == "AF")
             {
-                output = ContinentCode::ContinentCodeAF;
+                output = PlayFabContinentCode::AF;
                 return;
             }
             if (inputStr == "AN")
             {
-                output = ContinentCode::ContinentCodeAN;
+                output = PlayFabContinentCode::AN;
                 return;
             }
             if (inputStr == "AS")
             {
-                output = ContinentCode::ContinentCodeAS;
+                output = PlayFabContinentCode::AS;
                 return;
             }
             if (inputStr == "EU")
             {
-                output = ContinentCode::ContinentCodeEU;
+                output = PlayFabContinentCode::EU;
                 return;
             }
             if (inputStr == "NA")
             {
-                output = ContinentCode::ContinentCodeNA;
+                output = PlayFabContinentCode::NA;
                 return;
             }
             if (inputStr == "OC")
             {
-                output = ContinentCode::ContinentCodeOC;
+                output = PlayFabContinentCode::OC;
                 return;
             }
             if (inputStr == "SA")
             {
-                output = ContinentCode::ContinentCodeSA;
+                output = PlayFabContinentCode::SA;
                 return;
             }
         }
 
-        enum class CountryCode
+        inline void ToJsonEnum(const PlayFabCountryCode input, Json::Value& output)
         {
-            CountryCodeAF,
-            CountryCodeAX,
-            CountryCodeAL,
-            CountryCodeDZ,
-            CountryCodeAS,
-            CountryCodeAD,
-            CountryCodeAO,
-            CountryCodeAI,
-            CountryCodeAQ,
-            CountryCodeAG,
-            CountryCodeAR,
-            CountryCodeAM,
-            CountryCodeAW,
-            CountryCodeAU,
-            CountryCodeAT,
-            CountryCodeAZ,
-            CountryCodeBS,
-            CountryCodeBH,
-            CountryCodeBD,
-            CountryCodeBB,
-            CountryCodeBY,
-            CountryCodeBE,
-            CountryCodeBZ,
-            CountryCodeBJ,
-            CountryCodeBM,
-            CountryCodeBT,
-            CountryCodeBO,
-            CountryCodeBQ,
-            CountryCodeBA,
-            CountryCodeBW,
-            CountryCodeBV,
-            CountryCodeBR,
-            CountryCodeIO,
-            CountryCodeBN,
-            CountryCodeBG,
-            CountryCodeBF,
-            CountryCodeBI,
-            CountryCodeKH,
-            CountryCodeCM,
-            CountryCodeCA,
-            CountryCodeCV,
-            CountryCodeKY,
-            CountryCodeCF,
-            CountryCodeTD,
-            CountryCodeCL,
-            CountryCodeCN,
-            CountryCodeCX,
-            CountryCodeCC,
-            CountryCodeCO,
-            CountryCodeKM,
-            CountryCodeCG,
-            CountryCodeCD,
-            CountryCodeCK,
-            CountryCodeCR,
-            CountryCodeCI,
-            CountryCodeHR,
-            CountryCodeCU,
-            CountryCodeCW,
-            CountryCodeCY,
-            CountryCodeCZ,
-            CountryCodeDK,
-            CountryCodeDJ,
-            CountryCodeDM,
-            CountryCodeDO,
-            CountryCodeEC,
-            CountryCodeEG,
-            CountryCodeSV,
-            CountryCodeGQ,
-            CountryCodeER,
-            CountryCodeEE,
-            CountryCodeET,
-            CountryCodeFK,
-            CountryCodeFO,
-            CountryCodeFJ,
-            CountryCodeFI,
-            CountryCodeFR,
-            CountryCodeGF,
-            CountryCodePF,
-            CountryCodeTF,
-            CountryCodeGA,
-            CountryCodeGM,
-            CountryCodeGE,
-            CountryCodeDE,
-            CountryCodeGH,
-            CountryCodeGI,
-            CountryCodeGR,
-            CountryCodeGL,
-            CountryCodeGD,
-            CountryCodeGP,
-            CountryCodeGU,
-            CountryCodeGT,
-            CountryCodeGG,
-            CountryCodeGN,
-            CountryCodeGW,
-            CountryCodeGY,
-            CountryCodeHT,
-            CountryCodeHM,
-            CountryCodeVA,
-            CountryCodeHN,
-            CountryCodeHK,
-            CountryCodeHU,
-            CountryCodeIS,
-            CountryCodeIN,
-            CountryCodeID,
-            CountryCodeIR,
-            CountryCodeIQ,
-            CountryCodeIE,
-            CountryCodeIM,
-            CountryCodeIL,
-            CountryCodeIT,
-            CountryCodeJM,
-            CountryCodeJP,
-            CountryCodeJE,
-            CountryCodeJO,
-            CountryCodeKZ,
-            CountryCodeKE,
-            CountryCodeKI,
-            CountryCodeKP,
-            CountryCodeKR,
-            CountryCodeKW,
-            CountryCodeKG,
-            CountryCodeLA,
-            CountryCodeLV,
-            CountryCodeLB,
-            CountryCodeLS,
-            CountryCodeLR,
-            CountryCodeLY,
-            CountryCodeLI,
-            CountryCodeLT,
-            CountryCodeLU,
-            CountryCodeMO,
-            CountryCodeMK,
-            CountryCodeMG,
-            CountryCodeMW,
-            CountryCodeMY,
-            CountryCodeMV,
-            CountryCodeML,
-            CountryCodeMT,
-            CountryCodeMH,
-            CountryCodeMQ,
-            CountryCodeMR,
-            CountryCodeMU,
-            CountryCodeYT,
-            CountryCodeMX,
-            CountryCodeFM,
-            CountryCodeMD,
-            CountryCodeMC,
-            CountryCodeMN,
-            CountryCodeME,
-            CountryCodeMS,
-            CountryCodeMA,
-            CountryCodeMZ,
-            CountryCodeMM,
-            CountryCodeNA,
-            CountryCodeNR,
-            CountryCodeNP,
-            CountryCodeNL,
-            CountryCodeNC,
-            CountryCodeNZ,
-            CountryCodeNI,
-            CountryCodeNE,
-            CountryCodeNG,
-            CountryCodeNU,
-            CountryCodeNF,
-            CountryCodeMP,
-            CountryCodeNO,
-            CountryCodeOM,
-            CountryCodePK,
-            CountryCodePW,
-            CountryCodePS,
-            CountryCodePA,
-            CountryCodePG,
-            CountryCodePY,
-            CountryCodePE,
-            CountryCodePH,
-            CountryCodePN,
-            CountryCodePL,
-            CountryCodePT,
-            CountryCodePR,
-            CountryCodeQA,
-            CountryCodeRE,
-            CountryCodeRO,
-            CountryCodeRU,
-            CountryCodeRW,
-            CountryCodeBL,
-            CountryCodeSH,
-            CountryCodeKN,
-            CountryCodeLC,
-            CountryCodeMF,
-            CountryCodePM,
-            CountryCodeVC,
-            CountryCodeWS,
-            CountryCodeSM,
-            CountryCodeST,
-            CountryCodeSA,
-            CountryCodeSN,
-            CountryCodeRS,
-            CountryCodeSC,
-            CountryCodeSL,
-            CountryCodeSG,
-            CountryCodeSX,
-            CountryCodeSK,
-            CountryCodeSI,
-            CountryCodeSB,
-            CountryCodeSO,
-            CountryCodeZA,
-            CountryCodeGS,
-            CountryCodeSS,
-            CountryCodeES,
-            CountryCodeLK,
-            CountryCodeSD,
-            CountryCodeSR,
-            CountryCodeSJ,
-            CountryCodeSZ,
-            CountryCodeSE,
-            CountryCodeCH,
-            CountryCodeSY,
-            CountryCodeTW,
-            CountryCodeTJ,
-            CountryCodeTZ,
-            CountryCodeTH,
-            CountryCodeTL,
-            CountryCodeTG,
-            CountryCodeTK,
-            CountryCodeTO,
-            CountryCodeTT,
-            CountryCodeTN,
-            CountryCodeTR,
-            CountryCodeTM,
-            CountryCodeTC,
-            CountryCodeTV,
-            CountryCodeUG,
-            CountryCodeUA,
-            CountryCodeAE,
-            CountryCodeGB,
-            CountryCodeUS,
-            CountryCodeUM,
-            CountryCodeUY,
-            CountryCodeUZ,
-            CountryCodeVU,
-            CountryCodeVE,
-            CountryCodeVN,
-            CountryCodeVG,
-            CountryCodeVI,
-            CountryCodeWF,
-            CountryCodeEH,
-            CountryCodeYE,
-            CountryCodeZM,
-            CountryCodeZW
-        };
-
-        inline void ToJsonEnum(const CountryCode input, Json::Value& output)
-        {
-            if (input == CountryCode::CountryCodeAF)
+            if (input == PlayFabCountryCode::AF)
             {
                 output = Json::Value("AF");
                 return;
             }
-            if (input == CountryCode::CountryCodeAX)
+            if (input == PlayFabCountryCode::AX)
             {
                 output = Json::Value("AX");
                 return;
             }
-            if (input == CountryCode::CountryCodeAL)
+            if (input == PlayFabCountryCode::AL)
             {
                 output = Json::Value("AL");
                 return;
             }
-            if (input == CountryCode::CountryCodeDZ)
+            if (input == PlayFabCountryCode::DZ)
             {
                 output = Json::Value("DZ");
                 return;
             }
-            if (input == CountryCode::CountryCodeAS)
+            if (input == PlayFabCountryCode::AS)
             {
                 output = Json::Value("AS");
                 return;
             }
-            if (input == CountryCode::CountryCodeAD)
+            if (input == PlayFabCountryCode::AD)
             {
                 output = Json::Value("AD");
                 return;
             }
-            if (input == CountryCode::CountryCodeAO)
+            if (input == PlayFabCountryCode::AO)
             {
                 output = Json::Value("AO");
                 return;
             }
-            if (input == CountryCode::CountryCodeAI)
+            if (input == PlayFabCountryCode::AI)
             {
                 output = Json::Value("AI");
                 return;
             }
-            if (input == CountryCode::CountryCodeAQ)
+            if (input == PlayFabCountryCode::AQ)
             {
                 output = Json::Value("AQ");
                 return;
             }
-            if (input == CountryCode::CountryCodeAG)
+            if (input == PlayFabCountryCode::AG)
             {
                 output = Json::Value("AG");
                 return;
             }
-            if (input == CountryCode::CountryCodeAR)
+            if (input == PlayFabCountryCode::AR)
             {
                 output = Json::Value("AR");
                 return;
             }
-            if (input == CountryCode::CountryCodeAM)
+            if (input == PlayFabCountryCode::AM)
             {
                 output = Json::Value("AM");
                 return;
             }
-            if (input == CountryCode::CountryCodeAW)
+            if (input == PlayFabCountryCode::AW)
             {
                 output = Json::Value("AW");
                 return;
             }
-            if (input == CountryCode::CountryCodeAU)
+            if (input == PlayFabCountryCode::AU)
             {
                 output = Json::Value("AU");
                 return;
             }
-            if (input == CountryCode::CountryCodeAT)
+            if (input == PlayFabCountryCode::AT)
             {
                 output = Json::Value("AT");
                 return;
             }
-            if (input == CountryCode::CountryCodeAZ)
+            if (input == PlayFabCountryCode::AZ)
             {
                 output = Json::Value("AZ");
                 return;
             }
-            if (input == CountryCode::CountryCodeBS)
+            if (input == PlayFabCountryCode::BS)
             {
                 output = Json::Value("BS");
                 return;
             }
-            if (input == CountryCode::CountryCodeBH)
+            if (input == PlayFabCountryCode::BH)
             {
                 output = Json::Value("BH");
                 return;
             }
-            if (input == CountryCode::CountryCodeBD)
+            if (input == PlayFabCountryCode::BD)
             {
                 output = Json::Value("BD");
                 return;
             }
-            if (input == CountryCode::CountryCodeBB)
+            if (input == PlayFabCountryCode::BB)
             {
                 output = Json::Value("BB");
                 return;
             }
-            if (input == CountryCode::CountryCodeBY)
+            if (input == PlayFabCountryCode::BY)
             {
                 output = Json::Value("BY");
                 return;
             }
-            if (input == CountryCode::CountryCodeBE)
+            if (input == PlayFabCountryCode::BE)
             {
                 output = Json::Value("BE");
                 return;
             }
-            if (input == CountryCode::CountryCodeBZ)
+            if (input == PlayFabCountryCode::BZ)
             {
                 output = Json::Value("BZ");
                 return;
             }
-            if (input == CountryCode::CountryCodeBJ)
+            if (input == PlayFabCountryCode::BJ)
             {
                 output = Json::Value("BJ");
                 return;
             }
-            if (input == CountryCode::CountryCodeBM)
+            if (input == PlayFabCountryCode::BM)
             {
                 output = Json::Value("BM");
                 return;
             }
-            if (input == CountryCode::CountryCodeBT)
+            if (input == PlayFabCountryCode::BT)
             {
                 output = Json::Value("BT");
                 return;
             }
-            if (input == CountryCode::CountryCodeBO)
+            if (input == PlayFabCountryCode::BO)
             {
                 output = Json::Value("BO");
                 return;
             }
-            if (input == CountryCode::CountryCodeBQ)
+            if (input == PlayFabCountryCode::BQ)
             {
                 output = Json::Value("BQ");
                 return;
             }
-            if (input == CountryCode::CountryCodeBA)
+            if (input == PlayFabCountryCode::BA)
             {
                 output = Json::Value("BA");
                 return;
             }
-            if (input == CountryCode::CountryCodeBW)
+            if (input == PlayFabCountryCode::BW)
             {
                 output = Json::Value("BW");
                 return;
             }
-            if (input == CountryCode::CountryCodeBV)
+            if (input == PlayFabCountryCode::BV)
             {
                 output = Json::Value("BV");
                 return;
             }
-            if (input == CountryCode::CountryCodeBR)
+            if (input == PlayFabCountryCode::BR)
             {
                 output = Json::Value("BR");
                 return;
             }
-            if (input == CountryCode::CountryCodeIO)
+            if (input == PlayFabCountryCode::IO)
             {
                 output = Json::Value("IO");
                 return;
             }
-            if (input == CountryCode::CountryCodeBN)
+            if (input == PlayFabCountryCode::BN)
             {
                 output = Json::Value("BN");
                 return;
             }
-            if (input == CountryCode::CountryCodeBG)
+            if (input == PlayFabCountryCode::BG)
             {
                 output = Json::Value("BG");
                 return;
             }
-            if (input == CountryCode::CountryCodeBF)
+            if (input == PlayFabCountryCode::BF)
             {
                 output = Json::Value("BF");
                 return;
             }
-            if (input == CountryCode::CountryCodeBI)
+            if (input == PlayFabCountryCode::BI)
             {
                 output = Json::Value("BI");
                 return;
             }
-            if (input == CountryCode::CountryCodeKH)
+            if (input == PlayFabCountryCode::KH)
             {
                 output = Json::Value("KH");
                 return;
             }
-            if (input == CountryCode::CountryCodeCM)
+            if (input == PlayFabCountryCode::CM)
             {
                 output = Json::Value("CM");
                 return;
             }
-            if (input == CountryCode::CountryCodeCA)
+            if (input == PlayFabCountryCode::CA)
             {
                 output = Json::Value("CA");
                 return;
             }
-            if (input == CountryCode::CountryCodeCV)
+            if (input == PlayFabCountryCode::CV)
             {
                 output = Json::Value("CV");
                 return;
             }
-            if (input == CountryCode::CountryCodeKY)
+            if (input == PlayFabCountryCode::KY)
             {
                 output = Json::Value("KY");
                 return;
             }
-            if (input == CountryCode::CountryCodeCF)
+            if (input == PlayFabCountryCode::CF)
             {
                 output = Json::Value("CF");
                 return;
             }
-            if (input == CountryCode::CountryCodeTD)
+            if (input == PlayFabCountryCode::TD)
             {
                 output = Json::Value("TD");
                 return;
             }
-            if (input == CountryCode::CountryCodeCL)
+            if (input == PlayFabCountryCode::CL)
             {
                 output = Json::Value("CL");
                 return;
             }
-            if (input == CountryCode::CountryCodeCN)
+            if (input == PlayFabCountryCode::CN)
             {
                 output = Json::Value("CN");
                 return;
             }
-            if (input == CountryCode::CountryCodeCX)
+            if (input == PlayFabCountryCode::CX)
             {
                 output = Json::Value("CX");
                 return;
             }
-            if (input == CountryCode::CountryCodeCC)
+            if (input == PlayFabCountryCode::CC)
             {
                 output = Json::Value("CC");
                 return;
             }
-            if (input == CountryCode::CountryCodeCO)
+            if (input == PlayFabCountryCode::CO)
             {
                 output = Json::Value("CO");
                 return;
             }
-            if (input == CountryCode::CountryCodeKM)
+            if (input == PlayFabCountryCode::KM)
             {
                 output = Json::Value("KM");
                 return;
             }
-            if (input == CountryCode::CountryCodeCG)
+            if (input == PlayFabCountryCode::CG)
             {
                 output = Json::Value("CG");
                 return;
             }
-            if (input == CountryCode::CountryCodeCD)
+            if (input == PlayFabCountryCode::CD)
             {
                 output = Json::Value("CD");
                 return;
             }
-            if (input == CountryCode::CountryCodeCK)
+            if (input == PlayFabCountryCode::CK)
             {
                 output = Json::Value("CK");
                 return;
             }
-            if (input == CountryCode::CountryCodeCR)
+            if (input == PlayFabCountryCode::CR)
             {
                 output = Json::Value("CR");
                 return;
             }
-            if (input == CountryCode::CountryCodeCI)
+            if (input == PlayFabCountryCode::CI)
             {
                 output = Json::Value("CI");
                 return;
             }
-            if (input == CountryCode::CountryCodeHR)
+            if (input == PlayFabCountryCode::HR)
             {
                 output = Json::Value("HR");
                 return;
             }
-            if (input == CountryCode::CountryCodeCU)
+            if (input == PlayFabCountryCode::CU)
             {
                 output = Json::Value("CU");
                 return;
             }
-            if (input == CountryCode::CountryCodeCW)
+            if (input == PlayFabCountryCode::CW)
             {
                 output = Json::Value("CW");
                 return;
             }
-            if (input == CountryCode::CountryCodeCY)
+            if (input == PlayFabCountryCode::CY)
             {
                 output = Json::Value("CY");
                 return;
             }
-            if (input == CountryCode::CountryCodeCZ)
+            if (input == PlayFabCountryCode::CZ)
             {
                 output = Json::Value("CZ");
                 return;
             }
-            if (input == CountryCode::CountryCodeDK)
+            if (input == PlayFabCountryCode::DK)
             {
                 output = Json::Value("DK");
                 return;
             }
-            if (input == CountryCode::CountryCodeDJ)
+            if (input == PlayFabCountryCode::DJ)
             {
                 output = Json::Value("DJ");
                 return;
             }
-            if (input == CountryCode::CountryCodeDM)
+            if (input == PlayFabCountryCode::DM)
             {
                 output = Json::Value("DM");
                 return;
             }
-            if (input == CountryCode::CountryCodeDO)
+            if (input == PlayFabCountryCode::DO)
             {
                 output = Json::Value("DO");
                 return;
             }
-            if (input == CountryCode::CountryCodeEC)
+            if (input == PlayFabCountryCode::EC)
             {
                 output = Json::Value("EC");
                 return;
             }
-            if (input == CountryCode::CountryCodeEG)
+            if (input == PlayFabCountryCode::EG)
             {
                 output = Json::Value("EG");
                 return;
             }
-            if (input == CountryCode::CountryCodeSV)
+            if (input == PlayFabCountryCode::SV)
             {
                 output = Json::Value("SV");
                 return;
             }
-            if (input == CountryCode::CountryCodeGQ)
+            if (input == PlayFabCountryCode::GQ)
             {
                 output = Json::Value("GQ");
                 return;
             }
-            if (input == CountryCode::CountryCodeER)
+            if (input == PlayFabCountryCode::ER)
             {
                 output = Json::Value("ER");
                 return;
             }
-            if (input == CountryCode::CountryCodeEE)
+            if (input == PlayFabCountryCode::EE)
             {
                 output = Json::Value("EE");
                 return;
             }
-            if (input == CountryCode::CountryCodeET)
+            if (input == PlayFabCountryCode::ET)
             {
                 output = Json::Value("ET");
                 return;
             }
-            if (input == CountryCode::CountryCodeFK)
+            if (input == PlayFabCountryCode::FK)
             {
                 output = Json::Value("FK");
                 return;
             }
-            if (input == CountryCode::CountryCodeFO)
+            if (input == PlayFabCountryCode::FO)
             {
                 output = Json::Value("FO");
                 return;
             }
-            if (input == CountryCode::CountryCodeFJ)
+            if (input == PlayFabCountryCode::FJ)
             {
                 output = Json::Value("FJ");
                 return;
             }
-            if (input == CountryCode::CountryCodeFI)
+            if (input == PlayFabCountryCode::FI)
             {
                 output = Json::Value("FI");
                 return;
             }
-            if (input == CountryCode::CountryCodeFR)
+            if (input == PlayFabCountryCode::FR)
             {
                 output = Json::Value("FR");
                 return;
             }
-            if (input == CountryCode::CountryCodeGF)
+            if (input == PlayFabCountryCode::GF)
             {
                 output = Json::Value("GF");
                 return;
             }
-            if (input == CountryCode::CountryCodePF)
+            if (input == PlayFabCountryCode::PF)
             {
                 output = Json::Value("PF");
                 return;
             }
-            if (input == CountryCode::CountryCodeTF)
+            if (input == PlayFabCountryCode::TF)
             {
                 output = Json::Value("TF");
                 return;
             }
-            if (input == CountryCode::CountryCodeGA)
+            if (input == PlayFabCountryCode::GA)
             {
                 output = Json::Value("GA");
                 return;
             }
-            if (input == CountryCode::CountryCodeGM)
+            if (input == PlayFabCountryCode::GM)
             {
                 output = Json::Value("GM");
                 return;
             }
-            if (input == CountryCode::CountryCodeGE)
+            if (input == PlayFabCountryCode::GE)
             {
                 output = Json::Value("GE");
                 return;
             }
-            if (input == CountryCode::CountryCodeDE)
+            if (input == PlayFabCountryCode::DE)
             {
                 output = Json::Value("DE");
                 return;
             }
-            if (input == CountryCode::CountryCodeGH)
+            if (input == PlayFabCountryCode::GH)
             {
                 output = Json::Value("GH");
                 return;
             }
-            if (input == CountryCode::CountryCodeGI)
+            if (input == PlayFabCountryCode::GI)
             {
                 output = Json::Value("GI");
                 return;
             }
-            if (input == CountryCode::CountryCodeGR)
+            if (input == PlayFabCountryCode::GR)
             {
                 output = Json::Value("GR");
                 return;
             }
-            if (input == CountryCode::CountryCodeGL)
+            if (input == PlayFabCountryCode::GL)
             {
                 output = Json::Value("GL");
                 return;
             }
-            if (input == CountryCode::CountryCodeGD)
+            if (input == PlayFabCountryCode::GD)
             {
                 output = Json::Value("GD");
                 return;
             }
-            if (input == CountryCode::CountryCodeGP)
+            if (input == PlayFabCountryCode::GP)
             {
                 output = Json::Value("GP");
                 return;
             }
-            if (input == CountryCode::CountryCodeGU)
+            if (input == PlayFabCountryCode::GU)
             {
                 output = Json::Value("GU");
                 return;
             }
-            if (input == CountryCode::CountryCodeGT)
+            if (input == PlayFabCountryCode::GT)
             {
                 output = Json::Value("GT");
                 return;
             }
-            if (input == CountryCode::CountryCodeGG)
+            if (input == PlayFabCountryCode::GG)
             {
                 output = Json::Value("GG");
                 return;
             }
-            if (input == CountryCode::CountryCodeGN)
+            if (input == PlayFabCountryCode::GN)
             {
                 output = Json::Value("GN");
                 return;
             }
-            if (input == CountryCode::CountryCodeGW)
+            if (input == PlayFabCountryCode::GW)
             {
                 output = Json::Value("GW");
                 return;
             }
-            if (input == CountryCode::CountryCodeGY)
+            if (input == PlayFabCountryCode::GY)
             {
                 output = Json::Value("GY");
                 return;
             }
-            if (input == CountryCode::CountryCodeHT)
+            if (input == PlayFabCountryCode::HT)
             {
                 output = Json::Value("HT");
                 return;
             }
-            if (input == CountryCode::CountryCodeHM)
+            if (input == PlayFabCountryCode::HM)
             {
                 output = Json::Value("HM");
                 return;
             }
-            if (input == CountryCode::CountryCodeVA)
+            if (input == PlayFabCountryCode::VA)
             {
                 output = Json::Value("VA");
                 return;
             }
-            if (input == CountryCode::CountryCodeHN)
+            if (input == PlayFabCountryCode::HN)
             {
                 output = Json::Value("HN");
                 return;
             }
-            if (input == CountryCode::CountryCodeHK)
+            if (input == PlayFabCountryCode::HK)
             {
                 output = Json::Value("HK");
                 return;
             }
-            if (input == CountryCode::CountryCodeHU)
+            if (input == PlayFabCountryCode::HU)
             {
                 output = Json::Value("HU");
                 return;
             }
-            if (input == CountryCode::CountryCodeIS)
+            if (input == PlayFabCountryCode::IS)
             {
                 output = Json::Value("IS");
                 return;
             }
-            if (input == CountryCode::CountryCodeIN)
+#pragma push_macro("IN")
+#undef IN
+            if (input == PlayFabCountryCode::IN)
             {
                 output = Json::Value("IN");
                 return;
             }
-            if (input == CountryCode::CountryCodeID)
+#pragma pop_macro("IN")
+            if (input == PlayFabCountryCode::ID)
             {
                 output = Json::Value("ID");
                 return;
             }
-            if (input == CountryCode::CountryCodeIR)
+            if (input == PlayFabCountryCode::IR)
             {
                 output = Json::Value("IR");
                 return;
             }
-            if (input == CountryCode::CountryCodeIQ)
+            if (input == PlayFabCountryCode::IQ)
             {
                 output = Json::Value("IQ");
                 return;
             }
-            if (input == CountryCode::CountryCodeIE)
+            if (input == PlayFabCountryCode::IE)
             {
                 output = Json::Value("IE");
                 return;
             }
-            if (input == CountryCode::CountryCodeIM)
+            if (input == PlayFabCountryCode::IM)
             {
                 output = Json::Value("IM");
                 return;
             }
-            if (input == CountryCode::CountryCodeIL)
+            if (input == PlayFabCountryCode::IL)
             {
                 output = Json::Value("IL");
                 return;
             }
-            if (input == CountryCode::CountryCodeIT)
+            if (input == PlayFabCountryCode::IT)
             {
                 output = Json::Value("IT");
                 return;
             }
-            if (input == CountryCode::CountryCodeJM)
+            if (input == PlayFabCountryCode::JM)
             {
                 output = Json::Value("JM");
                 return;
             }
-            if (input == CountryCode::CountryCodeJP)
+            if (input == PlayFabCountryCode::JP)
             {
                 output = Json::Value("JP");
                 return;
             }
-            if (input == CountryCode::CountryCodeJE)
+            if (input == PlayFabCountryCode::JE)
             {
                 output = Json::Value("JE");
                 return;
             }
-            if (input == CountryCode::CountryCodeJO)
+            if (input == PlayFabCountryCode::JO)
             {
                 output = Json::Value("JO");
                 return;
             }
-            if (input == CountryCode::CountryCodeKZ)
+            if (input == PlayFabCountryCode::KZ)
             {
                 output = Json::Value("KZ");
                 return;
             }
-            if (input == CountryCode::CountryCodeKE)
+            if (input == PlayFabCountryCode::KE)
             {
                 output = Json::Value("KE");
                 return;
             }
-            if (input == CountryCode::CountryCodeKI)
+            if (input == PlayFabCountryCode::KI)
             {
                 output = Json::Value("KI");
                 return;
             }
-            if (input == CountryCode::CountryCodeKP)
+            if (input == PlayFabCountryCode::KP)
             {
                 output = Json::Value("KP");
                 return;
             }
-            if (input == CountryCode::CountryCodeKR)
+            if (input == PlayFabCountryCode::KR)
             {
                 output = Json::Value("KR");
                 return;
             }
-            if (input == CountryCode::CountryCodeKW)
+            if (input == PlayFabCountryCode::KW)
             {
                 output = Json::Value("KW");
                 return;
             }
-            if (input == CountryCode::CountryCodeKG)
+            if (input == PlayFabCountryCode::KG)
             {
                 output = Json::Value("KG");
                 return;
             }
-            if (input == CountryCode::CountryCodeLA)
+            if (input == PlayFabCountryCode::LA)
             {
                 output = Json::Value("LA");
                 return;
             }
-            if (input == CountryCode::CountryCodeLV)
+            if (input == PlayFabCountryCode::LV)
             {
                 output = Json::Value("LV");
                 return;
             }
-            if (input == CountryCode::CountryCodeLB)
+            if (input == PlayFabCountryCode::LB)
             {
                 output = Json::Value("LB");
                 return;
             }
-            if (input == CountryCode::CountryCodeLS)
+            if (input == PlayFabCountryCode::LS)
             {
                 output = Json::Value("LS");
                 return;
             }
-            if (input == CountryCode::CountryCodeLR)
+            if (input == PlayFabCountryCode::LR)
             {
                 output = Json::Value("LR");
                 return;
             }
-            if (input == CountryCode::CountryCodeLY)
+            if (input == PlayFabCountryCode::LY)
             {
                 output = Json::Value("LY");
                 return;
             }
-            if (input == CountryCode::CountryCodeLI)
+            if (input == PlayFabCountryCode::LI)
             {
                 output = Json::Value("LI");
                 return;
             }
-            if (input == CountryCode::CountryCodeLT)
+            if (input == PlayFabCountryCode::LT)
             {
                 output = Json::Value("LT");
                 return;
             }
-            if (input == CountryCode::CountryCodeLU)
+            if (input == PlayFabCountryCode::LU)
             {
                 output = Json::Value("LU");
                 return;
             }
-            if (input == CountryCode::CountryCodeMO)
+            if (input == PlayFabCountryCode::MO)
             {
                 output = Json::Value("MO");
                 return;
             }
-            if (input == CountryCode::CountryCodeMK)
+            if (input == PlayFabCountryCode::MK)
             {
                 output = Json::Value("MK");
                 return;
             }
-            if (input == CountryCode::CountryCodeMG)
+            if (input == PlayFabCountryCode::MG)
             {
                 output = Json::Value("MG");
                 return;
             }
-            if (input == CountryCode::CountryCodeMW)
+            if (input == PlayFabCountryCode::MW)
             {
                 output = Json::Value("MW");
                 return;
             }
-            if (input == CountryCode::CountryCodeMY)
+            if (input == PlayFabCountryCode::MY)
             {
                 output = Json::Value("MY");
                 return;
             }
-            if (input == CountryCode::CountryCodeMV)
+            if (input == PlayFabCountryCode::MV)
             {
                 output = Json::Value("MV");
                 return;
             }
-            if (input == CountryCode::CountryCodeML)
+            if (input == PlayFabCountryCode::ML)
             {
                 output = Json::Value("ML");
                 return;
             }
-            if (input == CountryCode::CountryCodeMT)
+            if (input == PlayFabCountryCode::MT)
             {
                 output = Json::Value("MT");
                 return;
             }
-            if (input == CountryCode::CountryCodeMH)
+            if (input == PlayFabCountryCode::MH)
             {
                 output = Json::Value("MH");
                 return;
             }
-            if (input == CountryCode::CountryCodeMQ)
+            if (input == PlayFabCountryCode::MQ)
             {
                 output = Json::Value("MQ");
                 return;
             }
-            if (input == CountryCode::CountryCodeMR)
+            if (input == PlayFabCountryCode::MR)
             {
                 output = Json::Value("MR");
                 return;
             }
-            if (input == CountryCode::CountryCodeMU)
+            if (input == PlayFabCountryCode::MU)
             {
                 output = Json::Value("MU");
                 return;
             }
-            if (input == CountryCode::CountryCodeYT)
+            if (input == PlayFabCountryCode::YT)
             {
                 output = Json::Value("YT");
                 return;
             }
-            if (input == CountryCode::CountryCodeMX)
+            if (input == PlayFabCountryCode::MX)
             {
                 output = Json::Value("MX");
                 return;
             }
-            if (input == CountryCode::CountryCodeFM)
+            if (input == PlayFabCountryCode::FM)
             {
                 output = Json::Value("FM");
                 return;
             }
-            if (input == CountryCode::CountryCodeMD)
+            if (input == PlayFabCountryCode::MD)
             {
                 output = Json::Value("MD");
                 return;
             }
-            if (input == CountryCode::CountryCodeMC)
+            if (input == PlayFabCountryCode::MC)
             {
                 output = Json::Value("MC");
                 return;
             }
-            if (input == CountryCode::CountryCodeMN)
+            if (input == PlayFabCountryCode::MN)
             {
                 output = Json::Value("MN");
                 return;
             }
-            if (input == CountryCode::CountryCodeME)
+            if (input == PlayFabCountryCode::ME)
             {
                 output = Json::Value("ME");
                 return;
             }
-            if (input == CountryCode::CountryCodeMS)
+            if (input == PlayFabCountryCode::MS)
             {
                 output = Json::Value("MS");
                 return;
             }
-            if (input == CountryCode::CountryCodeMA)
+            if (input == PlayFabCountryCode::MA)
             {
                 output = Json::Value("MA");
                 return;
             }
-            if (input == CountryCode::CountryCodeMZ)
+            if (input == PlayFabCountryCode::MZ)
             {
                 output = Json::Value("MZ");
                 return;
             }
-            if (input == CountryCode::CountryCodeMM)
+            if (input == PlayFabCountryCode::MM)
             {
                 output = Json::Value("MM");
                 return;
             }
-            if (input == CountryCode::CountryCodeNA)
+            if (input == PlayFabCountryCode::NA)
             {
                 output = Json::Value("NA");
                 return;
             }
-            if (input == CountryCode::CountryCodeNR)
+            if (input == PlayFabCountryCode::NR)
             {
                 output = Json::Value("NR");
                 return;
             }
-            if (input == CountryCode::CountryCodeNP)
+            if (input == PlayFabCountryCode::NP)
             {
                 output = Json::Value("NP");
                 return;
             }
-            if (input == CountryCode::CountryCodeNL)
+            if (input == PlayFabCountryCode::NL)
             {
                 output = Json::Value("NL");
                 return;
             }
-            if (input == CountryCode::CountryCodeNC)
+            if (input == PlayFabCountryCode::NC)
             {
                 output = Json::Value("NC");
                 return;
             }
-            if (input == CountryCode::CountryCodeNZ)
+            if (input == PlayFabCountryCode::NZ)
             {
                 output = Json::Value("NZ");
                 return;
             }
-            if (input == CountryCode::CountryCodeNI)
+            if (input == PlayFabCountryCode::NI)
             {
                 output = Json::Value("NI");
                 return;
             }
-            if (input == CountryCode::CountryCodeNE)
+            if (input == PlayFabCountryCode::NE)
             {
                 output = Json::Value("NE");
                 return;
             }
-            if (input == CountryCode::CountryCodeNG)
+            if (input == PlayFabCountryCode::NG)
             {
                 output = Json::Value("NG");
                 return;
             }
-            if (input == CountryCode::CountryCodeNU)
+            if (input == PlayFabCountryCode::NU)
             {
                 output = Json::Value("NU");
                 return;
             }
-            if (input == CountryCode::CountryCodeNF)
+            if (input == PlayFabCountryCode::NF)
             {
                 output = Json::Value("NF");
                 return;
             }
-            if (input == CountryCode::CountryCodeMP)
+            if (input == PlayFabCountryCode::MP)
             {
                 output = Json::Value("MP");
                 return;
             }
-            if (input == CountryCode::CountryCodeNO)
+            if (input == PlayFabCountryCode::NO)
             {
                 output = Json::Value("NO");
                 return;
             }
-            if (input == CountryCode::CountryCodeOM)
+            if (input == PlayFabCountryCode::OM)
             {
                 output = Json::Value("OM");
                 return;
             }
-            if (input == CountryCode::CountryCodePK)
+            if (input == PlayFabCountryCode::PK)
             {
                 output = Json::Value("PK");
                 return;
             }
-            if (input == CountryCode::CountryCodePW)
+            if (input == PlayFabCountryCode::PW)
             {
                 output = Json::Value("PW");
                 return;
             }
-            if (input == CountryCode::CountryCodePS)
+            if (input == PlayFabCountryCode::PS)
             {
                 output = Json::Value("PS");
                 return;
             }
-            if (input == CountryCode::CountryCodePA)
+            if (input == PlayFabCountryCode::PA)
             {
                 output = Json::Value("PA");
                 return;
             }
-            if (input == CountryCode::CountryCodePG)
+            if (input == PlayFabCountryCode::PG)
             {
                 output = Json::Value("PG");
                 return;
             }
-            if (input == CountryCode::CountryCodePY)
+            if (input == PlayFabCountryCode::PY)
             {
                 output = Json::Value("PY");
                 return;
             }
-            if (input == CountryCode::CountryCodePE)
+            if (input == PlayFabCountryCode::PE)
             {
                 output = Json::Value("PE");
                 return;
             }
-            if (input == CountryCode::CountryCodePH)
+            if (input == PlayFabCountryCode::PH)
             {
                 output = Json::Value("PH");
                 return;
             }
-            if (input == CountryCode::CountryCodePN)
+            if (input == PlayFabCountryCode::PN)
             {
                 output = Json::Value("PN");
                 return;
             }
-            if (input == CountryCode::CountryCodePL)
+            if (input == PlayFabCountryCode::PL)
             {
                 output = Json::Value("PL");
                 return;
             }
-            if (input == CountryCode::CountryCodePT)
+            if (input == PlayFabCountryCode::PT)
             {
                 output = Json::Value("PT");
                 return;
             }
-            if (input == CountryCode::CountryCodePR)
+            if (input == PlayFabCountryCode::PR)
             {
                 output = Json::Value("PR");
                 return;
             }
-            if (input == CountryCode::CountryCodeQA)
+            if (input == PlayFabCountryCode::QA)
             {
                 output = Json::Value("QA");
                 return;
             }
-            if (input == CountryCode::CountryCodeRE)
+            if (input == PlayFabCountryCode::RE)
             {
                 output = Json::Value("RE");
                 return;
             }
-            if (input == CountryCode::CountryCodeRO)
+            if (input == PlayFabCountryCode::RO)
             {
                 output = Json::Value("RO");
                 return;
             }
-            if (input == CountryCode::CountryCodeRU)
+            if (input == PlayFabCountryCode::RU)
             {
                 output = Json::Value("RU");
                 return;
             }
-            if (input == CountryCode::CountryCodeRW)
+            if (input == PlayFabCountryCode::RW)
             {
                 output = Json::Value("RW");
                 return;
             }
-            if (input == CountryCode::CountryCodeBL)
+            if (input == PlayFabCountryCode::BL)
             {
                 output = Json::Value("BL");
                 return;
             }
-            if (input == CountryCode::CountryCodeSH)
+            if (input == PlayFabCountryCode::SH)
             {
                 output = Json::Value("SH");
                 return;
             }
-            if (input == CountryCode::CountryCodeKN)
+            if (input == PlayFabCountryCode::KN)
             {
                 output = Json::Value("KN");
                 return;
             }
-            if (input == CountryCode::CountryCodeLC)
+            if (input == PlayFabCountryCode::LC)
             {
                 output = Json::Value("LC");
                 return;
             }
-            if (input == CountryCode::CountryCodeMF)
+            if (input == PlayFabCountryCode::MF)
             {
                 output = Json::Value("MF");
                 return;
             }
-            if (input == CountryCode::CountryCodePM)
+            if (input == PlayFabCountryCode::PM)
             {
                 output = Json::Value("PM");
                 return;
             }
-            if (input == CountryCode::CountryCodeVC)
+            if (input == PlayFabCountryCode::VC)
             {
                 output = Json::Value("VC");
                 return;
             }
-            if (input == CountryCode::CountryCodeWS)
+            if (input == PlayFabCountryCode::WS)
             {
                 output = Json::Value("WS");
                 return;
             }
-            if (input == CountryCode::CountryCodeSM)
+            if (input == PlayFabCountryCode::SM)
             {
                 output = Json::Value("SM");
                 return;
             }
-            if (input == CountryCode::CountryCodeST)
+            if (input == PlayFabCountryCode::ST)
             {
                 output = Json::Value("ST");
                 return;
             }
-            if (input == CountryCode::CountryCodeSA)
+            if (input == PlayFabCountryCode::SA)
             {
                 output = Json::Value("SA");
                 return;
             }
-            if (input == CountryCode::CountryCodeSN)
+            if (input == PlayFabCountryCode::SN)
             {
                 output = Json::Value("SN");
                 return;
             }
-            if (input == CountryCode::CountryCodeRS)
+            if (input == PlayFabCountryCode::RS)
             {
                 output = Json::Value("RS");
                 return;
             }
-            if (input == CountryCode::CountryCodeSC)
+            if (input == PlayFabCountryCode::SC)
             {
                 output = Json::Value("SC");
                 return;
             }
-            if (input == CountryCode::CountryCodeSL)
+            if (input == PlayFabCountryCode::SL)
             {
                 output = Json::Value("SL");
                 return;
             }
-            if (input == CountryCode::CountryCodeSG)
+            if (input == PlayFabCountryCode::SG)
             {
                 output = Json::Value("SG");
                 return;
             }
-            if (input == CountryCode::CountryCodeSX)
+            if (input == PlayFabCountryCode::SX)
             {
                 output = Json::Value("SX");
                 return;
             }
-            if (input == CountryCode::CountryCodeSK)
+            if (input == PlayFabCountryCode::SK)
             {
                 output = Json::Value("SK");
                 return;
             }
-            if (input == CountryCode::CountryCodeSI)
+            if (input == PlayFabCountryCode::SI)
             {
                 output = Json::Value("SI");
                 return;
             }
-            if (input == CountryCode::CountryCodeSB)
+            if (input == PlayFabCountryCode::SB)
             {
                 output = Json::Value("SB");
                 return;
             }
-            if (input == CountryCode::CountryCodeSO)
+            if (input == PlayFabCountryCode::SO)
             {
                 output = Json::Value("SO");
                 return;
             }
-            if (input == CountryCode::CountryCodeZA)
+            if (input == PlayFabCountryCode::ZA)
             {
                 output = Json::Value("ZA");
                 return;
             }
-            if (input == CountryCode::CountryCodeGS)
+            if (input == PlayFabCountryCode::GS)
             {
                 output = Json::Value("GS");
                 return;
             }
-            if (input == CountryCode::CountryCodeSS)
+            if (input == PlayFabCountryCode::SS)
             {
                 output = Json::Value("SS");
                 return;
             }
-            if (input == CountryCode::CountryCodeES)
+            if (input == PlayFabCountryCode::ES)
             {
                 output = Json::Value("ES");
                 return;
             }
-            if (input == CountryCode::CountryCodeLK)
+            if (input == PlayFabCountryCode::LK)
             {
                 output = Json::Value("LK");
                 return;
             }
-            if (input == CountryCode::CountryCodeSD)
+            if (input == PlayFabCountryCode::SD)
             {
                 output = Json::Value("SD");
                 return;
             }
-            if (input == CountryCode::CountryCodeSR)
+            if (input == PlayFabCountryCode::SR)
             {
                 output = Json::Value("SR");
                 return;
             }
-            if (input == CountryCode::CountryCodeSJ)
+            if (input == PlayFabCountryCode::SJ)
             {
                 output = Json::Value("SJ");
                 return;
             }
-            if (input == CountryCode::CountryCodeSZ)
+            if (input == PlayFabCountryCode::SZ)
             {
                 output = Json::Value("SZ");
                 return;
             }
-            if (input == CountryCode::CountryCodeSE)
+            if (input == PlayFabCountryCode::SE)
             {
                 output = Json::Value("SE");
                 return;
             }
-            if (input == CountryCode::CountryCodeCH)
+            if (input == PlayFabCountryCode::CH)
             {
                 output = Json::Value("CH");
                 return;
             }
-            if (input == CountryCode::CountryCodeSY)
+            if (input == PlayFabCountryCode::SY)
             {
                 output = Json::Value("SY");
                 return;
             }
-            if (input == CountryCode::CountryCodeTW)
+            if (input == PlayFabCountryCode::TW)
             {
                 output = Json::Value("TW");
                 return;
             }
-            if (input == CountryCode::CountryCodeTJ)
+            if (input == PlayFabCountryCode::TJ)
             {
                 output = Json::Value("TJ");
                 return;
             }
-            if (input == CountryCode::CountryCodeTZ)
+            if (input == PlayFabCountryCode::TZ)
             {
                 output = Json::Value("TZ");
                 return;
             }
-            if (input == CountryCode::CountryCodeTH)
+            if (input == PlayFabCountryCode::TH)
             {
                 output = Json::Value("TH");
                 return;
             }
-            if (input == CountryCode::CountryCodeTL)
+            if (input == PlayFabCountryCode::TL)
             {
                 output = Json::Value("TL");
                 return;
             }
-            if (input == CountryCode::CountryCodeTG)
+            if (input == PlayFabCountryCode::TG)
             {
                 output = Json::Value("TG");
                 return;
             }
-            if (input == CountryCode::CountryCodeTK)
+            if (input == PlayFabCountryCode::TK)
             {
                 output = Json::Value("TK");
                 return;
             }
-            if (input == CountryCode::CountryCodeTO)
+            if (input == PlayFabCountryCode::TO)
             {
                 output = Json::Value("TO");
                 return;
             }
-            if (input == CountryCode::CountryCodeTT)
+            if (input == PlayFabCountryCode::TT)
             {
                 output = Json::Value("TT");
                 return;
             }
-            if (input == CountryCode::CountryCodeTN)
+            if (input == PlayFabCountryCode::TN)
             {
                 output = Json::Value("TN");
                 return;
             }
-            if (input == CountryCode::CountryCodeTR)
+            if (input == PlayFabCountryCode::TR)
             {
                 output = Json::Value("TR");
                 return;
             }
-            if (input == CountryCode::CountryCodeTM)
+            if (input == PlayFabCountryCode::TM)
             {
                 output = Json::Value("TM");
                 return;
             }
-            if (input == CountryCode::CountryCodeTC)
+            if (input == PlayFabCountryCode::TC)
             {
                 output = Json::Value("TC");
                 return;
             }
-            if (input == CountryCode::CountryCodeTV)
+            if (input == PlayFabCountryCode::TV)
             {
                 output = Json::Value("TV");
                 return;
             }
-            if (input == CountryCode::CountryCodeUG)
+            if (input == PlayFabCountryCode::UG)
             {
                 output = Json::Value("UG");
                 return;
             }
-            if (input == CountryCode::CountryCodeUA)
+            if (input == PlayFabCountryCode::UA)
             {
                 output = Json::Value("UA");
                 return;
             }
-            if (input == CountryCode::CountryCodeAE)
+            if (input == PlayFabCountryCode::AE)
             {
                 output = Json::Value("AE");
                 return;
             }
-            if (input == CountryCode::CountryCodeGB)
+            if (input == PlayFabCountryCode::GB)
             {
                 output = Json::Value("GB");
                 return;
             }
-            if (input == CountryCode::CountryCodeUS)
+            if (input == PlayFabCountryCode::US)
             {
                 output = Json::Value("US");
                 return;
             }
-            if (input == CountryCode::CountryCodeUM)
+            if (input == PlayFabCountryCode::UM)
             {
                 output = Json::Value("UM");
                 return;
             }
-            if (input == CountryCode::CountryCodeUY)
+            if (input == PlayFabCountryCode::UY)
             {
                 output = Json::Value("UY");
                 return;
             }
-            if (input == CountryCode::CountryCodeUZ)
+            if (input == PlayFabCountryCode::UZ)
             {
                 output = Json::Value("UZ");
                 return;
             }
-            if (input == CountryCode::CountryCodeVU)
+            if (input == PlayFabCountryCode::VU)
             {
                 output = Json::Value("VU");
                 return;
             }
-            if (input == CountryCode::CountryCodeVE)
+            if (input == PlayFabCountryCode::VE)
             {
                 output = Json::Value("VE");
                 return;
             }
-            if (input == CountryCode::CountryCodeVN)
+            if (input == PlayFabCountryCode::VN)
             {
                 output = Json::Value("VN");
                 return;
             }
-            if (input == CountryCode::CountryCodeVG)
+            if (input == PlayFabCountryCode::VG)
             {
                 output = Json::Value("VG");
                 return;
             }
-            if (input == CountryCode::CountryCodeVI)
+            if (input == PlayFabCountryCode::VI)
             {
                 output = Json::Value("VI");
                 return;
             }
-            if (input == CountryCode::CountryCodeWF)
+            if (input == PlayFabCountryCode::WF)
             {
                 output = Json::Value("WF");
                 return;
             }
-            if (input == CountryCode::CountryCodeEH)
+            if (input == PlayFabCountryCode::EH)
             {
                 output = Json::Value("EH");
                 return;
             }
-            if (input == CountryCode::CountryCodeYE)
+            if (input == PlayFabCountryCode::YE)
             {
                 output = Json::Value("YE");
                 return;
             }
-            if (input == CountryCode::CountryCodeZM)
+            if (input == PlayFabCountryCode::ZM)
             {
                 output = Json::Value("ZM");
                 return;
             }
-            if (input == CountryCode::CountryCodeZW)
+            if (input == PlayFabCountryCode::ZW)
             {
                 output = Json::Value("ZW");
                 return;
             }
         }
-        inline void FromJsonEnum(const Json::Value& input, CountryCode& output)
+        inline void FromJsonEnum(const Json::Value& input, PlayFabCountryCode& output)
         {
             if (!input.isString())
             {
@@ -1722,1247 +1663,1250 @@ namespace PlayFab
             const std::string& inputStr = input.asString();
             if (inputStr == "AF")
             {
-                output = CountryCode::CountryCodeAF;
+                output = PlayFabCountryCode::AF;
                 return;
             }
             if (inputStr == "AX")
             {
-                output = CountryCode::CountryCodeAX;
+                output = PlayFabCountryCode::AX;
                 return;
             }
             if (inputStr == "AL")
             {
-                output = CountryCode::CountryCodeAL;
+                output = PlayFabCountryCode::AL;
                 return;
             }
             if (inputStr == "DZ")
             {
-                output = CountryCode::CountryCodeDZ;
+                output = PlayFabCountryCode::DZ;
                 return;
             }
             if (inputStr == "AS")
             {
-                output = CountryCode::CountryCodeAS;
+                output = PlayFabCountryCode::AS;
                 return;
             }
             if (inputStr == "AD")
             {
-                output = CountryCode::CountryCodeAD;
+                output = PlayFabCountryCode::AD;
                 return;
             }
             if (inputStr == "AO")
             {
-                output = CountryCode::CountryCodeAO;
+                output = PlayFabCountryCode::AO;
                 return;
             }
             if (inputStr == "AI")
             {
-                output = CountryCode::CountryCodeAI;
+                output = PlayFabCountryCode::AI;
                 return;
             }
             if (inputStr == "AQ")
             {
-                output = CountryCode::CountryCodeAQ;
+                output = PlayFabCountryCode::AQ;
                 return;
             }
             if (inputStr == "AG")
             {
-                output = CountryCode::CountryCodeAG;
+                output = PlayFabCountryCode::AG;
                 return;
             }
             if (inputStr == "AR")
             {
-                output = CountryCode::CountryCodeAR;
+                output = PlayFabCountryCode::AR;
                 return;
             }
             if (inputStr == "AM")
             {
-                output = CountryCode::CountryCodeAM;
+                output = PlayFabCountryCode::AM;
                 return;
             }
             if (inputStr == "AW")
             {
-                output = CountryCode::CountryCodeAW;
+                output = PlayFabCountryCode::AW;
                 return;
             }
             if (inputStr == "AU")
             {
-                output = CountryCode::CountryCodeAU;
+                output = PlayFabCountryCode::AU;
                 return;
             }
             if (inputStr == "AT")
             {
-                output = CountryCode::CountryCodeAT;
+                output = PlayFabCountryCode::AT;
                 return;
             }
             if (inputStr == "AZ")
             {
-                output = CountryCode::CountryCodeAZ;
+                output = PlayFabCountryCode::AZ;
                 return;
             }
             if (inputStr == "BS")
             {
-                output = CountryCode::CountryCodeBS;
+                output = PlayFabCountryCode::BS;
                 return;
             }
             if (inputStr == "BH")
             {
-                output = CountryCode::CountryCodeBH;
+                output = PlayFabCountryCode::BH;
                 return;
             }
             if (inputStr == "BD")
             {
-                output = CountryCode::CountryCodeBD;
+                output = PlayFabCountryCode::BD;
                 return;
             }
             if (inputStr == "BB")
             {
-                output = CountryCode::CountryCodeBB;
+                output = PlayFabCountryCode::BB;
                 return;
             }
             if (inputStr == "BY")
             {
-                output = CountryCode::CountryCodeBY;
+                output = PlayFabCountryCode::BY;
                 return;
             }
             if (inputStr == "BE")
             {
-                output = CountryCode::CountryCodeBE;
+                output = PlayFabCountryCode::BE;
                 return;
             }
             if (inputStr == "BZ")
             {
-                output = CountryCode::CountryCodeBZ;
+                output = PlayFabCountryCode::BZ;
                 return;
             }
             if (inputStr == "BJ")
             {
-                output = CountryCode::CountryCodeBJ;
+                output = PlayFabCountryCode::BJ;
                 return;
             }
             if (inputStr == "BM")
             {
-                output = CountryCode::CountryCodeBM;
+                output = PlayFabCountryCode::BM;
                 return;
             }
             if (inputStr == "BT")
             {
-                output = CountryCode::CountryCodeBT;
+                output = PlayFabCountryCode::BT;
                 return;
             }
             if (inputStr == "BO")
             {
-                output = CountryCode::CountryCodeBO;
+                output = PlayFabCountryCode::BO;
                 return;
             }
             if (inputStr == "BQ")
             {
-                output = CountryCode::CountryCodeBQ;
+                output = PlayFabCountryCode::BQ;
                 return;
             }
             if (inputStr == "BA")
             {
-                output = CountryCode::CountryCodeBA;
+                output = PlayFabCountryCode::BA;
                 return;
             }
             if (inputStr == "BW")
             {
-                output = CountryCode::CountryCodeBW;
+                output = PlayFabCountryCode::BW;
                 return;
             }
             if (inputStr == "BV")
             {
-                output = CountryCode::CountryCodeBV;
+                output = PlayFabCountryCode::BV;
                 return;
             }
             if (inputStr == "BR")
             {
-                output = CountryCode::CountryCodeBR;
+                output = PlayFabCountryCode::BR;
                 return;
             }
             if (inputStr == "IO")
             {
-                output = CountryCode::CountryCodeIO;
+                output = PlayFabCountryCode::IO;
                 return;
             }
             if (inputStr == "BN")
             {
-                output = CountryCode::CountryCodeBN;
+                output = PlayFabCountryCode::BN;
                 return;
             }
             if (inputStr == "BG")
             {
-                output = CountryCode::CountryCodeBG;
+                output = PlayFabCountryCode::BG;
                 return;
             }
             if (inputStr == "BF")
             {
-                output = CountryCode::CountryCodeBF;
+                output = PlayFabCountryCode::BF;
                 return;
             }
             if (inputStr == "BI")
             {
-                output = CountryCode::CountryCodeBI;
+                output = PlayFabCountryCode::BI;
                 return;
             }
             if (inputStr == "KH")
             {
-                output = CountryCode::CountryCodeKH;
+                output = PlayFabCountryCode::KH;
                 return;
             }
             if (inputStr == "CM")
             {
-                output = CountryCode::CountryCodeCM;
+                output = PlayFabCountryCode::CM;
                 return;
             }
             if (inputStr == "CA")
             {
-                output = CountryCode::CountryCodeCA;
+                output = PlayFabCountryCode::CA;
                 return;
             }
             if (inputStr == "CV")
             {
-                output = CountryCode::CountryCodeCV;
+                output = PlayFabCountryCode::CV;
                 return;
             }
             if (inputStr == "KY")
             {
-                output = CountryCode::CountryCodeKY;
+                output = PlayFabCountryCode::KY;
                 return;
             }
             if (inputStr == "CF")
             {
-                output = CountryCode::CountryCodeCF;
+                output = PlayFabCountryCode::CF;
                 return;
             }
             if (inputStr == "TD")
             {
-                output = CountryCode::CountryCodeTD;
+                output = PlayFabCountryCode::TD;
                 return;
             }
             if (inputStr == "CL")
             {
-                output = CountryCode::CountryCodeCL;
+                output = PlayFabCountryCode::CL;
                 return;
             }
             if (inputStr == "CN")
             {
-                output = CountryCode::CountryCodeCN;
+                output = PlayFabCountryCode::CN;
                 return;
             }
             if (inputStr == "CX")
             {
-                output = CountryCode::CountryCodeCX;
+                output = PlayFabCountryCode::CX;
                 return;
             }
             if (inputStr == "CC")
             {
-                output = CountryCode::CountryCodeCC;
+                output = PlayFabCountryCode::CC;
                 return;
             }
             if (inputStr == "CO")
             {
-                output = CountryCode::CountryCodeCO;
+                output = PlayFabCountryCode::CO;
                 return;
             }
             if (inputStr == "KM")
             {
-                output = CountryCode::CountryCodeKM;
+                output = PlayFabCountryCode::KM;
                 return;
             }
             if (inputStr == "CG")
             {
-                output = CountryCode::CountryCodeCG;
+                output = PlayFabCountryCode::CG;
                 return;
             }
             if (inputStr == "CD")
             {
-                output = CountryCode::CountryCodeCD;
+                output = PlayFabCountryCode::CD;
                 return;
             }
             if (inputStr == "CK")
             {
-                output = CountryCode::CountryCodeCK;
+                output = PlayFabCountryCode::CK;
                 return;
             }
             if (inputStr == "CR")
             {
-                output = CountryCode::CountryCodeCR;
+                output = PlayFabCountryCode::CR;
                 return;
             }
             if (inputStr == "CI")
             {
-                output = CountryCode::CountryCodeCI;
+                output = PlayFabCountryCode::CI;
                 return;
             }
             if (inputStr == "HR")
             {
-                output = CountryCode::CountryCodeHR;
+                output = PlayFabCountryCode::HR;
                 return;
             }
             if (inputStr == "CU")
             {
-                output = CountryCode::CountryCodeCU;
+                output = PlayFabCountryCode::CU;
                 return;
             }
             if (inputStr == "CW")
             {
-                output = CountryCode::CountryCodeCW;
+                output = PlayFabCountryCode::CW;
                 return;
             }
             if (inputStr == "CY")
             {
-                output = CountryCode::CountryCodeCY;
+                output = PlayFabCountryCode::CY;
                 return;
             }
             if (inputStr == "CZ")
             {
-                output = CountryCode::CountryCodeCZ;
+                output = PlayFabCountryCode::CZ;
                 return;
             }
             if (inputStr == "DK")
             {
-                output = CountryCode::CountryCodeDK;
+                output = PlayFabCountryCode::DK;
                 return;
             }
             if (inputStr == "DJ")
             {
-                output = CountryCode::CountryCodeDJ;
+                output = PlayFabCountryCode::DJ;
                 return;
             }
             if (inputStr == "DM")
             {
-                output = CountryCode::CountryCodeDM;
+                output = PlayFabCountryCode::DM;
                 return;
             }
             if (inputStr == "DO")
             {
-                output = CountryCode::CountryCodeDO;
+                output = PlayFabCountryCode::DO;
                 return;
             }
             if (inputStr == "EC")
             {
-                output = CountryCode::CountryCodeEC;
+                output = PlayFabCountryCode::EC;
                 return;
             }
             if (inputStr == "EG")
             {
-                output = CountryCode::CountryCodeEG;
+                output = PlayFabCountryCode::EG;
                 return;
             }
             if (inputStr == "SV")
             {
-                output = CountryCode::CountryCodeSV;
+                output = PlayFabCountryCode::SV;
                 return;
             }
             if (inputStr == "GQ")
             {
-                output = CountryCode::CountryCodeGQ;
+                output = PlayFabCountryCode::GQ;
                 return;
             }
             if (inputStr == "ER")
             {
-                output = CountryCode::CountryCodeER;
+                output = PlayFabCountryCode::ER;
                 return;
             }
             if (inputStr == "EE")
             {
-                output = CountryCode::CountryCodeEE;
+                output = PlayFabCountryCode::EE;
                 return;
             }
             if (inputStr == "ET")
             {
-                output = CountryCode::CountryCodeET;
+                output = PlayFabCountryCode::ET;
                 return;
             }
             if (inputStr == "FK")
             {
-                output = CountryCode::CountryCodeFK;
+                output = PlayFabCountryCode::FK;
                 return;
             }
             if (inputStr == "FO")
             {
-                output = CountryCode::CountryCodeFO;
+                output = PlayFabCountryCode::FO;
                 return;
             }
             if (inputStr == "FJ")
             {
-                output = CountryCode::CountryCodeFJ;
+                output = PlayFabCountryCode::FJ;
                 return;
             }
             if (inputStr == "FI")
             {
-                output = CountryCode::CountryCodeFI;
+                output = PlayFabCountryCode::FI;
                 return;
             }
             if (inputStr == "FR")
             {
-                output = CountryCode::CountryCodeFR;
+                output = PlayFabCountryCode::FR;
                 return;
             }
             if (inputStr == "GF")
             {
-                output = CountryCode::CountryCodeGF;
+                output = PlayFabCountryCode::GF;
                 return;
             }
             if (inputStr == "PF")
             {
-                output = CountryCode::CountryCodePF;
+                output = PlayFabCountryCode::PF;
                 return;
             }
             if (inputStr == "TF")
             {
-                output = CountryCode::CountryCodeTF;
+                output = PlayFabCountryCode::TF;
                 return;
             }
             if (inputStr == "GA")
             {
-                output = CountryCode::CountryCodeGA;
+                output = PlayFabCountryCode::GA;
                 return;
             }
             if (inputStr == "GM")
             {
-                output = CountryCode::CountryCodeGM;
+                output = PlayFabCountryCode::GM;
                 return;
             }
             if (inputStr == "GE")
             {
-                output = CountryCode::CountryCodeGE;
+                output = PlayFabCountryCode::GE;
                 return;
             }
             if (inputStr == "DE")
             {
-                output = CountryCode::CountryCodeDE;
+                output = PlayFabCountryCode::DE;
                 return;
             }
             if (inputStr == "GH")
             {
-                output = CountryCode::CountryCodeGH;
+                output = PlayFabCountryCode::GH;
                 return;
             }
             if (inputStr == "GI")
             {
-                output = CountryCode::CountryCodeGI;
+                output = PlayFabCountryCode::GI;
                 return;
             }
             if (inputStr == "GR")
             {
-                output = CountryCode::CountryCodeGR;
+                output = PlayFabCountryCode::GR;
                 return;
             }
             if (inputStr == "GL")
             {
-                output = CountryCode::CountryCodeGL;
+                output = PlayFabCountryCode::GL;
                 return;
             }
             if (inputStr == "GD")
             {
-                output = CountryCode::CountryCodeGD;
+                output = PlayFabCountryCode::GD;
                 return;
             }
             if (inputStr == "GP")
             {
-                output = CountryCode::CountryCodeGP;
+                output = PlayFabCountryCode::GP;
                 return;
             }
             if (inputStr == "GU")
             {
-                output = CountryCode::CountryCodeGU;
+                output = PlayFabCountryCode::GU;
                 return;
             }
             if (inputStr == "GT")
             {
-                output = CountryCode::CountryCodeGT;
+                output = PlayFabCountryCode::GT;
                 return;
             }
             if (inputStr == "GG")
             {
-                output = CountryCode::CountryCodeGG;
+                output = PlayFabCountryCode::GG;
                 return;
             }
             if (inputStr == "GN")
             {
-                output = CountryCode::CountryCodeGN;
+                output = PlayFabCountryCode::GN;
                 return;
             }
             if (inputStr == "GW")
             {
-                output = CountryCode::CountryCodeGW;
+                output = PlayFabCountryCode::GW;
                 return;
             }
             if (inputStr == "GY")
             {
-                output = CountryCode::CountryCodeGY;
+                output = PlayFabCountryCode::GY;
                 return;
             }
             if (inputStr == "HT")
             {
-                output = CountryCode::CountryCodeHT;
+                output = PlayFabCountryCode::HT;
                 return;
             }
             if (inputStr == "HM")
             {
-                output = CountryCode::CountryCodeHM;
+                output = PlayFabCountryCode::HM;
                 return;
             }
             if (inputStr == "VA")
             {
-                output = CountryCode::CountryCodeVA;
+                output = PlayFabCountryCode::VA;
                 return;
             }
             if (inputStr == "HN")
             {
-                output = CountryCode::CountryCodeHN;
+                output = PlayFabCountryCode::HN;
                 return;
             }
             if (inputStr == "HK")
             {
-                output = CountryCode::CountryCodeHK;
+                output = PlayFabCountryCode::HK;
                 return;
             }
             if (inputStr == "HU")
             {
-                output = CountryCode::CountryCodeHU;
+                output = PlayFabCountryCode::HU;
                 return;
             }
             if (inputStr == "IS")
             {
-                output = CountryCode::CountryCodeIS;
+                output = PlayFabCountryCode::IS;
                 return;
             }
+#pragma push_macro("IN")
+#undef IN
             if (inputStr == "IN")
             {
-                output = CountryCode::CountryCodeIN;
+                output = PlayFabCountryCode::IN;
                 return;
             }
+#pragma pop_macro("IN")
             if (inputStr == "ID")
             {
-                output = CountryCode::CountryCodeID;
+                output = PlayFabCountryCode::ID;
                 return;
             }
             if (inputStr == "IR")
             {
-                output = CountryCode::CountryCodeIR;
+                output = PlayFabCountryCode::IR;
                 return;
             }
             if (inputStr == "IQ")
             {
-                output = CountryCode::CountryCodeIQ;
+                output = PlayFabCountryCode::IQ;
                 return;
             }
             if (inputStr == "IE")
             {
-                output = CountryCode::CountryCodeIE;
+                output = PlayFabCountryCode::IE;
                 return;
             }
             if (inputStr == "IM")
             {
-                output = CountryCode::CountryCodeIM;
+                output = PlayFabCountryCode::IM;
                 return;
             }
             if (inputStr == "IL")
             {
-                output = CountryCode::CountryCodeIL;
+                output = PlayFabCountryCode::IL;
                 return;
             }
             if (inputStr == "IT")
             {
-                output = CountryCode::CountryCodeIT;
+                output = PlayFabCountryCode::IT;
                 return;
             }
             if (inputStr == "JM")
             {
-                output = CountryCode::CountryCodeJM;
+                output = PlayFabCountryCode::JM;
                 return;
             }
             if (inputStr == "JP")
             {
-                output = CountryCode::CountryCodeJP;
+                output = PlayFabCountryCode::JP;
                 return;
             }
             if (inputStr == "JE")
             {
-                output = CountryCode::CountryCodeJE;
+                output = PlayFabCountryCode::JE;
                 return;
             }
             if (inputStr == "JO")
             {
-                output = CountryCode::CountryCodeJO;
+                output = PlayFabCountryCode::JO;
                 return;
             }
             if (inputStr == "KZ")
             {
-                output = CountryCode::CountryCodeKZ;
+                output = PlayFabCountryCode::KZ;
                 return;
             }
             if (inputStr == "KE")
             {
-                output = CountryCode::CountryCodeKE;
+                output = PlayFabCountryCode::KE;
                 return;
             }
             if (inputStr == "KI")
             {
-                output = CountryCode::CountryCodeKI;
+                output = PlayFabCountryCode::KI;
                 return;
             }
             if (inputStr == "KP")
             {
-                output = CountryCode::CountryCodeKP;
+                output = PlayFabCountryCode::KP;
                 return;
             }
             if (inputStr == "KR")
             {
-                output = CountryCode::CountryCodeKR;
+                output = PlayFabCountryCode::KR;
                 return;
             }
             if (inputStr == "KW")
             {
-                output = CountryCode::CountryCodeKW;
+                output = PlayFabCountryCode::KW;
                 return;
             }
             if (inputStr == "KG")
             {
-                output = CountryCode::CountryCodeKG;
+                output = PlayFabCountryCode::KG;
                 return;
             }
             if (inputStr == "LA")
             {
-                output = CountryCode::CountryCodeLA;
+                output = PlayFabCountryCode::LA;
                 return;
             }
             if (inputStr == "LV")
             {
-                output = CountryCode::CountryCodeLV;
+                output = PlayFabCountryCode::LV;
                 return;
             }
             if (inputStr == "LB")
             {
-                output = CountryCode::CountryCodeLB;
+                output = PlayFabCountryCode::LB;
                 return;
             }
             if (inputStr == "LS")
             {
-                output = CountryCode::CountryCodeLS;
+                output = PlayFabCountryCode::LS;
                 return;
             }
             if (inputStr == "LR")
             {
-                output = CountryCode::CountryCodeLR;
+                output = PlayFabCountryCode::LR;
                 return;
             }
             if (inputStr == "LY")
             {
-                output = CountryCode::CountryCodeLY;
+                output = PlayFabCountryCode::LY;
                 return;
             }
             if (inputStr == "LI")
             {
-                output = CountryCode::CountryCodeLI;
+                output = PlayFabCountryCode::LI;
                 return;
             }
             if (inputStr == "LT")
             {
-                output = CountryCode::CountryCodeLT;
+                output = PlayFabCountryCode::LT;
                 return;
             }
             if (inputStr == "LU")
             {
-                output = CountryCode::CountryCodeLU;
+                output = PlayFabCountryCode::LU;
                 return;
             }
             if (inputStr == "MO")
             {
-                output = CountryCode::CountryCodeMO;
+                output = PlayFabCountryCode::MO;
                 return;
             }
             if (inputStr == "MK")
             {
-                output = CountryCode::CountryCodeMK;
+                output = PlayFabCountryCode::MK;
                 return;
             }
             if (inputStr == "MG")
             {
-                output = CountryCode::CountryCodeMG;
+                output = PlayFabCountryCode::MG;
                 return;
             }
             if (inputStr == "MW")
             {
-                output = CountryCode::CountryCodeMW;
+                output = PlayFabCountryCode::MW;
                 return;
             }
             if (inputStr == "MY")
             {
-                output = CountryCode::CountryCodeMY;
+                output = PlayFabCountryCode::MY;
                 return;
             }
             if (inputStr == "MV")
             {
-                output = CountryCode::CountryCodeMV;
+                output = PlayFabCountryCode::MV;
                 return;
             }
             if (inputStr == "ML")
             {
-                output = CountryCode::CountryCodeML;
+                output = PlayFabCountryCode::ML;
                 return;
             }
             if (inputStr == "MT")
             {
-                output = CountryCode::CountryCodeMT;
+                output = PlayFabCountryCode::MT;
                 return;
             }
             if (inputStr == "MH")
             {
-                output = CountryCode::CountryCodeMH;
+                output = PlayFabCountryCode::MH;
                 return;
             }
             if (inputStr == "MQ")
             {
-                output = CountryCode::CountryCodeMQ;
+                output = PlayFabCountryCode::MQ;
                 return;
             }
             if (inputStr == "MR")
             {
-                output = CountryCode::CountryCodeMR;
+                output = PlayFabCountryCode::MR;
                 return;
             }
             if (inputStr == "MU")
             {
-                output = CountryCode::CountryCodeMU;
+                output = PlayFabCountryCode::MU;
                 return;
             }
             if (inputStr == "YT")
             {
-                output = CountryCode::CountryCodeYT;
+                output = PlayFabCountryCode::YT;
                 return;
             }
             if (inputStr == "MX")
             {
-                output = CountryCode::CountryCodeMX;
+                output = PlayFabCountryCode::MX;
                 return;
             }
             if (inputStr == "FM")
             {
-                output = CountryCode::CountryCodeFM;
+                output = PlayFabCountryCode::FM;
                 return;
             }
             if (inputStr == "MD")
             {
-                output = CountryCode::CountryCodeMD;
+                output = PlayFabCountryCode::MD;
                 return;
             }
             if (inputStr == "MC")
             {
-                output = CountryCode::CountryCodeMC;
+                output = PlayFabCountryCode::MC;
                 return;
             }
             if (inputStr == "MN")
             {
-                output = CountryCode::CountryCodeMN;
+                output = PlayFabCountryCode::MN;
                 return;
             }
             if (inputStr == "ME")
             {
-                output = CountryCode::CountryCodeME;
+                output = PlayFabCountryCode::ME;
                 return;
             }
             if (inputStr == "MS")
             {
-                output = CountryCode::CountryCodeMS;
+                output = PlayFabCountryCode::MS;
                 return;
             }
             if (inputStr == "MA")
             {
-                output = CountryCode::CountryCodeMA;
+                output = PlayFabCountryCode::MA;
                 return;
             }
             if (inputStr == "MZ")
             {
-                output = CountryCode::CountryCodeMZ;
+                output = PlayFabCountryCode::MZ;
                 return;
             }
             if (inputStr == "MM")
             {
-                output = CountryCode::CountryCodeMM;
+                output = PlayFabCountryCode::MM;
                 return;
             }
             if (inputStr == "NA")
             {
-                output = CountryCode::CountryCodeNA;
+                output = PlayFabCountryCode::NA;
                 return;
             }
             if (inputStr == "NR")
             {
-                output = CountryCode::CountryCodeNR;
+                output = PlayFabCountryCode::NR;
                 return;
             }
             if (inputStr == "NP")
             {
-                output = CountryCode::CountryCodeNP;
+                output = PlayFabCountryCode::NP;
                 return;
             }
             if (inputStr == "NL")
             {
-                output = CountryCode::CountryCodeNL;
+                output = PlayFabCountryCode::NL;
                 return;
             }
             if (inputStr == "NC")
             {
-                output = CountryCode::CountryCodeNC;
+                output = PlayFabCountryCode::NC;
                 return;
             }
             if (inputStr == "NZ")
             {
-                output = CountryCode::CountryCodeNZ;
+                output = PlayFabCountryCode::NZ;
                 return;
             }
             if (inputStr == "NI")
             {
-                output = CountryCode::CountryCodeNI;
+                output = PlayFabCountryCode::NI;
                 return;
             }
             if (inputStr == "NE")
             {
-                output = CountryCode::CountryCodeNE;
+                output = PlayFabCountryCode::NE;
                 return;
             }
             if (inputStr == "NG")
             {
-                output = CountryCode::CountryCodeNG;
+                output = PlayFabCountryCode::NG;
                 return;
             }
             if (inputStr == "NU")
             {
-                output = CountryCode::CountryCodeNU;
+                output = PlayFabCountryCode::NU;
                 return;
             }
             if (inputStr == "NF")
             {
-                output = CountryCode::CountryCodeNF;
+                output = PlayFabCountryCode::NF;
                 return;
             }
             if (inputStr == "MP")
             {
-                output = CountryCode::CountryCodeMP;
+                output = PlayFabCountryCode::MP;
                 return;
             }
             if (inputStr == "NO")
             {
-                output = CountryCode::CountryCodeNO;
+                output = PlayFabCountryCode::NO;
                 return;
             }
             if (inputStr == "OM")
             {
-                output = CountryCode::CountryCodeOM;
+                output = PlayFabCountryCode::OM;
                 return;
             }
             if (inputStr == "PK")
             {
-                output = CountryCode::CountryCodePK;
+                output = PlayFabCountryCode::PK;
                 return;
             }
             if (inputStr == "PW")
             {
-                output = CountryCode::CountryCodePW;
+                output = PlayFabCountryCode::PW;
                 return;
             }
             if (inputStr == "PS")
             {
-                output = CountryCode::CountryCodePS;
+                output = PlayFabCountryCode::PS;
                 return;
             }
             if (inputStr == "PA")
             {
-                output = CountryCode::CountryCodePA;
+                output = PlayFabCountryCode::PA;
                 return;
             }
             if (inputStr == "PG")
             {
-                output = CountryCode::CountryCodePG;
+                output = PlayFabCountryCode::PG;
                 return;
             }
             if (inputStr == "PY")
             {
-                output = CountryCode::CountryCodePY;
+                output = PlayFabCountryCode::PY;
                 return;
             }
             if (inputStr == "PE")
             {
-                output = CountryCode::CountryCodePE;
+                output = PlayFabCountryCode::PE;
                 return;
             }
             if (inputStr == "PH")
             {
-                output = CountryCode::CountryCodePH;
+                output = PlayFabCountryCode::PH;
                 return;
             }
             if (inputStr == "PN")
             {
-                output = CountryCode::CountryCodePN;
+                output = PlayFabCountryCode::PN;
                 return;
             }
             if (inputStr == "PL")
             {
-                output = CountryCode::CountryCodePL;
+                output = PlayFabCountryCode::PL;
                 return;
             }
             if (inputStr == "PT")
             {
-                output = CountryCode::CountryCodePT;
+                output = PlayFabCountryCode::PT;
                 return;
             }
             if (inputStr == "PR")
             {
-                output = CountryCode::CountryCodePR;
+                output = PlayFabCountryCode::PR;
                 return;
             }
             if (inputStr == "QA")
             {
-                output = CountryCode::CountryCodeQA;
+                output = PlayFabCountryCode::QA;
                 return;
             }
             if (inputStr == "RE")
             {
-                output = CountryCode::CountryCodeRE;
+                output = PlayFabCountryCode::RE;
                 return;
             }
             if (inputStr == "RO")
             {
-                output = CountryCode::CountryCodeRO;
+                output = PlayFabCountryCode::RO;
                 return;
             }
             if (inputStr == "RU")
             {
-                output = CountryCode::CountryCodeRU;
+                output = PlayFabCountryCode::RU;
                 return;
             }
             if (inputStr == "RW")
             {
-                output = CountryCode::CountryCodeRW;
+                output = PlayFabCountryCode::RW;
                 return;
             }
             if (inputStr == "BL")
             {
-                output = CountryCode::CountryCodeBL;
+                output = PlayFabCountryCode::BL;
                 return;
             }
             if (inputStr == "SH")
             {
-                output = CountryCode::CountryCodeSH;
+                output = PlayFabCountryCode::SH;
                 return;
             }
             if (inputStr == "KN")
             {
-                output = CountryCode::CountryCodeKN;
+                output = PlayFabCountryCode::KN;
                 return;
             }
             if (inputStr == "LC")
             {
-                output = CountryCode::CountryCodeLC;
+                output = PlayFabCountryCode::LC;
                 return;
             }
             if (inputStr == "MF")
             {
-                output = CountryCode::CountryCodeMF;
+                output = PlayFabCountryCode::MF;
                 return;
             }
             if (inputStr == "PM")
             {
-                output = CountryCode::CountryCodePM;
+                output = PlayFabCountryCode::PM;
                 return;
             }
             if (inputStr == "VC")
             {
-                output = CountryCode::CountryCodeVC;
+                output = PlayFabCountryCode::VC;
                 return;
             }
             if (inputStr == "WS")
             {
-                output = CountryCode::CountryCodeWS;
+                output = PlayFabCountryCode::WS;
                 return;
             }
             if (inputStr == "SM")
             {
-                output = CountryCode::CountryCodeSM;
+                output = PlayFabCountryCode::SM;
                 return;
             }
             if (inputStr == "ST")
             {
-                output = CountryCode::CountryCodeST;
+                output = PlayFabCountryCode::ST;
                 return;
             }
             if (inputStr == "SA")
             {
-                output = CountryCode::CountryCodeSA;
+                output = PlayFabCountryCode::SA;
                 return;
             }
             if (inputStr == "SN")
             {
-                output = CountryCode::CountryCodeSN;
+                output = PlayFabCountryCode::SN;
                 return;
             }
             if (inputStr == "RS")
             {
-                output = CountryCode::CountryCodeRS;
+                output = PlayFabCountryCode::RS;
                 return;
             }
             if (inputStr == "SC")
             {
-                output = CountryCode::CountryCodeSC;
+                output = PlayFabCountryCode::SC;
                 return;
             }
             if (inputStr == "SL")
             {
-                output = CountryCode::CountryCodeSL;
+                output = PlayFabCountryCode::SL;
                 return;
             }
             if (inputStr == "SG")
             {
-                output = CountryCode::CountryCodeSG;
+                output = PlayFabCountryCode::SG;
                 return;
             }
             if (inputStr == "SX")
             {
-                output = CountryCode::CountryCodeSX;
+                output = PlayFabCountryCode::SX;
                 return;
             }
             if (inputStr == "SK")
             {
-                output = CountryCode::CountryCodeSK;
+                output = PlayFabCountryCode::SK;
                 return;
             }
             if (inputStr == "SI")
             {
-                output = CountryCode::CountryCodeSI;
+                output = PlayFabCountryCode::SI;
                 return;
             }
             if (inputStr == "SB")
             {
-                output = CountryCode::CountryCodeSB;
+                output = PlayFabCountryCode::SB;
                 return;
             }
             if (inputStr == "SO")
             {
-                output = CountryCode::CountryCodeSO;
+                output = PlayFabCountryCode::SO;
                 return;
             }
             if (inputStr == "ZA")
             {
-                output = CountryCode::CountryCodeZA;
+                output = PlayFabCountryCode::ZA;
                 return;
             }
             if (inputStr == "GS")
             {
-                output = CountryCode::CountryCodeGS;
+                output = PlayFabCountryCode::GS;
                 return;
             }
             if (inputStr == "SS")
             {
-                output = CountryCode::CountryCodeSS;
+                output = PlayFabCountryCode::SS;
                 return;
             }
             if (inputStr == "ES")
             {
-                output = CountryCode::CountryCodeES;
+                output = PlayFabCountryCode::ES;
                 return;
             }
             if (inputStr == "LK")
             {
-                output = CountryCode::CountryCodeLK;
+                output = PlayFabCountryCode::LK;
                 return;
             }
             if (inputStr == "SD")
             {
-                output = CountryCode::CountryCodeSD;
+                output = PlayFabCountryCode::SD;
                 return;
             }
             if (inputStr == "SR")
             {
-                output = CountryCode::CountryCodeSR;
+                output = PlayFabCountryCode::SR;
                 return;
             }
             if (inputStr == "SJ")
             {
-                output = CountryCode::CountryCodeSJ;
+                output = PlayFabCountryCode::SJ;
                 return;
             }
             if (inputStr == "SZ")
             {
-                output = CountryCode::CountryCodeSZ;
+                output = PlayFabCountryCode::SZ;
                 return;
             }
             if (inputStr == "SE")
             {
-                output = CountryCode::CountryCodeSE;
+                output = PlayFabCountryCode::SE;
                 return;
             }
             if (inputStr == "CH")
             {
-                output = CountryCode::CountryCodeCH;
+                output = PlayFabCountryCode::CH;
                 return;
             }
             if (inputStr == "SY")
             {
-                output = CountryCode::CountryCodeSY;
+                output = PlayFabCountryCode::SY;
                 return;
             }
             if (inputStr == "TW")
             {
-                output = CountryCode::CountryCodeTW;
+                output = PlayFabCountryCode::TW;
                 return;
             }
             if (inputStr == "TJ")
             {
-                output = CountryCode::CountryCodeTJ;
+                output = PlayFabCountryCode::TJ;
                 return;
             }
             if (inputStr == "TZ")
             {
-                output = CountryCode::CountryCodeTZ;
+                output = PlayFabCountryCode::TZ;
                 return;
             }
             if (inputStr == "TH")
             {
-                output = CountryCode::CountryCodeTH;
+                output = PlayFabCountryCode::TH;
                 return;
             }
             if (inputStr == "TL")
             {
-                output = CountryCode::CountryCodeTL;
+                output = PlayFabCountryCode::TL;
                 return;
             }
             if (inputStr == "TG")
             {
-                output = CountryCode::CountryCodeTG;
+                output = PlayFabCountryCode::TG;
                 return;
             }
             if (inputStr == "TK")
             {
-                output = CountryCode::CountryCodeTK;
+                output = PlayFabCountryCode::TK;
                 return;
             }
             if (inputStr == "TO")
             {
-                output = CountryCode::CountryCodeTO;
+                output = PlayFabCountryCode::TO;
                 return;
             }
             if (inputStr == "TT")
             {
-                output = CountryCode::CountryCodeTT;
+                output = PlayFabCountryCode::TT;
                 return;
             }
             if (inputStr == "TN")
             {
-                output = CountryCode::CountryCodeTN;
+                output = PlayFabCountryCode::TN;
                 return;
             }
             if (inputStr == "TR")
             {
-                output = CountryCode::CountryCodeTR;
+                output = PlayFabCountryCode::TR;
                 return;
             }
             if (inputStr == "TM")
             {
-                output = CountryCode::CountryCodeTM;
+                output = PlayFabCountryCode::TM;
                 return;
             }
             if (inputStr == "TC")
             {
-                output = CountryCode::CountryCodeTC;
+                output = PlayFabCountryCode::TC;
                 return;
             }
             if (inputStr == "TV")
             {
-                output = CountryCode::CountryCodeTV;
+                output = PlayFabCountryCode::TV;
                 return;
             }
             if (inputStr == "UG")
             {
-                output = CountryCode::CountryCodeUG;
+                output = PlayFabCountryCode::UG;
                 return;
             }
             if (inputStr == "UA")
             {
-                output = CountryCode::CountryCodeUA;
+                output = PlayFabCountryCode::UA;
                 return;
             }
             if (inputStr == "AE")
             {
-                output = CountryCode::CountryCodeAE;
+                output = PlayFabCountryCode::AE;
                 return;
             }
             if (inputStr == "GB")
             {
-                output = CountryCode::CountryCodeGB;
+                output = PlayFabCountryCode::GB;
                 return;
             }
             if (inputStr == "US")
             {
-                output = CountryCode::CountryCodeUS;
+                output = PlayFabCountryCode::US;
                 return;
             }
             if (inputStr == "UM")
             {
-                output = CountryCode::CountryCodeUM;
+                output = PlayFabCountryCode::UM;
                 return;
             }
             if (inputStr == "UY")
             {
-                output = CountryCode::CountryCodeUY;
+                output = PlayFabCountryCode::UY;
                 return;
             }
             if (inputStr == "UZ")
             {
-                output = CountryCode::CountryCodeUZ;
+                output = PlayFabCountryCode::UZ;
                 return;
             }
             if (inputStr == "VU")
             {
-                output = CountryCode::CountryCodeVU;
+                output = PlayFabCountryCode::VU;
                 return;
             }
             if (inputStr == "VE")
             {
-                output = CountryCode::CountryCodeVE;
+                output = PlayFabCountryCode::VE;
                 return;
             }
             if (inputStr == "VN")
             {
-                output = CountryCode::CountryCodeVN;
+                output = PlayFabCountryCode::VN;
                 return;
             }
             if (inputStr == "VG")
             {
-                output = CountryCode::CountryCodeVG;
+                output = PlayFabCountryCode::VG;
                 return;
             }
             if (inputStr == "VI")
             {
-                output = CountryCode::CountryCodeVI;
+                output = PlayFabCountryCode::VI;
                 return;
             }
             if (inputStr == "WF")
             {
-                output = CountryCode::CountryCodeWF;
+                output = PlayFabCountryCode::WF;
                 return;
             }
             if (inputStr == "EH")
             {
-                output = CountryCode::CountryCodeEH;
+                output = PlayFabCountryCode::EH;
                 return;
             }
             if (inputStr == "YE")
             {
-                output = CountryCode::CountryCodeYE;
+                output = PlayFabCountryCode::YE;
                 return;
             }
             if (inputStr == "ZM")
             {
-                output = CountryCode::CountryCodeZM;
+                output = PlayFabCountryCode::ZM;
                 return;
             }
             if (inputStr == "ZW")
             {
-                output = CountryCode::CountryCodeZW;
+                output = PlayFabCountryCode::ZW;
                 return;
             }
         }
@@ -4765,32 +4709,25 @@ namespace PlayFab
             }
         }
 
-        enum class EmailVerificationStatus
+        inline void ToJsonEnum(const PlayFabEmailVerificationStatus input, Json::Value& output)
         {
-            EmailVerificationStatusUnverified,
-            EmailVerificationStatusPending,
-            EmailVerificationStatusConfirmed
-        };
-
-        inline void ToJsonEnum(const EmailVerificationStatus input, Json::Value& output)
-        {
-            if (input == EmailVerificationStatus::EmailVerificationStatusUnverified)
+            if (input == PlayFabEmailVerificationStatus::Unverified)
             {
                 output = Json::Value("Unverified");
                 return;
             }
-            if (input == EmailVerificationStatus::EmailVerificationStatusPending)
+            if (input == PlayFabEmailVerificationStatus::Pending)
             {
                 output = Json::Value("Pending");
                 return;
             }
-            if (input == EmailVerificationStatus::EmailVerificationStatusConfirmed)
+            if (input == PlayFabEmailVerificationStatus::Confirmed)
             {
                 output = Json::Value("Confirmed");
                 return;
             }
         }
-        inline void FromJsonEnum(const Json::Value& input, EmailVerificationStatus& output)
+        inline void FromJsonEnum(const Json::Value& input, PlayFabEmailVerificationStatus& output)
         {
             if (!input.isString())
             {
@@ -4799,17 +4736,17 @@ namespace PlayFab
             const std::string& inputStr = input.asString();
             if (inputStr == "Unverified")
             {
-                output = EmailVerificationStatus::EmailVerificationStatusUnverified;
+                output = PlayFabEmailVerificationStatus::Unverified;
                 return;
             }
             if (inputStr == "Pending")
             {
-                output = EmailVerificationStatus::EmailVerificationStatusPending;
+                output = PlayFabEmailVerificationStatus::Pending;
                 return;
             }
             if (inputStr == "Confirmed")
             {
-                output = EmailVerificationStatus::EmailVerificationStatusConfirmed;
+                output = PlayFabEmailVerificationStatus::Confirmed;
                 return;
             }
         }
@@ -4852,140 +4789,115 @@ namespace PlayFab
             }
         }
 
-        enum class LoginIdentityProvider
+        inline void ToJsonEnum(const PlayFabLoginIdentityProvider input, Json::Value& output)
         {
-            LoginIdentityProviderUnknown,
-            LoginIdentityProviderPlayFab,
-            LoginIdentityProviderCustom,
-            LoginIdentityProviderGameCenter,
-            LoginIdentityProviderGooglePlay,
-            LoginIdentityProviderSteam,
-            LoginIdentityProviderXBoxLive,
-            LoginIdentityProviderPSN,
-            LoginIdentityProviderKongregate,
-            LoginIdentityProviderFacebook,
-            LoginIdentityProviderIOSDevice,
-            LoginIdentityProviderAndroidDevice,
-            LoginIdentityProviderTwitch,
-            LoginIdentityProviderWindowsHello,
-            LoginIdentityProviderGameServer,
-            LoginIdentityProviderCustomServer,
-            LoginIdentityProviderNintendoSwitch,
-            LoginIdentityProviderFacebookInstantGames,
-            LoginIdentityProviderOpenIdConnect,
-            LoginIdentityProviderApple,
-            LoginIdentityProviderNintendoSwitchAccount
-        };
-
-        inline void ToJsonEnum(const LoginIdentityProvider input, Json::Value& output)
-        {
-            if (input == LoginIdentityProvider::LoginIdentityProviderUnknown)
+            if (input == PlayFabLoginIdentityProvider::Unknown)
             {
                 output = Json::Value("Unknown");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderPlayFab)
+            if (input == PlayFabLoginIdentityProvider::PlayFab)
             {
                 output = Json::Value("PlayFab");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderCustom)
+            if (input == PlayFabLoginIdentityProvider::Custom)
             {
                 output = Json::Value("Custom");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderGameCenter)
+            if (input == PlayFabLoginIdentityProvider::GameCenter)
             {
                 output = Json::Value("GameCenter");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderGooglePlay)
+            if (input == PlayFabLoginIdentityProvider::GooglePlay)
             {
                 output = Json::Value("GooglePlay");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderSteam)
+            if (input == PlayFabLoginIdentityProvider::Steam)
             {
                 output = Json::Value("Steam");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderXBoxLive)
+            if (input == PlayFabLoginIdentityProvider::XBoxLive)
             {
                 output = Json::Value("XBoxLive");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderPSN)
+            if (input == PlayFabLoginIdentityProvider::PSN)
             {
                 output = Json::Value("PSN");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderKongregate)
+            if (input == PlayFabLoginIdentityProvider::Kongregate)
             {
                 output = Json::Value("Kongregate");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderFacebook)
+            if (input == PlayFabLoginIdentityProvider::Facebook)
             {
                 output = Json::Value("Facebook");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderIOSDevice)
+            if (input == PlayFabLoginIdentityProvider::IOSDevice)
             {
                 output = Json::Value("IOSDevice");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderAndroidDevice)
+            if (input == PlayFabLoginIdentityProvider::AndroidDevice)
             {
                 output = Json::Value("AndroidDevice");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderTwitch)
+            if (input == PlayFabLoginIdentityProvider::Twitch)
             {
                 output = Json::Value("Twitch");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderWindowsHello)
+            if (input == PlayFabLoginIdentityProvider::WindowsHello)
             {
                 output = Json::Value("WindowsHello");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderGameServer)
+            if (input == PlayFabLoginIdentityProvider::GameServer)
             {
                 output = Json::Value("GameServer");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderCustomServer)
+            if (input == PlayFabLoginIdentityProvider::CustomServer)
             {
                 output = Json::Value("CustomServer");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderNintendoSwitch)
+            if (input == PlayFabLoginIdentityProvider::NintendoSwitch)
             {
                 output = Json::Value("NintendoSwitch");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderFacebookInstantGames)
+            if (input == PlayFabLoginIdentityProvider::FacebookInstantGames)
             {
                 output = Json::Value("FacebookInstantGames");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderOpenIdConnect)
+            if (input == PlayFabLoginIdentityProvider::OpenIdConnect)
             {
                 output = Json::Value("OpenIdConnect");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderApple)
+            if (input == PlayFabLoginIdentityProvider::Apple)
             {
                 output = Json::Value("Apple");
                 return;
             }
-            if (input == LoginIdentityProvider::LoginIdentityProviderNintendoSwitchAccount)
+            if (input == PlayFabLoginIdentityProvider::NintendoSwitchAccount)
             {
                 output = Json::Value("NintendoSwitchAccount");
                 return;
             }
         }
-        inline void FromJsonEnum(const Json::Value& input, LoginIdentityProvider& output)
+        inline void FromJsonEnum(const Json::Value& input, PlayFabLoginIdentityProvider& output)
         {
             if (!input.isString())
             {
@@ -4994,107 +4906,107 @@ namespace PlayFab
             const std::string& inputStr = input.asString();
             if (inputStr == "Unknown")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderUnknown;
+                output = PlayFabLoginIdentityProvider::Unknown;
                 return;
             }
             if (inputStr == "PlayFab")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderPlayFab;
+                output = PlayFabLoginIdentityProvider::PlayFab;
                 return;
             }
             if (inputStr == "Custom")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderCustom;
+                output = PlayFabLoginIdentityProvider::Custom;
                 return;
             }
             if (inputStr == "GameCenter")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderGameCenter;
+                output = PlayFabLoginIdentityProvider::GameCenter;
                 return;
             }
             if (inputStr == "GooglePlay")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderGooglePlay;
+                output = PlayFabLoginIdentityProvider::GooglePlay;
                 return;
             }
             if (inputStr == "Steam")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderSteam;
+                output = PlayFabLoginIdentityProvider::Steam;
                 return;
             }
             if (inputStr == "XBoxLive")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderXBoxLive;
+                output = PlayFabLoginIdentityProvider::XBoxLive;
                 return;
             }
             if (inputStr == "PSN")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderPSN;
+                output = PlayFabLoginIdentityProvider::PSN;
                 return;
             }
             if (inputStr == "Kongregate")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderKongregate;
+                output = PlayFabLoginIdentityProvider::Kongregate;
                 return;
             }
             if (inputStr == "Facebook")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderFacebook;
+                output = PlayFabLoginIdentityProvider::Facebook;
                 return;
             }
             if (inputStr == "IOSDevice")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderIOSDevice;
+                output = PlayFabLoginIdentityProvider::IOSDevice;
                 return;
             }
             if (inputStr == "AndroidDevice")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderAndroidDevice;
+                output = PlayFabLoginIdentityProvider::AndroidDevice;
                 return;
             }
             if (inputStr == "Twitch")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderTwitch;
+                output = PlayFabLoginIdentityProvider::Twitch;
                 return;
             }
             if (inputStr == "WindowsHello")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderWindowsHello;
+                output = PlayFabLoginIdentityProvider::WindowsHello;
                 return;
             }
             if (inputStr == "GameServer")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderGameServer;
+                output = PlayFabLoginIdentityProvider::GameServer;
                 return;
             }
             if (inputStr == "CustomServer")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderCustomServer;
+                output = PlayFabLoginIdentityProvider::CustomServer;
                 return;
             }
             if (inputStr == "NintendoSwitch")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderNintendoSwitch;
+                output = PlayFabLoginIdentityProvider::NintendoSwitch;
                 return;
             }
             if (inputStr == "FacebookInstantGames")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderFacebookInstantGames;
+                output = PlayFabLoginIdentityProvider::FacebookInstantGames;
                 return;
             }
             if (inputStr == "OpenIdConnect")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderOpenIdConnect;
+                output = PlayFabLoginIdentityProvider::OpenIdConnect;
                 return;
             }
             if (inputStr == "Apple")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderApple;
+                output = PlayFabLoginIdentityProvider::Apple;
                 return;
             }
             if (inputStr == "NintendoSwitchAccount")
             {
-                output = LoginIdentityProvider::LoginIdentityProviderNintendoSwitchAccount;
+                output = PlayFabLoginIdentityProvider::NintendoSwitchAccount;
                 return;
             }
         }
@@ -5170,26 +5082,20 @@ namespace PlayFab
             }
         }
 
-        enum class PushNotificationPlatform
+        inline void ToJsonEnum(const PlayFabPushNotificationPlatform input, Json::Value& output)
         {
-            PushNotificationPlatformApplePushNotificationService,
-            PushNotificationPlatformGoogleCloudMessaging
-        };
-
-        inline void ToJsonEnum(const PushNotificationPlatform input, Json::Value& output)
-        {
-            if (input == PushNotificationPlatform::PushNotificationPlatformApplePushNotificationService)
+            if (input == PlayFabPushNotificationPlatform::ApplePushNotificationService)
             {
                 output = Json::Value("ApplePushNotificationService");
                 return;
             }
-            if (input == PushNotificationPlatform::PushNotificationPlatformGoogleCloudMessaging)
+            if (input == PlayFabPushNotificationPlatform::GoogleCloudMessaging)
             {
                 output = Json::Value("GoogleCloudMessaging");
                 return;
             }
         }
-        inline void FromJsonEnum(const Json::Value& input, PushNotificationPlatform& output)
+        inline void FromJsonEnum(const Json::Value& input, PlayFabPushNotificationPlatform& output)
         {
             if (!input.isString())
             {
@@ -5198,12 +5104,12 @@ namespace PlayFab
             const std::string& inputStr = input.asString();
             if (inputStr == "ApplePushNotificationService")
             {
-                output = PushNotificationPlatform::PushNotificationPlatformApplePushNotificationService;
+                output = PlayFabPushNotificationPlatform::ApplePushNotificationService;
                 return;
             }
             if (inputStr == "GoogleCloudMessaging")
             {
-                output = PushNotificationPlatform::PushNotificationPlatformGoogleCloudMessaging;
+                output = PlayFabPushNotificationPlatform::GoogleCloudMessaging;
                 return;
             }
         }
@@ -5394,62 +5300,50 @@ namespace PlayFab
             }
         }
 
-        enum class SubscriptionProviderStatus
+        inline void ToJsonEnum(const PlayFabSubscriptionProviderStatus input, Json::Value& output)
         {
-            SubscriptionProviderStatusNoError,
-            SubscriptionProviderStatusCancelled,
-            SubscriptionProviderStatusUnknownError,
-            SubscriptionProviderStatusBillingError,
-            SubscriptionProviderStatusProductUnavailable,
-            SubscriptionProviderStatusCustomerDidNotAcceptPriceChange,
-            SubscriptionProviderStatusFreeTrial,
-            SubscriptionProviderStatusPaymentPending
-        };
-
-        inline void ToJsonEnum(const SubscriptionProviderStatus input, Json::Value& output)
-        {
-            if (input == SubscriptionProviderStatus::SubscriptionProviderStatusNoError)
+            if (input == PlayFabSubscriptionProviderStatus::NoError)
             {
                 output = Json::Value("NoError");
                 return;
             }
-            if (input == SubscriptionProviderStatus::SubscriptionProviderStatusCancelled)
+            if (input == PlayFabSubscriptionProviderStatus::Cancelled)
             {
                 output = Json::Value("Cancelled");
                 return;
             }
-            if (input == SubscriptionProviderStatus::SubscriptionProviderStatusUnknownError)
+            if (input == PlayFabSubscriptionProviderStatus::UnknownError)
             {
                 output = Json::Value("UnknownError");
                 return;
             }
-            if (input == SubscriptionProviderStatus::SubscriptionProviderStatusBillingError)
+            if (input == PlayFabSubscriptionProviderStatus::BillingError)
             {
                 output = Json::Value("BillingError");
                 return;
             }
-            if (input == SubscriptionProviderStatus::SubscriptionProviderStatusProductUnavailable)
+            if (input == PlayFabSubscriptionProviderStatus::ProductUnavailable)
             {
                 output = Json::Value("ProductUnavailable");
                 return;
             }
-            if (input == SubscriptionProviderStatus::SubscriptionProviderStatusCustomerDidNotAcceptPriceChange)
+            if (input == PlayFabSubscriptionProviderStatus::CustomerDidNotAcceptPriceChange)
             {
                 output = Json::Value("CustomerDidNotAcceptPriceChange");
                 return;
             }
-            if (input == SubscriptionProviderStatus::SubscriptionProviderStatusFreeTrial)
+            if (input == PlayFabSubscriptionProviderStatus::FreeTrial)
             {
                 output = Json::Value("FreeTrial");
                 return;
             }
-            if (input == SubscriptionProviderStatus::SubscriptionProviderStatusPaymentPending)
+            if (input == PlayFabSubscriptionProviderStatus::PaymentPending)
             {
                 output = Json::Value("PaymentPending");
                 return;
             }
         }
-        inline void FromJsonEnum(const Json::Value& input, SubscriptionProviderStatus& output)
+        inline void FromJsonEnum(const Json::Value& input, PlayFabSubscriptionProviderStatus& output)
         {
             if (!input.isString())
             {
@@ -5458,42 +5352,42 @@ namespace PlayFab
             const std::string& inputStr = input.asString();
             if (inputStr == "NoError")
             {
-                output = SubscriptionProviderStatus::SubscriptionProviderStatusNoError;
+                output = PlayFabSubscriptionProviderStatus::NoError;
                 return;
             }
             if (inputStr == "Cancelled")
             {
-                output = SubscriptionProviderStatus::SubscriptionProviderStatusCancelled;
+                output = PlayFabSubscriptionProviderStatus::Cancelled;
                 return;
             }
             if (inputStr == "UnknownError")
             {
-                output = SubscriptionProviderStatus::SubscriptionProviderStatusUnknownError;
+                output = PlayFabSubscriptionProviderStatus::UnknownError;
                 return;
             }
             if (inputStr == "BillingError")
             {
-                output = SubscriptionProviderStatus::SubscriptionProviderStatusBillingError;
+                output = PlayFabSubscriptionProviderStatus::BillingError;
                 return;
             }
             if (inputStr == "ProductUnavailable")
             {
-                output = SubscriptionProviderStatus::SubscriptionProviderStatusProductUnavailable;
+                output = PlayFabSubscriptionProviderStatus::ProductUnavailable;
                 return;
             }
             if (inputStr == "CustomerDidNotAcceptPriceChange")
             {
-                output = SubscriptionProviderStatus::SubscriptionProviderStatusCustomerDidNotAcceptPriceChange;
+                output = PlayFabSubscriptionProviderStatus::CustomerDidNotAcceptPriceChange;
                 return;
             }
             if (inputStr == "FreeTrial")
             {
-                output = SubscriptionProviderStatus::SubscriptionProviderStatusFreeTrial;
+                output = PlayFabSubscriptionProviderStatus::FreeTrial;
                 return;
             }
             if (inputStr == "PaymentPending")
             {
-                output = SubscriptionProviderStatus::SubscriptionProviderStatusPaymentPending;
+                output = PlayFabSubscriptionProviderStatus::PaymentPending;
                 return;
             }
         }
@@ -6374,43 +6268,43 @@ namespace PlayFab
             }
         };
 
-        struct AdCampaignAttributionModel : public PlayFabBaseModel
+        struct AdCampaignAttributionModel : public PlayFabAdCampaignAttributionModel, public BaseModel
         {
-            time_t AttributedAt;
-            std::string CampaignId;
-            std::string Platform;
-
-            AdCampaignAttributionModel() :
-                PlayFabBaseModel(),
-                AttributedAt(),
-                CampaignId(),
-                Platform()
-            {}
+            AdCampaignAttributionModel() = default;
 
             AdCampaignAttributionModel(const AdCampaignAttributionModel& src) :
-                PlayFabBaseModel(),
-                AttributedAt(src.AttributedAt),
-                CampaignId(src.CampaignId),
-                Platform(src.Platform)
-            {}
+                PlayFabAdCampaignAttributionModel{ src },
+                m_campaignId{ src.m_campaignId },
+                m_platform{ src.m_platform }
+            {
+                campaignId = m_campaignId.empty() ? nullptr : m_campaignId.data();
+                platform = m_platform.empty() ? nullptr : m_platform.data();
+            }
+
+            AdCampaignAttributionModel(AdCampaignAttributionModel&& src)
+                : PlayFabAdCampaignAttributionModel{ src },
+                m_campaignId{ std::move(src.m_campaignId) },
+                m_platform{ std::move(src.m_platform) }
+            {
+            }
 
             ~AdCampaignAttributionModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilT(input["AttributedAt"], AttributedAt);
-                FromJsonUtilS(input["CampaignId"], CampaignId);
-                FromJsonUtilS(input["Platform"], Platform);
+                FromJsonUtilT(input["AttributedAt"], attributedAt);
+                FromJsonUtilS(input["CampaignId"], m_campaignId, campaignId);
+                FromJsonUtilS(input["Platform"], m_platform, platform);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_AttributedAt; ToJsonUtilT(AttributedAt, each_AttributedAt); output["AttributedAt"] = each_AttributedAt;
-                Json::Value each_CampaignId; ToJsonUtilS(CampaignId, each_CampaignId); output["CampaignId"] = each_CampaignId;
-                Json::Value each_Platform; ToJsonUtilS(Platform, each_Platform); output["Platform"] = each_Platform;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_campaignId;
+            String m_platform;
         };
 
         struct AddFriendRequest : public PlayFabRequestCommon
@@ -8217,101 +8111,112 @@ namespace PlayFab
             }
         };
 
-        struct ContactEmailInfoModel : public PlayFabBaseModel
+        struct ContactEmailInfoModel : public PlayFabContactEmailInfoModel, public BaseModel
         {
-            std::string EmailAddress;
-            std::string Name;
-            Boxed<EmailVerificationStatus> VerificationStatus;
-
-            ContactEmailInfoModel() :
-                PlayFabBaseModel(),
-                EmailAddress(),
-                Name(),
-                VerificationStatus()
-            {}
+            ContactEmailInfoModel() = default;
 
             ContactEmailInfoModel(const ContactEmailInfoModel& src) :
-                PlayFabBaseModel(),
-                EmailAddress(src.EmailAddress),
-                Name(src.Name),
-                VerificationStatus(src.VerificationStatus)
-            {}
+                PlayFabContactEmailInfoModel(src),
+                m_emailAddress(src.m_emailAddress),
+                m_name(src.m_name),
+                m_verificationStatus(src.m_verificationStatus)
+            {
+                emailAddress = m_emailAddress.empty() ? nullptr : m_emailAddress.data();
+                name = m_name.empty() ? nullptr : m_name.data();
+                verificationStatus = m_verificationStatus ? m_verificationStatus.operator->() : nullptr;
+            }
 
             ~ContactEmailInfoModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["EmailAddress"], EmailAddress);
-                FromJsonUtilS(input["Name"], Name);
-                FromJsonUtilE(input["VerificationStatus"], VerificationStatus);
+                FromJsonUtilS(input["EmailAddress"], m_emailAddress, emailAddress);
+                FromJsonUtilS(input["Name"], m_name, name);
+                FromJsonUtilE(input["VerificationStatus"], m_verificationStatus, verificationStatus);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_EmailAddress; ToJsonUtilS(EmailAddress, each_EmailAddress); output["EmailAddress"] = each_EmailAddress;
-                Json::Value each_Name; ToJsonUtilS(Name, each_Name); output["Name"] = each_Name;
-                Json::Value each_VerificationStatus; ToJsonUtilE(VerificationStatus, each_VerificationStatus); output["VerificationStatus"] = each_VerificationStatus;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_emailAddress;
+            String m_name;
+            StdExtra::optional<PlayFabEmailVerificationStatus> m_verificationStatus;
         };
 
-        struct CreateSharedGroupRequest : public PlayFabRequestCommon
+        struct CreateSharedGroupRequest : public PlayFabCreateSharedGroupRequest, public RequestCommon
         {
-            std::string SharedGroupId;
-
-            CreateSharedGroupRequest() :
-                PlayFabRequestCommon(),
-                SharedGroupId()
-            {}
+            CreateSharedGroupRequest() = default;
 
             CreateSharedGroupRequest(const CreateSharedGroupRequest& src) :
-                PlayFabRequestCommon(),
-                SharedGroupId(src.SharedGroupId)
-            {}
+                PlayFabCreateSharedGroupRequest(src),
+                m_sharedGroupId(src.m_sharedGroupId)
+            {
+                sharedGroupId = m_sharedGroupId.empty() ? nullptr : m_sharedGroupId.data();
+            }
 
             ~CreateSharedGroupRequest() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["SharedGroupId"], SharedGroupId);
+                FromJsonUtilS(input["SharedGroupId"], m_sharedGroupId, sharedGroupId);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_SharedGroupId; ToJsonUtilS(SharedGroupId, each_SharedGroupId); output["SharedGroupId"] = each_SharedGroupId;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_sharedGroupId;
         };
 
-        struct CreateSharedGroupResult : public PlayFabResultCommon
+        struct CreateSharedGroupResult : public PlayFabCreateSharedGroupResult, public SerializableResult
         {
-            std::string SharedGroupId;
-
-            CreateSharedGroupResult() :
-                PlayFabResultCommon(),
-                SharedGroupId()
-            {}
+            CreateSharedGroupResult() = default;
 
             CreateSharedGroupResult(const CreateSharedGroupResult& src) :
-                PlayFabResultCommon(),
-                SharedGroupId(src.SharedGroupId)
-            {}
+                PlayFabCreateSharedGroupResult(src),
+                m_sharedGroupId(src.m_sharedGroupId)
+            {
+                sharedGroupId = m_sharedGroupId.empty() ? nullptr : m_sharedGroupId.data();
+            }
 
             ~CreateSharedGroupResult() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["SharedGroupId"], SharedGroupId);
+                FromJsonUtilS(input["SharedGroupId"], m_sharedGroupId, sharedGroupId);
             }
 
             Json::Value ToJson() const override
             {
                 Json::Value output;
-                Json::Value each_SharedGroupId; ToJsonUtilS(SharedGroupId, each_SharedGroupId); output["SharedGroupId"] = each_SharedGroupId;
+                Json::Value each_SharedGroupId; ToJsonUtilS(sharedGroupId, each_SharedGroupId); output["SharedGroupId"] = each_SharedGroupId;
                 return output;
             }
+
+            size_t RequiredBufferSize() const override
+            {
+                size_t requiredSize = sizeof(PlayFabCreateSharedGroupResult);
+                requiredSize += m_sharedGroupId.length() + 1;
+                return requiredSize;
+            }
+
+            void Serialize(void* buffer, size_t bufferSize) const override
+            {
+                assert(bufferSize == RequiredBufferSize());
+                char* stringBuffer = static_cast<char*>(buffer) + sizeof(PlayFabCreateSharedGroupResult);
+
+                auto result = new (buffer) PlayFabCreateSharedGroupResult(*this);
+                result->sharedGroupId = stringBuffer;
+                memcpy(stringBuffer, m_sharedGroupId.data(), m_sharedGroupId.size() + 1);
+            }
+
+        private:
+            String m_sharedGroupId;
         };
 
         struct CurrentGamesRequest : public PlayFabRequestCommon
@@ -9003,470 +8908,387 @@ namespace PlayFab
             }
         };
 
-        struct LinkedPlatformAccountModel : public PlayFabBaseModel
+        struct LinkedPlatformAccountModel : public PlayFabLinkedPlatformAccountModel, public BaseModel
         {
-            std::string Email;
-            Boxed<LoginIdentityProvider> Platform;
-            std::string PlatformUserId;
-            std::string Username;
-
-            LinkedPlatformAccountModel() :
-                PlayFabBaseModel(),
-                Email(),
-                Platform(),
-                PlatformUserId(),
-                Username()
-            {}
+            LinkedPlatformAccountModel() = default;
 
             LinkedPlatformAccountModel(const LinkedPlatformAccountModel& src) :
-                PlayFabBaseModel(),
-                Email(src.Email),
-                Platform(src.Platform),
-                PlatformUserId(src.PlatformUserId),
-                Username(src.Username)
-            {}
+                PlayFabLinkedPlatformAccountModel(src),
+                m_email(src.m_email),
+                m_platform(src.m_platform),
+                m_platformUserId(src.m_platformUserId),
+                m_username(src.m_username)
+            {
+                email = m_email.empty() ? nullptr : m_email.data();
+                platform = m_platform ? m_platform.operator->() : nullptr;
+                platformUserId = m_platformUserId.empty() ? nullptr : m_platformUserId.data();
+                username = m_username.empty() ? nullptr : m_username.data();
+            }
 
             ~LinkedPlatformAccountModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["Email"], Email);
-                FromJsonUtilE(input["Platform"], Platform);
-                FromJsonUtilS(input["PlatformUserId"], PlatformUserId);
-                FromJsonUtilS(input["Username"], Username);
+                FromJsonUtilS(input["Email"], m_email, email);
+                FromJsonUtilE(input["Platform"], m_platform, platform);
+                FromJsonUtilS(input["PlatformUserId"], m_platformUserId, platformUserId);
+                FromJsonUtilS(input["Username"], m_username, username);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_Email; ToJsonUtilS(Email, each_Email); output["Email"] = each_Email;
-                Json::Value each_Platform; ToJsonUtilE(Platform, each_Platform); output["Platform"] = each_Platform;
-                Json::Value each_PlatformUserId; ToJsonUtilS(PlatformUserId, each_PlatformUserId); output["PlatformUserId"] = each_PlatformUserId;
-                Json::Value each_Username; ToJsonUtilS(Username, each_Username); output["Username"] = each_Username;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_email;
+            StdExtra::optional<PlayFabLoginIdentityProvider> m_platform;
+            String m_platformUserId;
+            String m_username;
         };
 
-        struct LocationModel : public PlayFabBaseModel
+        struct LocationModel : public PlayFabLocationModel, public BaseModel
         {
-            std::string City;
-            Boxed<ContinentCode> pfContinentCode;
-            Boxed<CountryCode> pfCountryCode;
-            Boxed<double> Latitude;
-            Boxed<double> Longitude;
-
-            LocationModel() :
-                PlayFabBaseModel(),
-                City(),
-                pfContinentCode(),
-                pfCountryCode(),
-                Latitude(),
-                Longitude()
-            {}
+            LocationModel() = default;
 
             LocationModel(const LocationModel& src) :
-                PlayFabBaseModel(),
-                City(src.City),
-                pfContinentCode(src.pfContinentCode),
-                pfCountryCode(src.pfCountryCode),
-                Latitude(src.Latitude),
-                Longitude(src.Longitude)
-            {}
+                PlayFabLocationModel(src),
+                m_city(src.m_city),
+                m_pfContinentCode(src.m_pfContinentCode),
+                m_pfCountryCode(src.m_pfCountryCode),
+                m_latitude(src.m_latitude),
+                m_longitude(src.m_longitude)
+            {
+                city = m_city.empty() ? nullptr : m_city.data();
+                pfContinentCode = m_pfContinentCode ? m_pfContinentCode.operator->() : nullptr;
+                pfCountryCode = m_pfCountryCode ? m_pfCountryCode.operator->() : nullptr;
+                latitude = m_latitude ? m_latitude.operator->() : nullptr;
+                longitude = m_longitude ? m_longitude.operator->() : nullptr;
+            }
 
             ~LocationModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["City"], City);
-                FromJsonUtilE(input["ContinentCode"], pfContinentCode);
-                FromJsonUtilE(input["CountryCode"], pfCountryCode);
-                FromJsonUtilP(input["Latitude"], Latitude);
-                FromJsonUtilP(input["Longitude"], Longitude);
+                FromJsonUtilS(input["City"], m_city, city);
+                FromJsonUtilE(input["ContinentCode"], m_pfContinentCode, pfContinentCode);
+                FromJsonUtilE(input["CountryCode"], m_pfCountryCode, pfCountryCode);
+                FromJsonUtilP(input["Latitude"], m_latitude, latitude);
+                FromJsonUtilP(input["Longitude"], m_longitude, longitude);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_City; ToJsonUtilS(City, each_City); output["City"] = each_City;
-                Json::Value each_pfContinentCode; ToJsonUtilE(pfContinentCode, each_pfContinentCode); output["ContinentCode"] = each_pfContinentCode;
-                Json::Value each_pfCountryCode; ToJsonUtilE(pfCountryCode, each_pfCountryCode); output["CountryCode"] = each_pfCountryCode;
-                Json::Value each_Latitude; ToJsonUtilP(Latitude, each_Latitude); output["Latitude"] = each_Latitude;
-                Json::Value each_Longitude; ToJsonUtilP(Longitude, each_Longitude); output["Longitude"] = each_Longitude;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_city;
+            StdExtra::optional<PlayFabContinentCode> m_pfContinentCode;
+            StdExtra::optional<PlayFabCountryCode> m_pfCountryCode;
+            StdExtra::optional<double> m_latitude;
+            StdExtra::optional<double> m_longitude;
         };
 
-        struct SubscriptionModel : public PlayFabBaseModel
+        struct SubscriptionModel : public PlayFabSubscriptionModel, public BaseModel
         {
-            time_t Expiration;
-            time_t InitialSubscriptionTime;
-            bool IsActive;
-            Boxed<SubscriptionProviderStatus> Status;
-            std::string SubscriptionId;
-            std::string SubscriptionItemId;
-            std::string SubscriptionProvider;
-
-            SubscriptionModel() :
-                PlayFabBaseModel(),
-                Expiration(),
-                InitialSubscriptionTime(),
-                IsActive(),
-                Status(),
-                SubscriptionId(),
-                SubscriptionItemId(),
-                SubscriptionProvider()
-            {}
+            SubscriptionModel() = default;
 
             SubscriptionModel(const SubscriptionModel& src) :
-                PlayFabBaseModel(),
-                Expiration(src.Expiration),
-                InitialSubscriptionTime(src.InitialSubscriptionTime),
-                IsActive(src.IsActive),
-                Status(src.Status),
-                SubscriptionId(src.SubscriptionId),
-                SubscriptionItemId(src.SubscriptionItemId),
-                SubscriptionProvider(src.SubscriptionProvider)
-            {}
+                PlayFabSubscriptionModel(src),
+                m_status(src.m_status),
+                m_subscriptionId(src.m_subscriptionId),
+                m_subscriptionItemId(src.m_subscriptionItemId),
+                m_subscriptionProvider(src.m_subscriptionProvider)
+            {
+                status = m_status ? m_status.operator->() : nullptr;
+                subscriptionId = m_subscriptionId.empty() ? nullptr : m_subscriptionId.data();
+                subscriptionItemId = m_subscriptionItemId.empty() ? nullptr : m_subscriptionItemId.data();
+                subscriptionProvider = m_subscriptionProvider.empty() ? nullptr : m_subscriptionProvider.data();
+            }
 
             ~SubscriptionModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilT(input["Expiration"], Expiration);
-                FromJsonUtilT(input["InitialSubscriptionTime"], InitialSubscriptionTime);
-                FromJsonUtilP(input["IsActive"], IsActive);
-                FromJsonUtilE(input["Status"], Status);
-                FromJsonUtilS(input["SubscriptionId"], SubscriptionId);
-                FromJsonUtilS(input["SubscriptionItemId"], SubscriptionItemId);
-                FromJsonUtilS(input["SubscriptionProvider"], SubscriptionProvider);
+                FromJsonUtilT(input["Expiration"], expiration);
+                FromJsonUtilT(input["InitialSubscriptionTime"], initialSubscriptionTime);
+                FromJsonUtilP(input["IsActive"], isActive);
+                FromJsonUtilE(input["Status"], m_status, status);
+                FromJsonUtilS(input["SubscriptionId"], m_subscriptionId, subscriptionId);
+                FromJsonUtilS(input["SubscriptionItemId"], m_subscriptionItemId, subscriptionItemId);
+                FromJsonUtilS(input["SubscriptionProvider"], m_subscriptionProvider, subscriptionProvider);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_Expiration; ToJsonUtilT(Expiration, each_Expiration); output["Expiration"] = each_Expiration;
-                Json::Value each_InitialSubscriptionTime; ToJsonUtilT(InitialSubscriptionTime, each_InitialSubscriptionTime); output["InitialSubscriptionTime"] = each_InitialSubscriptionTime;
-                Json::Value each_IsActive; ToJsonUtilP(IsActive, each_IsActive); output["IsActive"] = each_IsActive;
-                Json::Value each_Status; ToJsonUtilE(Status, each_Status); output["Status"] = each_Status;
-                Json::Value each_SubscriptionId; ToJsonUtilS(SubscriptionId, each_SubscriptionId); output["SubscriptionId"] = each_SubscriptionId;
-                Json::Value each_SubscriptionItemId; ToJsonUtilS(SubscriptionItemId, each_SubscriptionItemId); output["SubscriptionItemId"] = each_SubscriptionItemId;
-                Json::Value each_SubscriptionProvider; ToJsonUtilS(SubscriptionProvider, each_SubscriptionProvider); output["SubscriptionProvider"] = each_SubscriptionProvider;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            StdExtra::optional<PlayFabSubscriptionProviderStatus> m_status;
+            String m_subscriptionId;
+            String m_subscriptionItemId;
+            String m_subscriptionProvider;
         };
 
-        struct MembershipModel : public PlayFabBaseModel
+        struct MembershipModel : public PlayFabMembershipModel, public BaseModel
         {
-            bool IsActive;
-            time_t MembershipExpiration;
-            std::string MembershipId;
-            Boxed<time_t> OverrideExpiration;
-            std::list<SubscriptionModel> Subscriptions;
-
-            MembershipModel() :
-                PlayFabBaseModel(),
-                IsActive(),
-                MembershipExpiration(),
-                MembershipId(),
-                OverrideExpiration(),
-                Subscriptions()
-            {}
+            MembershipModel() = default;
 
             MembershipModel(const MembershipModel& src) :
-                PlayFabBaseModel(),
-                IsActive(src.IsActive),
-                MembershipExpiration(src.MembershipExpiration),
-                MembershipId(src.MembershipId),
-                OverrideExpiration(src.OverrideExpiration),
-                Subscriptions(src.Subscriptions)
-            {}
+                PlayFabMembershipModel(src),
+                m_membershipId(src.m_membershipId),
+                m_overrideExpiration(src.m_overrideExpiration),
+                m_subscriptions(src.m_subscriptions)
+            {
+                membershipId = m_membershipId.empty() ? nullptr : m_membershipId.data();
+                overrideExpiration = m_overrideExpiration ? m_overrideExpiration.operator->() : nullptr;
+                subscriptions = m_subscriptions.Empty() ? nullptr : m_subscriptions.Data();
+            }
 
             ~MembershipModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilP(input["IsActive"], IsActive);
-                FromJsonUtilT(input["MembershipExpiration"], MembershipExpiration);
-                FromJsonUtilS(input["MembershipId"], MembershipId);
-                FromJsonUtilT(input["OverrideExpiration"], OverrideExpiration);
-                FromJsonUtilO(input["Subscriptions"], Subscriptions);
+                FromJsonUtilP(input["IsActive"], isActive);
+                FromJsonUtilT(input["MembershipExpiration"], membershipExpiration);
+                FromJsonUtilS(input["MembershipId"], m_membershipId, membershipId);
+                FromJsonUtilP(input["OverrideExpiration"], m_overrideExpiration, overrideExpiration);
+                FromJsonUtilA(input["Subscriptions"], m_subscriptions, subscriptions, subscriptionsCount);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_IsActive; ToJsonUtilP(IsActive, each_IsActive); output["IsActive"] = each_IsActive;
-                Json::Value each_MembershipExpiration; ToJsonUtilT(MembershipExpiration, each_MembershipExpiration); output["MembershipExpiration"] = each_MembershipExpiration;
-                Json::Value each_MembershipId; ToJsonUtilS(MembershipId, each_MembershipId); output["MembershipId"] = each_MembershipId;
-                Json::Value each_OverrideExpiration; ToJsonUtilT(OverrideExpiration, each_OverrideExpiration); output["OverrideExpiration"] = each_OverrideExpiration;
-                Json::Value each_Subscriptions; ToJsonUtilO(Subscriptions, each_Subscriptions); output["Subscriptions"] = each_Subscriptions;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_membershipId;
+            StdExtra::optional<time_t> m_overrideExpiration;
+            PointerArray<PlayFabSubscriptionModel, SubscriptionModel> m_subscriptions;
         };
 
-        struct PushNotificationRegistrationModel : public PlayFabBaseModel
+        struct PushNotificationRegistrationModel : public PlayFabPushNotificationRegistrationModel, public BaseModel
         {
-            std::string NotificationEndpointARN;
-            Boxed<PushNotificationPlatform> Platform;
-
-            PushNotificationRegistrationModel() :
-                PlayFabBaseModel(),
-                NotificationEndpointARN(),
-                Platform()
-            {}
+            PushNotificationRegistrationModel() = default;
 
             PushNotificationRegistrationModel(const PushNotificationRegistrationModel& src) :
-                PlayFabBaseModel(),
-                NotificationEndpointARN(src.NotificationEndpointARN),
-                Platform(src.Platform)
-            {}
+                PlayFabPushNotificationRegistrationModel(src),
+                m_notificationEndpointARN(src.m_notificationEndpointARN),
+                m_platform(src.m_platform)
+            {
+                notificationEndpointARN = m_notificationEndpointARN.empty() ? nullptr : m_notificationEndpointARN.data();
+                platform = m_platform ? m_platform.operator->() : nullptr;
+            }
 
             ~PushNotificationRegistrationModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["NotificationEndpointARN"], NotificationEndpointARN);
-                FromJsonUtilE(input["Platform"], Platform);
+                FromJsonUtilS(input["NotificationEndpointARN"], m_notificationEndpointARN, notificationEndpointARN);
+                FromJsonUtilE(input["Platform"], m_platform, platform);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_NotificationEndpointARN; ToJsonUtilS(NotificationEndpointARN, each_NotificationEndpointARN); output["NotificationEndpointARN"] = each_NotificationEndpointARN;
-                Json::Value each_Platform; ToJsonUtilE(Platform, each_Platform); output["Platform"] = each_Platform;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_notificationEndpointARN;
+            StdExtra::optional<PlayFabPushNotificationPlatform> m_platform;
         };
 
-        struct StatisticModel : public PlayFabBaseModel
+        struct StatisticModel : public PlayFabStatisticModel, public BaseModel
         {
-            std::string Name;
-            Int32 Value;
-            Int32 Version;
-
-            StatisticModel() :
-                PlayFabBaseModel(),
-                Name(),
-                Value(),
-                Version()
-            {}
+            StatisticModel() = default;
 
             StatisticModel(const StatisticModel& src) :
-                PlayFabBaseModel(),
-                Name(src.Name),
-                Value(src.Value),
-                Version(src.Version)
-            {}
+                PlayFabStatisticModel(src),
+                m_name(src.m_name)
+            {
+                name = m_name.empty() ? nullptr : m_name.data();
+            }
 
             ~StatisticModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["Name"], Name);
-                FromJsonUtilP(input["Value"], Value);
-                FromJsonUtilP(input["Version"], Version);
+                FromJsonUtilS(input["Name"], m_name, name);
+                FromJsonUtilP(input["Value"], value);
+                FromJsonUtilP(input["Version"], version);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_Name; ToJsonUtilS(Name, each_Name); output["Name"] = each_Name;
-                Json::Value each_Value; ToJsonUtilP(Value, each_Value); output["Value"] = each_Value;
-                Json::Value each_Version; ToJsonUtilP(Version, each_Version); output["Version"] = each_Version;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_name;
         };
 
-        struct TagModel : public PlayFabBaseModel
+        struct TagModel : public PlayFabTagModel, public BaseModel
         {
-            std::string TagValue;
-
-            TagModel() :
-                PlayFabBaseModel(),
-                TagValue()
-            {}
+            TagModel() = default;
 
             TagModel(const TagModel& src) :
-                PlayFabBaseModel(),
-                TagValue(src.TagValue)
-            {}
+                PlayFabTagModel(src),
+                m_tagValue(src.m_tagValue)
+            {
+                tagValue = m_tagValue.empty() ? nullptr : m_tagValue.data();
+            }
 
             ~TagModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["TagValue"], TagValue);
+                FromJsonUtilS(input["TagValue"], m_tagValue, tagValue);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_TagValue; ToJsonUtilS(TagValue, each_TagValue); output["TagValue"] = each_TagValue;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_tagValue;
         };
 
-        struct ValueToDateModel : public PlayFabBaseModel
+        struct ValueToDateModel : public PlayFabValueToDateModel, public BaseModel
         {
-            std::string Currency;
-            Uint32 TotalValue;
-            std::string TotalValueAsDecimal;
-
-            ValueToDateModel() :
-                PlayFabBaseModel(),
-                Currency(),
-                TotalValue(),
-                TotalValueAsDecimal()
-            {}
+            ValueToDateModel() = default;
 
             ValueToDateModel(const ValueToDateModel& src) :
-                PlayFabBaseModel(),
-                Currency(src.Currency),
-                TotalValue(src.TotalValue),
-                TotalValueAsDecimal(src.TotalValueAsDecimal)
-            {}
+                PlayFabValueToDateModel(src),
+                m_currency(src.m_currency),
+                m_totalValueAsDecimal(src.m_totalValueAsDecimal)
+            {
+                currency = m_currency.empty() ? nullptr : m_currency.data();
+                m_totalValueAsDecimal = m_totalValueAsDecimal.empty() ? nullptr : m_totalValueAsDecimal.data();
+            }
 
             ~ValueToDateModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["Currency"], Currency);
-                FromJsonUtilP(input["TotalValue"], TotalValue);
-                FromJsonUtilS(input["TotalValueAsDecimal"], TotalValueAsDecimal);
+                FromJsonUtilS(input["Currency"], m_currency, currency);
+                FromJsonUtilP(input["TotalValue"], totalValue);
+                FromJsonUtilS(input["TotalValueAsDecimal"], m_totalValueAsDecimal, totalValueAsDecimal);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_Currency; ToJsonUtilS(Currency, each_Currency); output["Currency"] = each_Currency;
-                Json::Value each_TotalValue; ToJsonUtilP(TotalValue, each_TotalValue); output["TotalValue"] = each_TotalValue;
-                Json::Value each_TotalValueAsDecimal; ToJsonUtilS(TotalValueAsDecimal, each_TotalValueAsDecimal); output["TotalValueAsDecimal"] = each_TotalValueAsDecimal;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            String m_currency;
+            String m_totalValueAsDecimal;
         };
 
-        struct PlayerProfileModel : public PlayFabBaseModel
+        struct PlayerProfileModel : public PlayFabPlayerProfileModel,  public BaseModel
         {
-            std::list<AdCampaignAttributionModel> AdCampaignAttributions;
-            std::string AvatarUrl;
-            Boxed<time_t> BannedUntil;
-            std::list<ContactEmailInfoModel> ContactEmailAddresses;
-            Boxed<time_t> Created;
-            std::string DisplayName;
-            std::list<std::string> ExperimentVariants;
-            Boxed<time_t> LastLogin;
-            std::list<LinkedPlatformAccountModel> LinkedAccounts;
-            std::list<LocationModel> Locations;
-            std::list<MembershipModel> Memberships;
-            Boxed<LoginIdentityProvider> Origination;
-            std::string PlayerId;
-            std::string PublisherId;
-            std::list<PushNotificationRegistrationModel> PushNotificationRegistrations;
-            std::list<StatisticModel> Statistics;
-            std::list<TagModel> Tags;
-            std::string TitleId;
-            Boxed<Uint32> TotalValueToDateInUSD;
-            std::list<ValueToDateModel> ValuesToDate;
-
-            PlayerProfileModel() :
-                PlayFabBaseModel(),
-                AdCampaignAttributions(),
-                AvatarUrl(),
-                BannedUntil(),
-                ContactEmailAddresses(),
-                Created(),
-                DisplayName(),
-                ExperimentVariants(),
-                LastLogin(),
-                LinkedAccounts(),
-                Locations(),
-                Memberships(),
-                Origination(),
-                PlayerId(),
-                PublisherId(),
-                PushNotificationRegistrations(),
-                Statistics(),
-                Tags(),
-                TitleId(),
-                TotalValueToDateInUSD(),
-                ValuesToDate()
-            {}
+            PlayerProfileModel() = default;
 
             PlayerProfileModel(const PlayerProfileModel& src) :
-                PlayFabBaseModel(),
-                AdCampaignAttributions(src.AdCampaignAttributions),
-                AvatarUrl(src.AvatarUrl),
-                BannedUntil(src.BannedUntil),
-                ContactEmailAddresses(src.ContactEmailAddresses),
-                Created(src.Created),
-                DisplayName(src.DisplayName),
-                ExperimentVariants(src.ExperimentVariants),
-                LastLogin(src.LastLogin),
-                LinkedAccounts(src.LinkedAccounts),
-                Locations(src.Locations),
-                Memberships(src.Memberships),
-                Origination(src.Origination),
-                PlayerId(src.PlayerId),
-                PublisherId(src.PublisherId),
-                PushNotificationRegistrations(src.PushNotificationRegistrations),
-                Statistics(src.Statistics),
-                Tags(src.Tags),
-                TitleId(src.TitleId),
-                TotalValueToDateInUSD(src.TotalValueToDateInUSD),
-                ValuesToDate(src.ValuesToDate)
-            {}
+                PlayFabPlayerProfileModel(src),
+                m_adCampaignAttributions(src.m_adCampaignAttributions),
+                m_avatarUrl(src.m_avatarUrl),
+                m_bannedUntil(src.m_bannedUntil),
+                m_contactEmailAddresses(src.m_contactEmailAddresses),
+                m_created(src.m_created),
+                m_displayName(src.m_displayName),
+                m_experimentVariants(src.m_experimentVariants),
+                m_lastLogin(src.m_lastLogin),
+                m_linkedAccounts(src.m_linkedAccounts),
+                m_locations(src.m_locations),
+                m_memberships(src.m_memberships),
+                m_origination(src.m_origination),
+                m_playerId(src.m_playerId),
+                m_publisherId(src.m_publisherId),
+                m_pushNotificationRegistrations(src.m_pushNotificationRegistrations),
+                m_statistics(src.m_statistics),
+                m_tags(src.m_tags),
+                m_titleId(src.m_titleId),
+                m_totalValueToDateInUSD(src.m_totalValueToDateInUSD),
+                m_valuesToDate(src.m_valuesToDate)
+            {
+                adCampaignAttributions = m_adCampaignAttributions.Empty() ? nullptr : m_adCampaignAttributions.Data();
+                avatarUrl = m_avatarUrl.empty() ? nullptr : m_avatarUrl.data();
+                bannedUntil = m_bannedUntil ? m_bannedUntil.operator->() : nullptr;
+                contactEmailAddresses = m_contactEmailAddresses.Empty() ? nullptr : m_contactEmailAddresses.Data();
+                created = m_created ? m_created.operator->() : nullptr;
+                displayName = m_displayName.empty() ? nullptr : m_displayName.data();
+                experimentVariants = m_experimentVariants.Empty() ? nullptr : m_experimentVariants.Data();
+                lastLogin = m_lastLogin ? m_lastLogin.operator->() : nullptr;
+                linkedAccounts = m_linkedAccounts.Empty() ? nullptr : m_linkedAccounts.Data();
+                locations = m_locations.Empty() ? nullptr : m_locations.Data();
+                memberships = m_memberships.Empty() ? nullptr : m_memberships.Data();
+                origination = m_origination ? m_origination.operator->() : nullptr;
+                playerId = m_playerId.empty() ? nullptr : m_playerId.data();
+                publisherId = m_publisherId.empty() ? nullptr : m_publisherId.data();
+                pushNotificationRegistrations = m_pushNotificationRegistrations.Empty() ? nullptr : m_pushNotificationRegistrations.Data();
+                statistics = m_statistics.Empty() ? nullptr : m_statistics.Data();
+                tags = m_tags.Empty() ? nullptr : m_tags.Data();
+                titleId = m_titleId.empty() ? nullptr : m_titleId.data();
+                totalValueToDateInUSD = m_totalValueToDateInUSD ? m_totalValueToDateInUSD.operator->() : nullptr;
+                valuesToDate = m_valuesToDate.Empty() ? nullptr : m_valuesToDate.Data();
+            }
 
             ~PlayerProfileModel() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilO(input["AdCampaignAttributions"], AdCampaignAttributions);
-                FromJsonUtilS(input["AvatarUrl"], AvatarUrl);
-                FromJsonUtilT(input["BannedUntil"], BannedUntil);
-                FromJsonUtilO(input["ContactEmailAddresses"], ContactEmailAddresses);
-                FromJsonUtilT(input["Created"], Created);
-                FromJsonUtilS(input["DisplayName"], DisplayName);
-                FromJsonUtilS(input["ExperimentVariants"], ExperimentVariants);
-                FromJsonUtilT(input["LastLogin"], LastLogin);
-                FromJsonUtilO(input["LinkedAccounts"], LinkedAccounts);
-                FromJsonUtilO(input["Locations"], Locations);
-                FromJsonUtilO(input["Memberships"], Memberships);
-                FromJsonUtilE(input["Origination"], Origination);
-                FromJsonUtilS(input["PlayerId"], PlayerId);
-                FromJsonUtilS(input["PublisherId"], PublisherId);
-                FromJsonUtilO(input["PushNotificationRegistrations"], PushNotificationRegistrations);
-                FromJsonUtilO(input["Statistics"], Statistics);
-                FromJsonUtilO(input["Tags"], Tags);
-                FromJsonUtilS(input["TitleId"], TitleId);
-                FromJsonUtilP(input["TotalValueToDateInUSD"], TotalValueToDateInUSD);
-                FromJsonUtilO(input["ValuesToDate"], ValuesToDate);
+                FromJsonUtilA(input["AdCampaignAttributions"], m_adCampaignAttributions, adCampaignAttributions, adCampaignAttributionsCount);
+                FromJsonUtilS(input["AvatarUrl"], m_avatarUrl, avatarUrl);
+                FromJsonUtilT(input["BannedUntil"], m_bannedUntil, bannedUntil);
+                FromJsonUtilA(input["ContactEmailAddresses"], m_contactEmailAddresses, contactEmailAddresses, contactEmailAddressesCount);
+                FromJsonUtilT(input["Created"], m_created, created);
+                FromJsonUtilS(input["DisplayName"], m_displayName, displayName);
+                FromJsonUtilA(input["ExperimentVariants"], m_experimentVariants, experimentVariants, experimentVariantsCount);
+                FromJsonUtilT(input["LastLogin"], m_lastLogin, lastLogin);
+                FromJsonUtilA(input["LinkedAccounts"], m_linkedAccounts, linkedAccounts, linkedAccountsCount);
+                FromJsonUtilA(input["Locations"], m_locations, locations, locationsCount);
+                FromJsonUtilA(input["Memberships"], m_memberships, memberships, membershipsCount);
+                FromJsonUtilE(input["Origination"], m_origination, origination);
+                FromJsonUtilS(input["PlayerId"], m_playerId, playerId);
+                FromJsonUtilS(input["PublisherId"], m_publisherId, publisherId);
+                FromJsonUtilA(input["PushNotificationRegistrations"], m_pushNotificationRegistrations, pushNotificationRegistrations, pushNotificationRegistrationsCount);
+                FromJsonUtilA(input["Statistics"], m_statistics, statistics, statisticsCount);
+                FromJsonUtilA(input["Tags"], m_tags, tags, tagsCount);
+                FromJsonUtilS(input["TitleId"], m_titleId, titleId);
+                FromJsonUtilP(input["TotalValueToDateInUSD"], m_totalValueToDateInUSD, totalValueToDateInUSD);
+                FromJsonUtilA(input["ValuesToDate"], m_valuesToDate, valuesToDate, valuesToDateCount);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_AdCampaignAttributions; ToJsonUtilO(AdCampaignAttributions, each_AdCampaignAttributions); output["AdCampaignAttributions"] = each_AdCampaignAttributions;
-                Json::Value each_AvatarUrl; ToJsonUtilS(AvatarUrl, each_AvatarUrl); output["AvatarUrl"] = each_AvatarUrl;
-                Json::Value each_BannedUntil; ToJsonUtilT(BannedUntil, each_BannedUntil); output["BannedUntil"] = each_BannedUntil;
-                Json::Value each_ContactEmailAddresses; ToJsonUtilO(ContactEmailAddresses, each_ContactEmailAddresses); output["ContactEmailAddresses"] = each_ContactEmailAddresses;
-                Json::Value each_Created; ToJsonUtilT(Created, each_Created); output["Created"] = each_Created;
-                Json::Value each_DisplayName; ToJsonUtilS(DisplayName, each_DisplayName); output["DisplayName"] = each_DisplayName;
-                Json::Value each_ExperimentVariants; ToJsonUtilS(ExperimentVariants, each_ExperimentVariants); output["ExperimentVariants"] = each_ExperimentVariants;
-                Json::Value each_LastLogin; ToJsonUtilT(LastLogin, each_LastLogin); output["LastLogin"] = each_LastLogin;
-                Json::Value each_LinkedAccounts; ToJsonUtilO(LinkedAccounts, each_LinkedAccounts); output["LinkedAccounts"] = each_LinkedAccounts;
-                Json::Value each_Locations; ToJsonUtilO(Locations, each_Locations); output["Locations"] = each_Locations;
-                Json::Value each_Memberships; ToJsonUtilO(Memberships, each_Memberships); output["Memberships"] = each_Memberships;
-                Json::Value each_Origination; ToJsonUtilE(Origination, each_Origination); output["Origination"] = each_Origination;
-                Json::Value each_PlayerId; ToJsonUtilS(PlayerId, each_PlayerId); output["PlayerId"] = each_PlayerId;
-                Json::Value each_PublisherId; ToJsonUtilS(PublisherId, each_PublisherId); output["PublisherId"] = each_PublisherId;
-                Json::Value each_PushNotificationRegistrations; ToJsonUtilO(PushNotificationRegistrations, each_PushNotificationRegistrations); output["PushNotificationRegistrations"] = each_PushNotificationRegistrations;
-                Json::Value each_Statistics; ToJsonUtilO(Statistics, each_Statistics); output["Statistics"] = each_Statistics;
-                Json::Value each_Tags; ToJsonUtilO(Tags, each_Tags); output["Tags"] = each_Tags;
-                Json::Value each_TitleId; ToJsonUtilS(TitleId, each_TitleId); output["TitleId"] = each_TitleId;
-                Json::Value each_TotalValueToDateInUSD; ToJsonUtilP(TotalValueToDateInUSD, each_TotalValueToDateInUSD); output["TotalValueToDateInUSD"] = each_TotalValueToDateInUSD;
-                Json::Value each_ValuesToDate; ToJsonUtilO(ValuesToDate, each_ValuesToDate); output["ValuesToDate"] = each_ValuesToDate;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            PointerArray<PlayFabAdCampaignAttributionModel, AdCampaignAttributionModel> m_adCampaignAttributions;
+            String m_avatarUrl;
+            StdExtra::optional<time_t> m_bannedUntil;
+            PointerArray<PlayFabContactEmailInfoModel, ContactEmailInfoModel> m_contactEmailAddresses;
+            StdExtra::optional<time_t> m_created;
+            String m_displayName;
+            PointerArray<const char*, String> m_experimentVariants;
+            StdExtra::optional<time_t> m_lastLogin;
+            PointerArray<PlayFabLinkedPlatformAccountModel, LinkedPlatformAccountModel> m_linkedAccounts;
+            PointerArray<PlayFabLocationModel, LocationModel> m_locations;
+            PointerArray<PlayFabMembershipModel, MembershipModel> m_memberships;
+            StdExtra::optional<PlayFabLoginIdentityProvider> m_origination;
+            String m_playerId;
+            String m_publisherId;
+            PointerArray<PlayFabPushNotificationRegistrationModel, PushNotificationRegistrationModel> m_pushNotificationRegistrations;
+            PointerArray<PlayFabStatisticModel, StatisticModel> m_statistics;
+            PointerArray<PlayFabTagModel, TagModel> m_tags;
+            String m_titleId;
+            StdExtra::optional<uint32_t> m_totalValueToDateInUSD;
+            PointerArray<PlayFabValueToDateModel, ValueToDateModel> m_valuesToDate;
         };
 
         struct UserPsnInfo : public PlayFabBaseModel
@@ -11121,112 +10943,36 @@ namespace PlayFab
             }
         };
 
-        struct PlayerProfileViewConstraints : public PlayFabBaseModel
+        struct PlayerProfileViewConstraints : public PlayFabPlayerProfileViewConstraints, public BaseModel
         {
-            bool ShowAvatarUrl;
-            bool ShowBannedUntil;
-            bool ShowCampaignAttributions;
-            bool ShowContactEmailAddresses;
-            bool ShowCreated;
-            bool ShowDisplayName;
-            bool ShowExperimentVariants;
-            bool ShowLastLogin;
-            bool ShowLinkedAccounts;
-            bool ShowLocations;
-            bool ShowMemberships;
-            bool ShowOrigination;
-            bool ShowPushNotificationRegistrations;
-            bool ShowStatistics;
-            bool ShowTags;
-            bool ShowTotalValueToDateInUsd;
-            bool ShowValuesToDate;
-
-            PlayerProfileViewConstraints() :
-                PlayFabBaseModel(),
-                ShowAvatarUrl(),
-                ShowBannedUntil(),
-                ShowCampaignAttributions(),
-                ShowContactEmailAddresses(),
-                ShowCreated(),
-                ShowDisplayName(),
-                ShowExperimentVariants(),
-                ShowLastLogin(),
-                ShowLinkedAccounts(),
-                ShowLocations(),
-                ShowMemberships(),
-                ShowOrigination(),
-                ShowPushNotificationRegistrations(),
-                ShowStatistics(),
-                ShowTags(),
-                ShowTotalValueToDateInUsd(),
-                ShowValuesToDate()
-            {}
-
-            PlayerProfileViewConstraints(const PlayerProfileViewConstraints& src) :
-                PlayFabBaseModel(),
-                ShowAvatarUrl(src.ShowAvatarUrl),
-                ShowBannedUntil(src.ShowBannedUntil),
-                ShowCampaignAttributions(src.ShowCampaignAttributions),
-                ShowContactEmailAddresses(src.ShowContactEmailAddresses),
-                ShowCreated(src.ShowCreated),
-                ShowDisplayName(src.ShowDisplayName),
-                ShowExperimentVariants(src.ShowExperimentVariants),
-                ShowLastLogin(src.ShowLastLogin),
-                ShowLinkedAccounts(src.ShowLinkedAccounts),
-                ShowLocations(src.ShowLocations),
-                ShowMemberships(src.ShowMemberships),
-                ShowOrigination(src.ShowOrigination),
-                ShowPushNotificationRegistrations(src.ShowPushNotificationRegistrations),
-                ShowStatistics(src.ShowStatistics),
-                ShowTags(src.ShowTags),
-                ShowTotalValueToDateInUsd(src.ShowTotalValueToDateInUsd),
-                ShowValuesToDate(src.ShowValuesToDate)
-            {}
-
+            PlayerProfileViewConstraints() = default;
+            PlayerProfileViewConstraints(const PlayerProfileViewConstraints& src) = default;
             ~PlayerProfileViewConstraints() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilP(input["ShowAvatarUrl"], ShowAvatarUrl);
-                FromJsonUtilP(input["ShowBannedUntil"], ShowBannedUntil);
-                FromJsonUtilP(input["ShowCampaignAttributions"], ShowCampaignAttributions);
-                FromJsonUtilP(input["ShowContactEmailAddresses"], ShowContactEmailAddresses);
-                FromJsonUtilP(input["ShowCreated"], ShowCreated);
-                FromJsonUtilP(input["ShowDisplayName"], ShowDisplayName);
-                FromJsonUtilP(input["ShowExperimentVariants"], ShowExperimentVariants);
-                FromJsonUtilP(input["ShowLastLogin"], ShowLastLogin);
-                FromJsonUtilP(input["ShowLinkedAccounts"], ShowLinkedAccounts);
-                FromJsonUtilP(input["ShowLocations"], ShowLocations);
-                FromJsonUtilP(input["ShowMemberships"], ShowMemberships);
-                FromJsonUtilP(input["ShowOrigination"], ShowOrigination);
-                FromJsonUtilP(input["ShowPushNotificationRegistrations"], ShowPushNotificationRegistrations);
-                FromJsonUtilP(input["ShowStatistics"], ShowStatistics);
-                FromJsonUtilP(input["ShowTags"], ShowTags);
-                FromJsonUtilP(input["ShowTotalValueToDateInUsd"], ShowTotalValueToDateInUsd);
-                FromJsonUtilP(input["ShowValuesToDate"], ShowValuesToDate);
+                FromJsonUtilP(input["ShowAvatarUrl"], showAvatarUrl);
+                FromJsonUtilP(input["ShowBannedUntil"], showBannedUntil);
+                FromJsonUtilP(input["ShowCampaignAttributions"], showCampaignAttributions);
+                FromJsonUtilP(input["ShowContactEmailAddresses"], showContactEmailAddresses);
+                FromJsonUtilP(input["ShowCreated"], showCreated);
+                FromJsonUtilP(input["ShowDisplayName"], showDisplayName);
+                FromJsonUtilP(input["ShowExperimentVariants"], showExperimentVariants);
+                FromJsonUtilP(input["ShowLastLogin"], showLastLogin);
+                FromJsonUtilP(input["ShowLinkedAccounts"], showLinkedAccounts);
+                FromJsonUtilP(input["ShowLocations"], showLocations);
+                FromJsonUtilP(input["ShowMemberships"], showMemberships);
+                FromJsonUtilP(input["ShowOrigination"], showOrigination);
+                FromJsonUtilP(input["ShowPushNotificationRegistrations"], showPushNotificationRegistrations);
+                FromJsonUtilP(input["ShowStatistics"], showStatistics);
+                FromJsonUtilP(input["ShowTags"], showTags);
+                FromJsonUtilP(input["ShowTotalValueToDateInUsd"], showTotalValueToDateInUsd);
+                FromJsonUtilP(input["ShowValuesToDate"], showValuesToDate);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_ShowAvatarUrl; ToJsonUtilP(ShowAvatarUrl, each_ShowAvatarUrl); output["ShowAvatarUrl"] = each_ShowAvatarUrl;
-                Json::Value each_ShowBannedUntil; ToJsonUtilP(ShowBannedUntil, each_ShowBannedUntil); output["ShowBannedUntil"] = each_ShowBannedUntil;
-                Json::Value each_ShowCampaignAttributions; ToJsonUtilP(ShowCampaignAttributions, each_ShowCampaignAttributions); output["ShowCampaignAttributions"] = each_ShowCampaignAttributions;
-                Json::Value each_ShowContactEmailAddresses; ToJsonUtilP(ShowContactEmailAddresses, each_ShowContactEmailAddresses); output["ShowContactEmailAddresses"] = each_ShowContactEmailAddresses;
-                Json::Value each_ShowCreated; ToJsonUtilP(ShowCreated, each_ShowCreated); output["ShowCreated"] = each_ShowCreated;
-                Json::Value each_ShowDisplayName; ToJsonUtilP(ShowDisplayName, each_ShowDisplayName); output["ShowDisplayName"] = each_ShowDisplayName;
-                Json::Value each_ShowExperimentVariants; ToJsonUtilP(ShowExperimentVariants, each_ShowExperimentVariants); output["ShowExperimentVariants"] = each_ShowExperimentVariants;
-                Json::Value each_ShowLastLogin; ToJsonUtilP(ShowLastLogin, each_ShowLastLogin); output["ShowLastLogin"] = each_ShowLastLogin;
-                Json::Value each_ShowLinkedAccounts; ToJsonUtilP(ShowLinkedAccounts, each_ShowLinkedAccounts); output["ShowLinkedAccounts"] = each_ShowLinkedAccounts;
-                Json::Value each_ShowLocations; ToJsonUtilP(ShowLocations, each_ShowLocations); output["ShowLocations"] = each_ShowLocations;
-                Json::Value each_ShowMemberships; ToJsonUtilP(ShowMemberships, each_ShowMemberships); output["ShowMemberships"] = each_ShowMemberships;
-                Json::Value each_ShowOrigination; ToJsonUtilP(ShowOrigination, each_ShowOrigination); output["ShowOrigination"] = each_ShowOrigination;
-                Json::Value each_ShowPushNotificationRegistrations; ToJsonUtilP(ShowPushNotificationRegistrations, each_ShowPushNotificationRegistrations); output["ShowPushNotificationRegistrations"] = each_ShowPushNotificationRegistrations;
-                Json::Value each_ShowStatistics; ToJsonUtilP(ShowStatistics, each_ShowStatistics); output["ShowStatistics"] = each_ShowStatistics;
-                Json::Value each_ShowTags; ToJsonUtilP(ShowTags, each_ShowTags); output["ShowTags"] = each_ShowTags;
-                Json::Value each_ShowTotalValueToDateInUsd; ToJsonUtilP(ShowTotalValueToDateInUsd, each_ShowTotalValueToDateInUsd); output["ShowTotalValueToDateInUsd"] = each_ShowTotalValueToDateInUsd;
-                Json::Value each_ShowValuesToDate; ToJsonUtilP(ShowValuesToDate, each_ShowValuesToDate); output["ShowValuesToDate"] = each_ShowValuesToDate;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
         };
 
@@ -11977,103 +11723,57 @@ namespace PlayFab
             }
         };
 
-        struct GetPlayerCombinedInfoRequestParams : public PlayFabBaseModel
+        struct GetPlayerCombinedInfoRequestParams : public PlayFabGetPlayerCombinedInfoRequestParams, public BaseModel
         {
-            bool GetCharacterInventories;
-            bool GetCharacterList;
-            bool GetPlayerProfile;
-            bool GetPlayerStatistics;
-            bool GetTitleData;
-            bool GetUserAccountInfo;
-            bool GetUserData;
-            bool GetUserInventory;
-            bool GetUserReadOnlyData;
-            bool GetUserVirtualCurrency;
-            std::list<std::string> PlayerStatisticNames;
-            Boxed<PlayerProfileViewConstraints> ProfileConstraints;
-            std::list<std::string> TitleDataKeys;
-            std::list<std::string> UserDataKeys;
-            std::list<std::string> UserReadOnlyDataKeys;
-
-            GetPlayerCombinedInfoRequestParams() :
-                PlayFabBaseModel(),
-                GetCharacterInventories(),
-                GetCharacterList(),
-                GetPlayerProfile(),
-                GetPlayerStatistics(),
-                GetTitleData(),
-                GetUserAccountInfo(),
-                GetUserData(),
-                GetUserInventory(),
-                GetUserReadOnlyData(),
-                GetUserVirtualCurrency(),
-                PlayerStatisticNames(),
-                ProfileConstraints(),
-                TitleDataKeys(),
-                UserDataKeys(),
-                UserReadOnlyDataKeys()
-            {}
+            GetPlayerCombinedInfoRequestParams() = default;
 
             GetPlayerCombinedInfoRequestParams(const GetPlayerCombinedInfoRequestParams& src) :
-                PlayFabBaseModel(),
-                GetCharacterInventories(src.GetCharacterInventories),
-                GetCharacterList(src.GetCharacterList),
-                GetPlayerProfile(src.GetPlayerProfile),
-                GetPlayerStatistics(src.GetPlayerStatistics),
-                GetTitleData(src.GetTitleData),
-                GetUserAccountInfo(src.GetUserAccountInfo),
-                GetUserData(src.GetUserData),
-                GetUserInventory(src.GetUserInventory),
-                GetUserReadOnlyData(src.GetUserReadOnlyData),
-                GetUserVirtualCurrency(src.GetUserVirtualCurrency),
-                PlayerStatisticNames(src.PlayerStatisticNames),
-                ProfileConstraints(src.ProfileConstraints),
-                TitleDataKeys(src.TitleDataKeys),
-                UserDataKeys(src.UserDataKeys),
-                UserReadOnlyDataKeys(src.UserReadOnlyDataKeys)
-            {}
+                PlayFabGetPlayerCombinedInfoRequestParams(src),
+                m_playerStatisticNames(src.m_playerStatisticNames),
+                m_profileConstraints(src.m_profileConstraints),
+                m_titleDataKeys(src.m_titleDataKeys),
+                m_userDataKeys(src.m_userDataKeys),
+                m_userReadOnlyDataKeys(src.m_userReadOnlyDataKeys)
+            {
+                playerStatisticNames = m_playerStatisticNames.Data();
+                profileConstraints = m_profileConstraints ? m_profileConstraints.operator->() : nullptr;
+                titleDataKeys = m_titleDataKeys.Data();
+                userDataKeys = m_userDataKeys.Data();
+                userReadOnlyDataKeys = m_userReadOnlyDataKeys.Data();
+            }
 
             ~GetPlayerCombinedInfoRequestParams() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilP(input["GetCharacterInventories"], GetCharacterInventories);
-                FromJsonUtilP(input["GetCharacterList"], GetCharacterList);
-                FromJsonUtilP(input["GetPlayerProfile"], GetPlayerProfile);
-                FromJsonUtilP(input["GetPlayerStatistics"], GetPlayerStatistics);
-                FromJsonUtilP(input["GetTitleData"], GetTitleData);
-                FromJsonUtilP(input["GetUserAccountInfo"], GetUserAccountInfo);
-                FromJsonUtilP(input["GetUserData"], GetUserData);
-                FromJsonUtilP(input["GetUserInventory"], GetUserInventory);
-                FromJsonUtilP(input["GetUserReadOnlyData"], GetUserReadOnlyData);
-                FromJsonUtilP(input["GetUserVirtualCurrency"], GetUserVirtualCurrency);
-                FromJsonUtilS(input["PlayerStatisticNames"], PlayerStatisticNames);
-                FromJsonUtilO(input["ProfileConstraints"], ProfileConstraints);
-                FromJsonUtilS(input["TitleDataKeys"], TitleDataKeys);
-                FromJsonUtilS(input["UserDataKeys"], UserDataKeys);
-                FromJsonUtilS(input["UserReadOnlyDataKeys"], UserReadOnlyDataKeys);
+                FromJsonUtilP(input["GetCharacterInventories"], getCharacterInventories);
+                FromJsonUtilP(input["GetCharacterList"], getCharacterList);
+                FromJsonUtilP(input["GetPlayerProfile"], getPlayerProfile);
+                FromJsonUtilP(input["GetPlayerStatistics"], getPlayerStatistics);
+                FromJsonUtilP(input["GetTitleData"], getTitleData);
+                FromJsonUtilP(input["GetUserAccountInfo"], getUserAccountInfo);
+                FromJsonUtilP(input["GetUserData"], getUserData);
+                FromJsonUtilP(input["GetUserInventory"], getUserInventory);
+                FromJsonUtilP(input["GetUserReadOnlyData"], getUserReadOnlyData);
+                FromJsonUtilP(input["GetUserVirtualCurrency"], getUserVirtualCurrency);
+                FromJsonUtilA(input["PlayerStatisticNames"], m_playerStatisticNames, playerStatisticNames, playerStatisticNamesCount);
+                FromJsonUtilO(input["ProfileConstraints"], m_profileConstraints, profileConstraints);
+                FromJsonUtilA(input["TitleDataKeys"], m_titleDataKeys, titleDataKeys, titleDataKeysCount);
+                FromJsonUtilA(input["UserDataKeys"], m_userDataKeys, userDataKeys, userDataKeysCount);
+                FromJsonUtilA(input["UserReadOnlyDataKeys"], m_userReadOnlyDataKeys, userDataKeys, userDataKeysCount);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_GetCharacterInventories; ToJsonUtilP(GetCharacterInventories, each_GetCharacterInventories); output["GetCharacterInventories"] = each_GetCharacterInventories;
-                Json::Value each_GetCharacterList; ToJsonUtilP(GetCharacterList, each_GetCharacterList); output["GetCharacterList"] = each_GetCharacterList;
-                Json::Value each_GetPlayerProfile; ToJsonUtilP(GetPlayerProfile, each_GetPlayerProfile); output["GetPlayerProfile"] = each_GetPlayerProfile;
-                Json::Value each_GetPlayerStatistics; ToJsonUtilP(GetPlayerStatistics, each_GetPlayerStatistics); output["GetPlayerStatistics"] = each_GetPlayerStatistics;
-                Json::Value each_GetTitleData; ToJsonUtilP(GetTitleData, each_GetTitleData); output["GetTitleData"] = each_GetTitleData;
-                Json::Value each_GetUserAccountInfo; ToJsonUtilP(GetUserAccountInfo, each_GetUserAccountInfo); output["GetUserAccountInfo"] = each_GetUserAccountInfo;
-                Json::Value each_GetUserData; ToJsonUtilP(GetUserData, each_GetUserData); output["GetUserData"] = each_GetUserData;
-                Json::Value each_GetUserInventory; ToJsonUtilP(GetUserInventory, each_GetUserInventory); output["GetUserInventory"] = each_GetUserInventory;
-                Json::Value each_GetUserReadOnlyData; ToJsonUtilP(GetUserReadOnlyData, each_GetUserReadOnlyData); output["GetUserReadOnlyData"] = each_GetUserReadOnlyData;
-                Json::Value each_GetUserVirtualCurrency; ToJsonUtilP(GetUserVirtualCurrency, each_GetUserVirtualCurrency); output["GetUserVirtualCurrency"] = each_GetUserVirtualCurrency;
-                Json::Value each_PlayerStatisticNames; ToJsonUtilS(PlayerStatisticNames, each_PlayerStatisticNames); output["PlayerStatisticNames"] = each_PlayerStatisticNames;
-                Json::Value each_ProfileConstraints; ToJsonUtilO(ProfileConstraints, each_ProfileConstraints); output["ProfileConstraints"] = each_ProfileConstraints;
-                Json::Value each_TitleDataKeys; ToJsonUtilS(TitleDataKeys, each_TitleDataKeys); output["TitleDataKeys"] = each_TitleDataKeys;
-                Json::Value each_UserDataKeys; ToJsonUtilS(UserDataKeys, each_UserDataKeys); output["UserDataKeys"] = each_UserDataKeys;
-                Json::Value each_UserReadOnlyDataKeys; ToJsonUtilS(UserReadOnlyDataKeys, each_UserReadOnlyDataKeys); output["UserReadOnlyDataKeys"] = each_UserReadOnlyDataKeys;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            PointerArray<const char*, String> m_playerStatisticNames;
+            StdExtra::optional<PlayerProfileViewConstraints> m_profileConstraints;
+            PointerArray<const char*, String> m_titleDataKeys;
+            PointerArray<const char*, String> m_userDataKeys;
+            PointerArray<const char*, String> m_userReadOnlyDataKeys;
         };
 
         struct GetPlayerCombinedInfoRequest : public PlayFabRequestCommon
@@ -12277,72 +11977,67 @@ namespace PlayFab
             }
         };
 
-        struct GetPlayerProfileRequest : public PlayFabRequestCommon
+        struct GetPlayerProfileRequest : public PlayFabGetPlayerProfileRequest, public RequestCommon
         {
-            std::map<std::string, std::string> CustomTags;
-            std::string PlayFabId;
-            Boxed<PlayerProfileViewConstraints> ProfileConstraints;
-
-            GetPlayerProfileRequest() :
-                PlayFabRequestCommon(),
-                CustomTags(),
-                PlayFabId(),
-                ProfileConstraints()
-            {}
+            GetPlayerProfileRequest() = default;
 
             GetPlayerProfileRequest(const GetPlayerProfileRequest& src) :
-                PlayFabRequestCommon(),
-                CustomTags(src.CustomTags),
-                PlayFabId(src.PlayFabId),
-                ProfileConstraints(src.ProfileConstraints)
-            {}
+                PlayFabGetPlayerProfileRequest(src),
+                m_customTags(src.m_customTags),
+                m_playFabId(src.m_playFabId),
+                m_profileConstraints(src.m_profileConstraints)
+            {
+                customTags = m_customTags.Empty() ? nullptr : m_customTags.Data();
+                playFabId = m_playFabId.empty() ? nullptr : m_playFabId.data();
+                profileConstraints = m_profileConstraints ? m_profileConstraints.operator->() : nullptr;
+            }
 
             ~GetPlayerProfileRequest() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilS(input["CustomTags"], CustomTags);
-                FromJsonUtilS(input["PlayFabId"], PlayFabId);
-                FromJsonUtilO(input["ProfileConstraints"], ProfileConstraints);
+                FromJsonUtilA(input["CustomTags"], m_customTags, customTags, customTagsCount);
+                FromJsonUtilS(input["PlayFabId"], m_playFabId, playFabId);
+                FromJsonUtilO(input["ProfileConstraints"], m_profileConstraints, profileConstraints);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_CustomTags; ToJsonUtilS(CustomTags, each_CustomTags); output["CustomTags"] = each_CustomTags;
-                Json::Value each_PlayFabId; ToJsonUtilS(PlayFabId, each_PlayFabId); output["PlayFabId"] = each_PlayFabId;
-                Json::Value each_ProfileConstraints; ToJsonUtilO(ProfileConstraints, each_ProfileConstraints); output["ProfileConstraints"] = each_ProfileConstraints;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            AssociativeArray<PlayFabDictionaryEntry, String> m_customTags;
+            String m_playFabId;
+            StdExtra::optional<PlayerProfileViewConstraints> m_profileConstraints;
         };
 
-        struct GetPlayerProfileResult : public PlayFabResultCommon
+        struct GetPlayerProfileResult : public PlayFabPlayerProfileResult, public PlayFabResultCommon
         {
-            Boxed<PlayerProfileModel> PlayerProfile;
-
-            GetPlayerProfileResult() :
-                PlayFabResultCommon(),
-                PlayerProfile()
-            {}
+            GetPlayerProfileResult() = default;
 
             GetPlayerProfileResult(const GetPlayerProfileResult& src) :
-                PlayFabResultCommon(),
-                PlayerProfile(src.PlayerProfile)
-            {}
+                PlayFabPlayerProfileResult(src),
+                m_playerProfile(src.m_playerProfile)
+            {
+                playerProfile = m_playerProfile ? m_playerProfile.operator->() : nullptr;
+            }
 
             ~GetPlayerProfileResult() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilO(input["PlayerProfile"], PlayerProfile);
+                FromJsonUtilO(input["PlayerProfile"], m_playerProfile, playerProfile);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_PlayerProfile; ToJsonUtilO(PlayerProfile, each_PlayerProfile); output["PlayerProfile"] = each_PlayerProfile;
-                return output;
+                // TODO
+                return Json::Value{};
             }
+
+        private:
+            StdExtra::optional<PlayerProfileModel> m_playerProfile;
         };
 
         struct GetPlayerSegmentsRequest : public PlayFabRequestCommon
@@ -14126,32 +13821,38 @@ namespace PlayFab
             }
         };
 
-        struct GetTimeResult : public PlayFabResultCommon
+        struct GetTimeResult : public PlayFabGetTimeResult, public SerializableResult
         {
-            time_t Time;
-
-            GetTimeResult() :
-                PlayFabResultCommon(),
-                Time()
-            {}
+            GetTimeResult() = default;
 
             GetTimeResult(const GetTimeResult& src) :
-                PlayFabResultCommon(),
-                Time(src.Time)
-            {}
+                PlayFabGetTimeResult(src)
+            {
+            }
 
             ~GetTimeResult() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilT(input["Time"], Time);
+                FromJsonUtilT(input["Time"], time);
             }
 
             Json::Value ToJson() const override
             {
                 Json::Value output;
-                Json::Value each_Time; ToJsonUtilT(Time, each_Time); output["Time"] = each_Time;
+                Json::Value each_Time; ToJsonUtilT(time, each_Time); output["Time"] = each_Time;
                 return output;
+            }
+
+            size_t RequiredBufferSize() const override
+            {
+                return sizeof(PlayFabGetTimeResult);
+            }
+
+            void Serialize(void* buffer, size_t bufferSize) const override
+            {
+                assert(bufferSize == RequiredBufferSize());
+                new (buffer) PlayFabGetTimeResult(*this);
             }
         };
 
@@ -16011,7 +15712,7 @@ namespace PlayFab
             }
         };
 
-        struct LoginResult : public PlayFabLoginResultCommon
+        struct LoginResult : public PlayFabLoginResult, public PlayFabLoginResultCommon
         {
             Boxed<EntityTokenResponse> EntityToken;
             Boxed<GetPlayerCombinedInfoResultPayload> InfoResultPayload;
@@ -16034,17 +15735,7 @@ namespace PlayFab
                 pfTreatmentAssignment()
             {}
 
-            LoginResult(const LoginResult& src) :
-                PlayFabLoginResultCommon(),
-                EntityToken(src.EntityToken),
-                InfoResultPayload(src.InfoResultPayload),
-                LastLoginTime(src.LastLoginTime),
-                NewlyCreated(src.NewlyCreated),
-                PlayFabId(src.PlayFabId),
-                SessionTicket(src.SessionTicket),
-                SettingsForUser(src.SettingsForUser),
-                pfTreatmentAssignment(src.pfTreatmentAssignment)
-            {}
+            LoginResult(const LoginResult& src);
 
             ~LoginResult() = default;
 
@@ -16203,63 +15894,55 @@ namespace PlayFab
             }
         };
 
-        struct LoginWithCustomIDRequest : public PlayFabRequestCommon
+        struct LoginWithCustomIDRequest : public PlayFabLoginWithCustomIDRequest, public RequestCommon
         {
-            Boxed<bool> CreateAccount;
-            std::string CustomId;
-            std::map<std::string, std::string> CustomTags;
-            std::string EncryptedRequest;
-            Boxed<GetPlayerCombinedInfoRequestParams> InfoRequestParameters;
-            std::string PlayerSecret;
-            std::string TitleId;
-
-            LoginWithCustomIDRequest() :
-                PlayFabRequestCommon(),
-                CreateAccount(),
-                CustomId(),
-                CustomTags(),
-                EncryptedRequest(),
-                InfoRequestParameters(),
-                PlayerSecret(),
-                TitleId()
-            {}
+            LoginWithCustomIDRequest() = default;
 
             LoginWithCustomIDRequest(const LoginWithCustomIDRequest& src) :
-                PlayFabRequestCommon(),
-                CreateAccount(src.CreateAccount),
-                CustomId(src.CustomId),
-                CustomTags(src.CustomTags),
-                EncryptedRequest(src.EncryptedRequest),
-                InfoRequestParameters(src.InfoRequestParameters),
-                PlayerSecret(src.PlayerSecret),
-                TitleId(src.TitleId)
-            {}
+                PlayFabLoginWithCustomIDRequest(),
+                m_createAccount(src.m_createAccount),
+                m_customId(src.m_customId),
+                m_customTags(src.m_customTags),
+                m_encryptedRequest(src.m_encryptedRequest),
+                m_infoRequestParameters(src.m_infoRequestParameters),
+                m_playerSecret(src.m_playerSecret),
+                m_titleId(src.m_titleId)
+            {
+                createAccount = m_createAccount ? m_createAccount.operator->() : nullptr;
+                customId = m_customId.empty() ? nullptr : m_customId.data();
+                customTags = m_customTags.Empty() ? nullptr : m_customTags.Data();
+                encryptedRequest = m_encryptedRequest.empty() ? nullptr : m_encryptedRequest.data();
+                infoRequestParameters = m_infoRequestParameters ? m_infoRequestParameters.operator->() : nullptr;
+                playerSecret = m_playerSecret.empty() ? nullptr : m_playerSecret.data();
+                titleId = m_titleId.empty() ? nullptr : m_titleId.data();
+            }
 
             ~LoginWithCustomIDRequest() = default;
 
             void FromJson(const Json::Value& input) override
             {
-                FromJsonUtilP(input["CreateAccount"], CreateAccount);
-                FromJsonUtilS(input["CustomId"], CustomId);
-                FromJsonUtilS(input["CustomTags"], CustomTags);
-                FromJsonUtilS(input["EncryptedRequest"], EncryptedRequest);
-                FromJsonUtilO(input["InfoRequestParameters"], InfoRequestParameters);
-                FromJsonUtilS(input["PlayerSecret"], PlayerSecret);
-                FromJsonUtilS(input["TitleId"], TitleId);
+                FromJsonUtilP(input["CreateAccount"], m_createAccount, createAccount);
+                FromJsonUtilS(input["CustomId"], m_customId, customId);
+                FromJsonUtilA(input["CustomTags"], m_customTags, customTags, customTagsCount);
+                FromJsonUtilS(input["EncryptedRequest"], m_encryptedRequest, encryptedRequest);
+                FromJsonUtilO(input["InfoRequestParameters"], m_infoRequestParameters, infoRequestParameters);
+                FromJsonUtilS(input["PlayerSecret"], m_playerSecret, playerSecret);
+                FromJsonUtilS(input["TitleId"], m_titleId, titleId);
             }
 
             Json::Value ToJson() const override
             {
-                Json::Value output;
-                Json::Value each_CreateAccount; ToJsonUtilP(CreateAccount, each_CreateAccount); output["CreateAccount"] = each_CreateAccount;
-                Json::Value each_CustomId; ToJsonUtilS(CustomId, each_CustomId); output["CustomId"] = each_CustomId;
-                Json::Value each_CustomTags; ToJsonUtilS(CustomTags, each_CustomTags); output["CustomTags"] = each_CustomTags;
-                Json::Value each_EncryptedRequest; ToJsonUtilS(EncryptedRequest, each_EncryptedRequest); output["EncryptedRequest"] = each_EncryptedRequest;
-                Json::Value each_InfoRequestParameters; ToJsonUtilO(InfoRequestParameters, each_InfoRequestParameters); output["InfoRequestParameters"] = each_InfoRequestParameters;
-                Json::Value each_PlayerSecret; ToJsonUtilS(PlayerSecret, each_PlayerSecret); output["PlayerSecret"] = each_PlayerSecret;
-                Json::Value each_TitleId; ToJsonUtilS(TitleId, each_TitleId); output["TitleId"] = each_TitleId;
-                return output;
+                return JsonUtils::ToJsonObject(*this);
             }
+
+        private:
+            StdExtra::optional<bool> m_createAccount;
+            String m_customId;
+            AssociativeArray<PlayFabDictionaryEntry, String> m_customTags;
+            String m_encryptedRequest;
+            StdExtra::optional<GetPlayerCombinedInfoRequestParams> m_infoRequestParameters;
+            String m_playerSecret;
+            String m_titleId;
         };
 
         struct LoginWithEmailAddressRequest : public PlayFabRequestCommon
