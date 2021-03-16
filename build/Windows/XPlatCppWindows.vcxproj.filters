@@ -269,6 +269,12 @@
     <ClInclude Include="..\..\code\include\playfab\StdOptional.h">
       <Filter>Header Files\playfab</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabLogin_c.h">
+      <Filter>Header Files\playfab_c</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabGlobal_c.h">
+      <Filter>Header Files\playfab_c</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabAuthenticationContext.cpp">

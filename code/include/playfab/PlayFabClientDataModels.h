@@ -3,6 +3,7 @@
 #if !defined(DISABLE_PLAYFABCLIENT_API)
 
 #include <playfab_c/PlayFabClientDataModels_c.h>
+#include <playfab_c/PlayFabLogin_c.h>
 #include <playfab/PlayFabBaseModel.h>
 #include <playfab/PlayFabJsonHeaders.h>
 
@@ -13851,7 +13852,7 @@ namespace PlayFab
             void Serialize(void* buffer, size_t bufferSize) const override
             {
                 assert(bufferSize == RequiredBufferSize());
-                auto result = new (buffer) PlayFabGetTimeResult(*this);
+                new (buffer) PlayFabGetTimeResult(*this);
             }
         };
 

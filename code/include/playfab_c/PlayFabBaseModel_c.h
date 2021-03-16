@@ -1,35 +1,28 @@
 #pragma once
 
-/// <summary>
-/// Handle to global state created by PlayFabInitialize. A PlayFabStateHandle will be needed to call login methods.
-/// Cleaned up with PlayFabCleanupAsync.
-/// </summary>
-typedef struct PlayFabGlobalState* PlayFabStateHandle;
-
-/// <summary>
-/// User handle returned from successful login calls. Contains auth context needed to make PlayFab requests.
-/// </summary>
-typedef struct PlayFabUser* PlayFabUserHandle;
-
-HRESULT PlayFabUserDuplicateHandle(
-    _In_ PlayFabUserHandle userHandle,
-    _Out_ PlayFabUserHandle* duplicatedHandle
-) noexcept;
-
-void PlayFabUserCloseHandle(
-    _In_ PlayFabUserHandle userHandle
-) noexcept;
+#include <httpClient/pal.h>
 
 /// <summary>
 /// Opaque handle to PlayFab API results. Lifetime of result objects will be tied to a PlayFabResultHandle.
 /// </summary>
 typedef struct PlayFabResultHolder* PlayFabResultHandle;
 
+/// <summary>
+/// Duplicate a result handle.
+/// </summary>
+/// <param name="userHandle">PlayFabResultHandle to duplicate.</param>
+/// <param name="duplicatedHandle">Pointer to duplicated handle.</param>
+/// <returns>Result code for this API operation.</returns>
 HRESULT PlayFabResultDuplicateHandle(
     _In_ PlayFabResultHandle resultHandle,
     _Out_ PlayFabResultHandle* duplicatedHandle
 ) noexcept;
 
+/// <summary>
+/// Close a result handle. If it is the last handle, the underlying result object will be destroyed.
+/// </summary>
+/// <param name="resultHandle">PlayFabResultHandle to close.</param>
+/// <returns>Result code for this API operation.</returns>
 void PlayFabResultCloseHandle(
     _In_ PlayFabResultHandle resultHandle
 ) noexcept;

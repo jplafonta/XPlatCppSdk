@@ -3,9 +3,8 @@
 
 #include <windows.h>
 #include <string>
-#include <playfab/PlayFabSettings.h>
-#include <playfab/PlayFabApiSettings.h>
-#include "playfab_c/PlayFabClientApi_c.h"
+#include <assert.h>
+#include <playfab_c/PlayFabClientApi_c.h>
 
 PlayFabStateHandle stateHandle{ nullptr };
 PlayFabUserHandle userHandle{ nullptr };

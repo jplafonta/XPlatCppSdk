@@ -1,6 +1,6 @@
 #pragma once
 
-#include <playfab_c/PlayFabBaseModel_c.h>
+#include <playfab_c/PlayFabGlobal_c.h>
 #include <playfab/ClientLoginApi.h>
 
 namespace PlayFab

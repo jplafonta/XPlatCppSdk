@@ -193,6 +193,8 @@
     <ClInclude Include="..\..\code\include\playfab_c\PlayFabBaseModel_c.h" />
     <ClInclude Include="..\..\code\include\playfab_c\PlayFabClientApi_c.h" />
     <ClInclude Include="..\..\code\include\playfab_c\PlayFabClientDataModels_c.h" />
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabLogin_c.h" />
+    <ClInclude Include="..\..\code\include\playfab_c\PlayFabGlobal_c.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(SdkSourceDir)\source\playfab\PlayFabAuthenticationContext.cpp" />
